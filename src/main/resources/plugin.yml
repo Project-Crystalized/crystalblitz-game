@@ -1,0 +1,13 @@
+name: CrystalBlitz
+version: '1.0.0'
+main: cc.crystalized.crystalBlitz
+api-version: '1.21.4'
+authors: [ Callum_Is_Bad ]
+description: description
+commands:
+  crystalblitz:
+    description: "Commands for Crystal Blitz"
+    usage: "/crystalblitz (see code or ask callum for info)"
+    aliases: [ ]
+    permission: crystalblitz.command
+    permission-message: "[!] You don't have permission to run the command"
