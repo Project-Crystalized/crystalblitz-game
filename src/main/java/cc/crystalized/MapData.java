@@ -176,7 +176,7 @@ public class MapData {
         }
     }
 
-    public double[] getShops(String team) {
+    public double[] getShop(String team) {
         double[] J = shops;
         switch (team) {
             case "blue":
