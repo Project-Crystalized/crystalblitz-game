@@ -46,6 +46,7 @@ public class GameManager {
             givePlayerItems(p);
             Teams.setPlayerDisplayNames(p);
             p.setGameMode(GameMode.SURVIVAL);
+            new ScoreboardManager(p);
 
             Location ploc = new Location(Bukkit.getWorld("world"),
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],

@@ -48,6 +48,7 @@ public class PlayerListener implements Listener {
                             .append(text("Crystal Blitz Version: " + crystalBlitz.getInstance().getDescription().getVersion()))
                             .append(text("\n"))
             );
+            new QueueScoreboard(p);
 
         } else {
             p.kick(text("A game is currently is progress, try joining again later.").color(NamedTextColor.RED));
