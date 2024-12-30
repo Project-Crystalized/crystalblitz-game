@@ -11,8 +11,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +35,7 @@ public class GameManager {
      */
 
     public Teams teams;
+    public static ArrayList<Nexus> nexuses;
 
     public GameManager() {
         teams = new Teams();
@@ -79,7 +83,7 @@ public class GameManager {
         }
 
         for (Entity e : Bukkit.getWorld("world").getEntities()) {
-            if (e instanceof Villager) {
+            if (e instanceof Villager || e instanceof TextDisplay) {
                 e.remove();
             }
         }
@@ -109,14 +113,35 @@ public class GameManager {
                 if (crystalBlitz.getInstance().Blocks.isEmpty()) {
                     Bukkit.getLogger().log(Level.INFO, "Removed all player-made blocks! You may rejoin to start another game");
                     crystalBlitz.getInstance().gamemanager = null;
+                    for (Nexus n : nexuses) {
+                        n.
+                                resetNexuses();
+                    }
                     cancel();
                 }
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
     }
 
+    public Nexus getNexus(String team) {
+        for (Nexus n : nexuses) {
+            if (n.getTeam().equals(team)) {
+                return n;
+            }
+        }
+
+        Bukkit.getLogger().log(Level.WARNING, "unknown team " + team);
+        return null;
+    }
+
     private static void setupEntities() {
         Component name = text("Shop");
+
+        nexuses = new ArrayList<Nexus>();
+        for (String team: Teams.teams) {
+            Nexus n = new Nexus(team);
+            nexuses.add(n);
+        }
 
         for (String team : Teams.teams) {
             Location loc = new Location(
@@ -131,6 +156,7 @@ public class GameManager {
                 entity.setAI(false);
                 entity.setCustomNameVisible(true);
                 entity.customName(name);
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, PotionEffect.INFINITE_DURATION, 0, false, false, false));
             });
         }
     }
@@ -140,8 +166,11 @@ public class GameManager {
 
         ItemStack WoodenSword = new ItemStack(Material.WOODEN_SWORD, 1);
         ItemMeta WoodenSwordIM = WoodenSword.getItemMeta();
+        WoodenSwordIM.setUnbreakable(true);
+
         ItemStack WoodenPickaxe = new ItemStack(Material.WOODEN_PICKAXE, 1);
         ItemMeta WoodenPickaxeIM = WoodenPickaxe.getItemMeta();
+        WoodenPickaxeIM.setUnbreakable(true);
 
         WoodenPickaxe.setItemMeta(WoodenPickaxeIM);
         WoodenSword.setItemMeta(WoodenSwordIM);

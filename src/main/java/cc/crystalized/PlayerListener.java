@@ -6,6 +6,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -100,8 +103,59 @@ public class PlayerListener implements Listener {
                 crystalBlitz.getInstance().Blocks.remove(e.getBlock());
                 p.sendMessage(text("block broken"));
             } else {
-                p.sendMessage(text("block breaking cancelled"));
-                e.setCancelled(true);
+                //this and the hit nexus method is a big messy
+                if (e.getBlock().getType().equals(Material.WHITE_GLAZED_TERRACOTTA) || e.getBlock().getType().equals(Material.GRAY_GLAZED_TERRACOTTA)
+                        || e.getBlock().getType().equals(Material.LIGHT_GRAY_GLAZED_TERRACOTTA)) {
+                    if (!p.getInventory().getItemInMainHand().toString().toLowerCase().contains("pickaxe")) {
+                        p.sendMessage(text("[!] You need to use your Pickaxe to break this."));
+                    }
+                    e.setCancelled(true);
+                    p.sendMessage(text("nexus hit"));
+                    Directional dir = (Directional) e.getBlock().getBlockData();
+                    switch (e.getBlock().getType()) {
+                        case Material.WHITE_GLAZED_TERRACOTTA -> {
+                            switch (dir.getFacing()) {
+                                case BlockFace.EAST:
+                                    crystalBlitz.getInstance().gamemanager.getNexus("blue").hitNexus("blue", p.getInventory().getItemInMainHand(), p);
+                                    break;
+                                case BlockFace.NORTH:
+                                    crystalBlitz.getInstance().gamemanager.getNexus("cyan").hitNexus("cyan", p.getInventory().getItemInMainHand(), p);
+                                    break;
+                                case BlockFace.SOUTH:
+                                    crystalBlitz.getInstance().gamemanager.getNexus("green").hitNexus("green", p.getInventory().getItemInMainHand(), p);
+                                    break;
+                            }
+                        }
+                        case Material.GRAY_GLAZED_TERRACOTTA -> {
+                            switch (dir.getFacing()) {
+                                case BlockFace.NORTH:
+                                    crystalBlitz.getInstance().gamemanager.getNexus("red").hitNexus("red", p.getInventory().getItemInMainHand(), p);
+                                    break;
+                                case BlockFace.SOUTH:
+                                    crystalBlitz.getInstance().gamemanager.getNexus("white").hitNexus("white", p.getInventory().getItemInMainHand(), p);
+                                    break;
+                                case BlockFace.WEST:
+                                    crystalBlitz.getInstance().gamemanager.getNexus("yellow").hitNexus("yellow", p.getInventory().getItemInMainHand(), p);
+                                    break;
+                            }
+                        }
+                        case Material.LIGHT_GRAY_GLAZED_TERRACOTTA -> {
+                            switch (dir.getFacing()) {
+                                case BlockFace.EAST:
+                                    crystalBlitz.getInstance().gamemanager.getNexus("lime").hitNexus("lime", p.getInventory().getItemInMainHand(), p);
+                                    break;
+                                case BlockFace.NORTH:
+                                    crystalBlitz.getInstance().gamemanager.getNexus("magenta").hitNexus("magenta", p.getInventory().getItemInMainHand(), p);
+                                    break;
+                            }
+                        }
+                    }
+
+
+                } else {
+                    p.sendMessage(text("block breaking cancelled"));
+                    e.setCancelled(true);
+                }
             }
         }
     }
