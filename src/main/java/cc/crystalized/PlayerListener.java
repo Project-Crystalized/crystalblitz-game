@@ -10,14 +10,12 @@ import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.potion.PotionEffect;
@@ -72,6 +70,17 @@ public class PlayerListener implements Listener {
     public void onPlayerDamage(EntityDamageEvent e) {
         if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onEntityHit(EntityDamageByEntityEvent e) {
+        if (crystalBlitz.getInstance().gamemanager == null) {
+            e.setCancelled(true);
+        } else {
+            if (e.getEntity() instanceof Villager) {
+                new Shop((Player) e.getDamager());
+            }
         }
     }
 

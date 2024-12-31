@@ -1,6 +1,8 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,9 +15,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Duration;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 
 public class Nexus {
 
@@ -84,6 +88,16 @@ public class Nexus {
                 health--;
                 break;
         }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (Teams.getPlayerTeam(player).equals(team)) {
+                player.sendMessage(translatable(""));
+                player.showTitle(
+                        Title.title(text(" "), translatable("crystalized.game.crystalblitz.chat.nexusattack").color(NamedTextColor.RED)
+                                ,Title.Times.times(Duration.ofMillis(0), Duration.ofSeconds(1), Duration.ofSeconds(1)))
+                );
+            }
+        }
+
         if (health < 0 || health == 0) {
             health = 0;
             destroyNexus(t, p);
