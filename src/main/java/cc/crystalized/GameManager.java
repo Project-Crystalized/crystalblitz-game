@@ -164,18 +164,8 @@ public class GameManager {
     private static void givePlayerItems(Player p) {
         PlayerInventory inv = p.getInventory();
 
-        ItemStack WoodenSword = new ItemStack(Material.WOODEN_SWORD, 1);
-        ItemMeta WoodenSwordIM = WoodenSword.getItemMeta();
-        WoodenSwordIM.setUnbreakable(true);
-
-        ItemStack WoodenPickaxe = new ItemStack(Material.WOODEN_PICKAXE, 1);
-        ItemMeta WoodenPickaxeIM = WoodenPickaxe.getItemMeta();
-        WoodenPickaxeIM.setUnbreakable(true);
-
-        WoodenPickaxe.setItemMeta(WoodenPickaxeIM);
-        WoodenSword.setItemMeta(WoodenSwordIM);
-        inv.setItem(0, WoodenSword);
-        inv.setItem(1, WoodenPickaxe);
+        inv.setItem(0, CrystalBlitzItems.WoodenSword);
+        inv.setItem(1, CrystalBlitzItems.WoodenPickaxe);
 
         switch (Teams.getPlayerTeam(p)) {
             case "blue":

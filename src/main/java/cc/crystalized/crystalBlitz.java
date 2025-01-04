@@ -24,8 +24,12 @@ public final class crystalBlitz extends JavaPlugin {
         this.getCommand("crystalblitz").setExecutor(dc);
 
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        this.getServer().getPluginManager().registerEvents(new ShopListener(), this);
 
         Bukkit.getWorld("world").setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+
+        Shop.setupShop();
+        CrystalBlitzItems.SetupItems();
 
         new BukkitRunnable() {
             @Override

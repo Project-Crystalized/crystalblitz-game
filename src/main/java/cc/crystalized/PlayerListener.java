@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.potion.PotionEffect;
@@ -74,12 +75,12 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityHit(EntityDamageByEntityEvent e) {
+    public void onShopInteract(PlayerInteractEntityEvent e) {
         if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
         } else {
-            if (e.getEntity() instanceof Villager) {
-                new Shop((Player) e.getDamager());
+            if (e.getRightClicked() instanceof Villager) {
+                new Shop(e.getPlayer());
             }
         }
     }
