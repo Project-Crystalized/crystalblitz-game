@@ -1,8 +1,10 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -17,6 +19,10 @@ public class CrystalBlitzItems {
     public static ItemStack WoodenPickaxe = new ItemStack(Material.WOODEN_PICKAXE);
     public static ItemStack StoneSword = new ItemStack(Material.STONE_SWORD);
     public static ItemStack StonePickaxe = new ItemStack(Material.STONE_PICKAXE);
+
+    public static ItemStack ConcreteBlocks = new ItemStack(Material.TERRACOTTA);
+
+    public static ItemStack BoostOrb = new ItemStack(Material.COAL);
 
     public static ItemStack WeakShard = new ItemStack(Material.COAL);
     public static ItemStack StrongShard = new ItemStack(Material.COAL);
@@ -40,16 +46,46 @@ public class CrystalBlitzItems {
         ItemMeta StoneSword_im = StoneSword.getItemMeta();
         StoneSword_im.customName(text("Stone Sword").decoration(TextDecoration.ITALIC, false));
         List<Component> StoneSwordLore = new ArrayList<>();
-        StoneSwordLore.add(text("Stone sword description here"));
+        StoneSwordLore.add(text("Stone sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        StoneSwordLore.add(text(" "));
+        StoneSwordLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StoneSword_im.lore(StoneSwordLore);
+        StoneSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         StoneSword.setItemMeta(StoneSword_im);
 
         ItemMeta StonePickaxe_im = StonePickaxe.getItemMeta();
         StonePickaxe_im.customName(text("Stone Pickaxe").decoration(TextDecoration.ITALIC, false));
         List<Component> StonePickaxeLore = new ArrayList<>();
-        StonePickaxeLore.add(text("Stone pickaxe description here"));
+        StonePickaxeLore.add(text("Stone pickaxe description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        StonePickaxeLore.add(text(" "));
+        StonePickaxeLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StonePickaxe_im.lore(StonePickaxeLore);
+        StonePickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         StonePickaxe.setItemMeta(StonePickaxe_im);
+
+
+
+        ItemMeta ConcreteBlocks_im = ConcreteBlocks.getItemMeta();
+        List<Component> ConcreteBlocksLore = new ArrayList<>();
+        ConcreteBlocksLore.add(text("Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        ConcreteBlocksLore.add(text(""));
+        ConcreteBlocksLore.add(text("8 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ConcreteBlocks_im.lore(ConcreteBlocksLore);
+        ConcreteBlocks.setItemMeta(ConcreteBlocks_im);
+
+
+
+        ItemMeta BoostOrb_im = BoostOrb.getItemMeta();
+        BoostOrb_im.setCustomModelData(1);
+        BoostOrb_im.displayName(translatable("crystalized.orb.boost.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        List<Component> BoostOrbLore = new ArrayList<>();
+        BoostOrbLore.add(translatable("crystalized.orb.boost.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        BoostOrbLore.add(text(" "));
+        BoostOrbLore.add(text("20 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BoostOrb_im.lore(BoostOrbLore);
+        BoostOrb.setItemMeta(BoostOrb_im);
+
+
 
         ItemMeta WeakShard_im = WeakShard.getItemMeta();
         WeakShard_im.customName(translatable("crystalized.item.weakshard.name").decoration(TextDecoration.ITALIC, false));

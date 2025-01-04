@@ -160,9 +160,13 @@ public class PlayerListener implements Listener {
                             }
                         }
                     }
+                } else if (e.getBlock().getType().equals(Material.BLACK_GLAZED_TERRACOTTA)) {
+                    e.setCancelled(true);
+                    p.sendMessage(text("todo"));
+                    //TODO, weak and strong shards
+                }
 
-
-                } else {
+                else {
                     p.sendMessage(text("block breaking cancelled"));
                     e.setCancelled(true);
                 }
