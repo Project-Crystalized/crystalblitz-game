@@ -65,9 +65,13 @@ public class GameManager {
             public void run() {
                 //Main game loop
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.sendActionBar(
-                            text("todo: count shards and print them here")
-                    );
+                    if (p.getGameMode().equals(GameMode.SPECTATOR)) {
+                        //Do nothing
+                    } else {
+                        p.sendActionBar(
+                                text("todo: count shards and print them here")
+                        );
+                    }
                 }
 
                 if (crystalBlitz.getInstance().gamemanager == null) {

@@ -6,9 +6,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -19,12 +23,16 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 
 public class PlayerListener implements Listener {
 
@@ -64,7 +72,40 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
-
+        e.setCancelled(true);
+        if (crystalBlitz.getInstance().gamemanager == null) {return;}
+        Player p = e.getPlayer();
+        p.setGameMode(GameMode.SPECTATOR);
+        p.teleport(
+                new Location(Bukkit.getWorld("world"),
+                        crystalBlitz.getInstance().mapdata.spectator_spawn[0],
+                        crystalBlitz.getInstance().mapdata.spectator_spawn[1],
+                        crystalBlitz.getInstance().mapdata.spectator_spawn[2]
+                )
+        );
+        if (crystalBlitz.getInstance().gamemanager.getNexus(Teams.getPlayerTeam(p)).health != 0) {
+            new BukkitRunnable() {
+                int timer = 5;
+                @Override
+                public void run() {
+                    if (crystalBlitz.getInstance().gamemanager == null) {cancel();}
+                    p.sendActionBar(translatable("crystalized.game.knockoff.respawn1").append(text(timer)).append(translatable("crystalized.game.knockoff.respawn2")));
+                    if (timer == 0) {
+                        Location spawnloc = new Location(Bukkit.getWorld("world"),
+                                crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
+                                crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
+                                crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[2]
+                        );
+                        p.setGameMode(GameMode.SURVIVAL);
+                        p.teleport(spawnloc);
+                        cancel();
+                    }
+                    timer--;
+                }
+            }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
+        } else {
+            p.sendMessage(text("[!] You're eliminated from the game!"));
+        }
     }
 
     @EventHandler
@@ -95,7 +136,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
-        p.sendMessage(text("block placed"));
         if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
         } else {
@@ -111,7 +151,6 @@ public class PlayerListener implements Listener {
         } else {
             if (crystalBlitz.getInstance().Blocks.contains(e.getBlock())) {
                 crystalBlitz.getInstance().Blocks.remove(e.getBlock());
-                p.sendMessage(text("block broken"));
             } else {
                 //this and the hit nexus method is a big messy
                 if (e.getBlock().getType().equals(Material.WHITE_GLAZED_TERRACOTTA) || e.getBlock().getType().equals(Material.GRAY_GLAZED_TERRACOTTA)
@@ -120,7 +159,6 @@ public class PlayerListener implements Listener {
                         p.sendMessage(text("[!] You need to use your Pickaxe to break this."));
                     }
                     e.setCancelled(true);
-                    p.sendMessage(text("nexus hit"));
                     Directional dir = (Directional) e.getBlock().getBlockData();
                     switch (e.getBlock().getType()) {
                         case Material.WHITE_GLAZED_TERRACOTTA -> {
@@ -160,14 +198,54 @@ public class PlayerListener implements Listener {
                             }
                         }
                     }
-                } else if (e.getBlock().getType().equals(Material.BLACK_GLAZED_TERRACOTTA)) {
-                    e.setCancelled(true);
-                    p.sendMessage(text("todo"));
-                    //TODO, weak and strong shards
                 }
 
+                //Weak and Strong Shard blocks
+                else if (e.getBlock().getType().equals(Material.BLACK_GLAZED_TERRACOTTA)) {
+                    e.setCancelled(true);
+                    Directional dir = (Directional) e.getBlock().getBlockData();
+                    switch (dir.getFacing()) {
+                        case BlockFace.EAST:
+                            ItemStack weak = CrystalBlitzItems.WeakShard.clone();
+                            weak.setAmount(1);
+                            p.getInventory().addItem(weak);
+                            p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
+                            break;
+                        case BlockFace.NORTH:
+                            ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+                            strong.setAmount(1);
+                            p.getInventory().addItem(strong);
+                            p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
+                            break;
+                        default:
+                            p.sendMessage(text("Broken black terracotta but this isn't weak or strong shards, please report this."));
+                            break;
+
+                    }
+                }
+
+                //Weak and Strong Shards (not blocks)
+                else if (e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_FAN) || e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_WALL_FAN)
+                    || e.getBlock().getType().equals(Material.AMETHYST_CLUSTER)
+                ) {
+                    if (e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_FAN) || e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_WALL_FAN)) {
+                        ItemStack weak = CrystalBlitzItems.WeakShard.clone();
+                        weak.setAmount(2);
+                        p.getInventory().addItem(weak);
+                        p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
+                    } else if (e.getBlock().getType().equals(Material.AMETHYST_CLUSTER)) {
+                        ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+                        strong.setAmount(2);
+                        p.getInventory().addItem(strong);
+                        p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
+                    }
+                    e.setCancelled(true);
+                    new CrystalShardBlock(e.getBlock().getType(), e.getBlock().getLocation(), e.getBlock().getBlockData());
+                    e.getBlock().setType(Material.AIR);
+                }
+
+
                 else {
-                    p.sendMessage(text("block breaking cancelled"));
                     e.setCancelled(true);
                 }
             }
@@ -193,5 +271,33 @@ public class PlayerListener implements Listener {
             Bukkit.getLogger().log(Level.INFO, "All players have disconnected. The Game will now end.");
             crystalBlitz.getInstance().gamemanager.ForceEndGame();
         }
+    }
+}
+
+class CrystalShardBlock {
+    public CrystalShardBlock(Material input, Location loc, BlockData data) {
+        new BukkitRunnable() {
+            int timer = crystalBlitz.getInstance().getRandomNumber(3, 9);
+
+            @Override
+            public void run () {
+
+                if (timer == 0 || crystalBlitz.getInstance().gamemanager == null) {
+                    loc.getBlock().setType(input);
+                    Directional dir = (Directional) loc.getBlock().getBlockData();
+                    Directional dir2 = (Directional) data;
+
+                    dir.setFacing(dir2.getFacing());
+                    loc.getBlock().setBlockData(data);
+                    loc.getBlock().setBlockData(dir);
+                    Waterlogged water = (Waterlogged) loc.getBlock().getBlockData();
+                    water.setWaterlogged(false);
+                    loc.getBlock().setBlockData(water);
+                    loc.getBlock().getState().update();
+                    cancel();
+                }
+                timer--;
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
     }
 }

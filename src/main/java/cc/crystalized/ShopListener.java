@@ -48,7 +48,7 @@ public class ShopListener implements Listener {
                     || p.getInventory().contains(Material.DIAMOND_SWORD)) {
                 p.sendMessage(text("[!] You already have this item or something better!"));
             } else {
-                ItemStack WeakShard = CrystalBlitzItems.WeakShard;
+                ItemStack WeakShard = CrystalBlitzItems.WeakShard.clone();
                 WeakShard.setAmount(20);
                 if (p.getInventory().containsAtLeast(CrystalBlitzItems.WeakShard, WeakShard.getAmount())) {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
@@ -66,7 +66,7 @@ public class ShopListener implements Listener {
                     || p.getInventory().contains(Material.DIAMOND_PICKAXE)) {
                 p.sendMessage(text("[!] You already have this item or something better!"));
             } else {
-                ItemStack WeakShard = CrystalBlitzItems.WeakShard;
+                ItemStack WeakShard = CrystalBlitzItems.WeakShard.clone();
                 WeakShard.setAmount(20);
                 if (p.getInventory().containsAtLeast(CrystalBlitzItems.WeakShard, WeakShard.getAmount())) {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
@@ -78,10 +78,44 @@ public class ShopListener implements Listener {
                 }
             }
         }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.IronSword)) {
+            if (p.getInventory().contains(CrystalBlitzItems.IronSword) || p.getInventory().contains(Material.DIAMOND_SWORD)) {
+                p.sendMessage(text("[!] You already have this item or something better!"));
+            } else {
+                ItemStack StrongShard = CrystalBlitzItems.StrongShard.clone();
+                StrongShard.setAmount(10);
+                if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, StrongShard.getAmount())) {
+                    p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                    p.getInventory().removeItem(StrongShard);
+                    p.getInventory().remove(CrystalBlitzItems.WoodenSword);
+                    p.getInventory().remove(CrystalBlitzItems.StoneSword);
+                    p.getInventory().addItem(CrystalBlitzItems.IronSword);
+                } else {
+                    p.sendMessage(text("[!] Insufficient funds"));
+                }
+            }
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.IronPickaxe)) {
+            if (p.getInventory().contains(CrystalBlitzItems.IronPickaxe) || p.getInventory().contains(Material.DIAMOND_PICKAXE)) {
+                p.sendMessage(text("[!] You already have this item or something better!"));
+            } else {
+                ItemStack StrongShard = CrystalBlitzItems.StrongShard.clone();
+                StrongShard.setAmount(10);
+                if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, StrongShard.getAmount())) {
+                    p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                    p.getInventory().removeItem(StrongShard);
+                    p.getInventory().remove(CrystalBlitzItems.WoodenPickaxe);
+                    p.getInventory().remove(CrystalBlitzItems.StonePickaxe);
+                    p.getInventory().addItem(CrystalBlitzItems.IronPickaxe);
+                } else {
+                    p.sendMessage(text("[!] Insufficient funds"));
+                }
+            }
+        }
 
         //Defence category
         else if (e.getCurrentItem().equals(CrystalBlitzItems.ConcreteBlocks)) {
-            ItemStack WeakShard = CrystalBlitzItems.WeakShard;
+            ItemStack WeakShard = CrystalBlitzItems.WeakShard.clone();
             WeakShard.setAmount(8);
             if (p.getInventory().containsAtLeast(CrystalBlitzItems.WeakShard, WeakShard.getAmount())) {
                 p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
@@ -130,6 +164,17 @@ public class ShopListener implements Listener {
                 }
             } else {
                 p.sendMessage(text("[!] Insufficient funds"));
+            }
+        }
+
+        //Utility
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.BoostOrb)) {
+            ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+            strong.setAmount(20);
+            if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount())) {
+                p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                p.getInventory().removeItem(strong);
+                p.getInventory().addItem(CrystalBlitzItems.BoostOrb);
             }
         }
 

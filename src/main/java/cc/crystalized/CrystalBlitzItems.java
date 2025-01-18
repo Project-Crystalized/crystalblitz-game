@@ -19,8 +19,14 @@ public class CrystalBlitzItems {
     public static ItemStack WoodenPickaxe = new ItemStack(Material.WOODEN_PICKAXE);
     public static ItemStack StoneSword = new ItemStack(Material.STONE_SWORD);
     public static ItemStack StonePickaxe = new ItemStack(Material.STONE_PICKAXE);
+    public static ItemStack IronSword = new ItemStack(Material.IRON_SWORD);
+    public static ItemStack IronPickaxe = new ItemStack(Material.IRON_PICKAXE);
+    public static ItemStack DiamondSword = new ItemStack(Material.DIAMOND_SWORD);
+    public static ItemStack DiamondPickaxe = new ItemStack(Material.DIAMOND_PICKAXE);
 
     public static ItemStack ConcreteBlocks = new ItemStack(Material.TERRACOTTA);
+    public static ItemStack CopperBlocks = new ItemStack(Material.COPPER_BLOCK);
+    public static ItemStack WoolBlocks = new ItemStack(Material.WHITE_WOOL);
 
     public static ItemStack BoostOrb = new ItemStack(Material.COAL);
 
@@ -30,38 +36,58 @@ public class CrystalBlitzItems {
 
     public static void SetupItems() {
         ItemMeta WoodenSword_im = WoodenSword.getItemMeta();
-        WoodenSword_im.customName(text("Wooden Sword").decoration(TextDecoration.ITALIC, false));
         List<Component> WoodenSwordLore = new ArrayList<>();
-        WoodenSwordLore.add(text("Your starting sword, you'll need to upgrade this at some point."));
+        WoodenSwordLore.add(text("Your starting sword, you'll need to upgrade this at some point.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         WoodenSword_im.lore(WoodenSwordLore);
+        WoodenSword_im.setUnbreakable(true);
         WoodenSword.setItemMeta(WoodenSword_im);
 
         ItemMeta WoodenPickaxe_im = WoodenPickaxe.getItemMeta();
-        WoodenPickaxe_im.customName(text("Wooden Pickaxe").decoration(TextDecoration.ITALIC, false));
         List<Component> WoodenPickaxeLore = new ArrayList<>();
-        WoodenPickaxeLore.add(text("Your starting pickaxe, you'll need to upgrade this at some point."));
+        WoodenPickaxeLore.add(text("Your starting pickaxe, you'll need to upgrade this at some point.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         WoodenPickaxe_im.lore(WoodenPickaxeLore);
+        WoodenPickaxe_im.setUnbreakable(true);
         WoodenPickaxe.setItemMeta(WoodenPickaxe_im);
 
         ItemMeta StoneSword_im = StoneSword.getItemMeta();
-        StoneSword_im.customName(text("Stone Sword").decoration(TextDecoration.ITALIC, false));
         List<Component> StoneSwordLore = new ArrayList<>();
         StoneSwordLore.add(text("Stone sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StoneSwordLore.add(text(" "));
         StoneSwordLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StoneSword_im.lore(StoneSwordLore);
+        StoneSword_im.setUnbreakable(true);
         StoneSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         StoneSword.setItemMeta(StoneSword_im);
 
         ItemMeta StonePickaxe_im = StonePickaxe.getItemMeta();
-        StonePickaxe_im.customName(text("Stone Pickaxe").decoration(TextDecoration.ITALIC, false));
         List<Component> StonePickaxeLore = new ArrayList<>();
         StonePickaxeLore.add(text("Stone pickaxe description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StonePickaxeLore.add(text(" "));
         StonePickaxeLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StonePickaxe_im.lore(StonePickaxeLore);
+        StonePickaxe_im.setUnbreakable(true);
         StonePickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         StonePickaxe.setItemMeta(StonePickaxe_im);
+
+        ItemMeta IronSword_im = IronSword.getItemMeta();
+        List<Component> IronSwordLore = new ArrayList<>();
+        IronSwordLore.add(text("Iron sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronSwordLore.add(text(""));
+        IronSwordLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        IronSword_im.lore(IronSwordLore);
+        IronSword_im.setUnbreakable(true);
+        IronSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        IronSword.setItemMeta(IronSword_im);
+
+        ItemMeta IronPickaxe_im = IronPickaxe.getItemMeta();
+        List<Component> IronPickaxeLore = new ArrayList<>();
+        IronPickaxeLore.add(text("Iron sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronPickaxeLore.add(text(""));
+        IronPickaxeLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        IronPickaxe_im.lore(IronPickaxeLore);
+        IronPickaxe_im.setUnbreakable(true);
+        IronPickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        IronPickaxe.setItemMeta(IronPickaxe_im);
 
 
 
@@ -72,6 +98,14 @@ public class CrystalBlitzItems {
         ConcreteBlocksLore.add(text("8 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ConcreteBlocks_im.lore(ConcreteBlocksLore);
         ConcreteBlocks.setItemMeta(ConcreteBlocks_im);
+
+        ItemMeta CopperBlocks_im = CopperBlocks.getItemMeta();
+        List<Component> CopperBlocksLore = new ArrayList<>();
+        CopperBlocksLore.add(text("Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        CopperBlocksLore.add(text(""));
+        CopperBlocksLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        CopperBlocks_im.lore(CopperBlocksLore);
+        CopperBlocks.setItemMeta(CopperBlocks_im);
 
 
 

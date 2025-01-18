@@ -100,6 +100,10 @@ public class Shop{
         view.clear();
         view.setItem(0, CrystalBlitzItems.StoneSword);
         view.setItem(1, CrystalBlitzItems.StonePickaxe);
+        view.setItem(2, CrystalBlitzItems.IronSword);
+        view.setItem(3, CrystalBlitzItems.IronPickaxe);
+        view.setItem(4, CrystalBlitzItems.DiamondSword);
+        view.setItem(5, CrystalBlitzItems.DiamondPickaxe);
 
         p.openInventory(view);
     }

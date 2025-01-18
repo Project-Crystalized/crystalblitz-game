@@ -90,11 +90,12 @@ public class Nexus {
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (Teams.getPlayerTeam(player).equals(team)) {
-                player.sendMessage(translatable(""));
+                player.sendMessage(translatable("crystalized.game.crystalblitz.chat.nexusattack"));
                 player.showTitle(
                         Title.title(text(" "), translatable("crystalized.game.crystalblitz.chat.nexusattack").color(NamedTextColor.RED)
                                 ,Title.Times.times(Duration.ofMillis(0), Duration.ofSeconds(1), Duration.ofSeconds(1)))
                 );
+                player.playSound(player, "minecraft:block.note_block.harp", 50, 1);
             }
         }
 
@@ -119,6 +120,10 @@ public class Nexus {
 
         blockloc1.getBlock().setType(Material.DIORITE);
         blockloc2.getBlock().setType(Material.DIORITE);
+
+        ItemStack nexusshards = CrystalBlitzItems.NexusShard.clone();
+        nexusshards.setAmount(4);
+        p.getInventory().addItem(nexusshards);
     }
 
     public void resetNexuses() {

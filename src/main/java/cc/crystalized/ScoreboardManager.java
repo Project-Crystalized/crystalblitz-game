@@ -9,8 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 import org.geysermc.floodgate.api.FloodgateApi;
 
-import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.Component.translatable;
+import static net.kyori.adventure.text.Component.*;
 
 public class ScoreboardManager {
 
@@ -22,7 +21,7 @@ public class ScoreboardManager {
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         obj.getScore("12").setScore(12);
-        obj.getScore("12").customName(text("Team: "));
+        obj.getScore("12").customName(translatable("crystalized.game.generic.team").append(text(": ")).append(translatable("crystalized.game.generic.team." + Teams.getPlayerTeam(player))));
 
         obj.getScore("11").setScore(11);
         obj.getScore("11").customName(text("Gen. Speed: "));
@@ -31,28 +30,28 @@ public class ScoreboardManager {
         obj.getScore("10").customName(text(" "));
 
         obj.getScore("9").setScore(9);
-        obj.getScore("9").customName(text("Blue: "));
+        obj.getScore("9").customName(translatable("crystalized.game.generic.team.blue").append(text(": ")));
 
         obj.getScore("8").setScore(8);
-        obj.getScore("8").customName(text("Cyan: "));
+        obj.getScore("8").customName(translatable("crystalized.game.generic.team.cyan").append(text(": ")));
 
         obj.getScore("7").setScore(7);
-        obj.getScore("7").customName(text("Green: "));
+        obj.getScore("7").customName(translatable("crystalized.game.generic.team.green").append(text(": ")));
 
         obj.getScore("6").setScore(6);
-        obj.getScore("6").customName(text("Lime: "));
+        obj.getScore("6").customName(translatable("crystalized.game.generic.team.lime").append(text(": ")));
 
         obj.getScore("5").setScore(5);
-        obj.getScore("5").customName(text("Magenta: "));
+        obj.getScore("5").customName(translatable("crystalized.game.generic.team.magenta").append(text(": ")));
 
         obj.getScore("4").setScore(4);
-        obj.getScore("4").customName(text("Red: "));
+        obj.getScore("4").customName(translatable("crystalized.game.generic.team.red").append(text(": ")));
 
         obj.getScore("3").setScore(3);
-        obj.getScore("3").customName(text("White: "));
+        obj.getScore("3").customName(translatable("crystalized.game.generic.team.white").append(text(": ")));
 
         obj.getScore("2").setScore(2);
-        obj.getScore("2").customName(text("Yellow: "));
+        obj.getScore("2").customName(translatable("crystalized.game.generic.team.yellow").append(text(": ")));
 
         obj.getScore("1").setScore(1);
         obj.getScore("1").customName(text(""));
@@ -60,8 +59,79 @@ public class ScoreboardManager {
         obj.getScore("0").setScore(0);
         obj.getScore("0").customName(text("crystalized.cc ").color(TextColor.color(0xc4b50a)).append(text("(ServID)").color(NamedTextColor.GRAY)));
 
+        Team blue = scoreboard.registerNewTeam("blue");
+        blue.setAllowFriendlyFire(false);
+        blue.addEntry("9");
+        blue.suffix(text(""));
+        obj.getScore("9").setScore(9);
+
+        Team cyan = scoreboard.registerNewTeam("cyan");
+        cyan.setAllowFriendlyFire(false);
+        cyan.addEntry("8");
+        cyan.suffix(text(""));
+        obj.getScore("8").setScore(8);
+
+        Team green = scoreboard.registerNewTeam("green");
+        green.setAllowFriendlyFire(false);
+        green.addEntry("7");
+        green.suffix(text(""));
+        obj.getScore("7").setScore(7);
+
+        Team lime = scoreboard.registerNewTeam("lime");
+        lime.setAllowFriendlyFire(false);
+        lime.addEntry("6");
+        lime.suffix(text(""));
+        obj.getScore("6").setScore(6);
+
+        Team magenta = scoreboard.registerNewTeam("magenta");
+        magenta.setAllowFriendlyFire(false);
+        magenta.addEntry("5");
+        magenta.suffix(text(""));
+        obj.getScore("5").setScore(5);
+
+        Team red = scoreboard.registerNewTeam("red");
+        red.setAllowFriendlyFire(false);
+        red.addEntry("4");
+        red.suffix(text(""));
+        obj.getScore("4").setScore(4);
+
+        Team white = scoreboard.registerNewTeam("white");
+        white.setAllowFriendlyFire(false);
+        white.addEntry("3");
+        white.suffix(text(""));
+        obj.getScore("3").setScore(3);
+
+        Team yellow = scoreboard.registerNewTeam("yellow");
+        yellow.setAllowFriendlyFire(false);
+        yellow.addEntry("2");
+        yellow.suffix(text(""));
+        obj.getScore("2").setScore(2);
+
         player.setScoreboard(scoreboard);
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    cancel();
+                } else {
+                    if (floodgateapi.isFloodgatePlayer(player.getUniqueId())) {
+                        //Bedrock
+
+                    } else {
+                        //Java
+                        blue.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("blue").health)).append(text("/10)")));
+                        cyan.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("cyan").health)).append(text("/10)")));
+                        green.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("green").health)).append(text("/10)")));
+                        lime.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("lime").health)).append(text("/10)")));
+                        magenta.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("magenta").health)).append(text("/10)")));
+                        red.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("red").health)).append(text("/10)")));
+                        white.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("white").health)).append(text("/10)")));
+                        yellow.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("yellow").health)).append(text("/10)")));
+                    }
+                }
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
     }
 }
 

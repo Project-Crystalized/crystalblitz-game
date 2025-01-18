@@ -58,4 +58,8 @@ public final class crystalBlitz extends JavaPlugin {
     public static crystalBlitz getInstance() {
         return getPlugin(crystalBlitz.class);
     }
+
+    public int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
+    }
 }
