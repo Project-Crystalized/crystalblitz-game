@@ -27,12 +27,16 @@ public class CrystalBlitzItems {
     public static ItemStack ConcreteBlocks = new ItemStack(Material.TERRACOTTA);
     public static ItemStack CopperBlocks = new ItemStack(Material.COPPER_BLOCK);
     public static ItemStack WoolBlocks = new ItemStack(Material.WHITE_WOOL);
+    public static ItemStack IronChestplate = new ItemStack(Material.IRON_CHESTPLATE);
+    public static ItemStack DiamondChestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
 
     public static ItemStack BoostOrb = new ItemStack(Material.COAL);
 
     public static ItemStack WeakShard = new ItemStack(Material.COAL);
     public static ItemStack StrongShard = new ItemStack(Material.COAL);
     public static ItemStack NexusShard = new ItemStack(Material.COAL);
+
+    public static ItemStack Arrows = new ItemStack(Material.ARROW);
 
     public static void SetupItems() {
         ItemMeta WoodenSword_im = WoodenSword.getItemMeta();
@@ -89,11 +93,31 @@ public class CrystalBlitzItems {
         IronPickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         IronPickaxe.setItemMeta(IronPickaxe_im);
 
+        ItemMeta DiamondSword_im = DiamondSword.getItemMeta();
+        List<Component> DiamondSwordLore = new ArrayList<>();
+        DiamondSwordLore.add(text("most powerful sword").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondSwordLore.add(text(""));
+        DiamondSwordLore.add(text("2 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        DiamondSword_im.lore(DiamondSwordLore);
+        DiamondSword_im.setUnbreakable(true);
+        DiamondSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        DiamondSword.setItemMeta(DiamondSword_im);
+
+        ItemMeta DiamondPickaxe_im = DiamondPickaxe.getItemMeta();
+        List<Component> DiamondPickaxeLore = new ArrayList<>();
+        DiamondPickaxeLore.add(text("most powerful pickaxe").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondPickaxeLore.add(text(""));
+        DiamondPickaxeLore.add(text("2 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        DiamondPickaxe_im.lore(DiamondPickaxeLore);
+        DiamondPickaxe_im.setUnbreakable(true);
+        DiamondPickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        DiamondPickaxe.setItemMeta(DiamondPickaxe_im);
+
 
 
         ItemMeta ConcreteBlocks_im = ConcreteBlocks.getItemMeta();
         List<Component> ConcreteBlocksLore = new ArrayList<>();
-        ConcreteBlocksLore.add(text("Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        ConcreteBlocksLore.add(text("16 Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         ConcreteBlocksLore.add(text(""));
         ConcreteBlocksLore.add(text("8 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ConcreteBlocks_im.lore(ConcreteBlocksLore);
@@ -101,11 +125,19 @@ public class CrystalBlitzItems {
 
         ItemMeta CopperBlocks_im = CopperBlocks.getItemMeta();
         List<Component> CopperBlocksLore = new ArrayList<>();
-        CopperBlocksLore.add(text("Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        CopperBlocksLore.add(text("8 Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         CopperBlocksLore.add(text(""));
-        CopperBlocksLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        CopperBlocksLore.add(text("10 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         CopperBlocks_im.lore(CopperBlocksLore);
         CopperBlocks.setItemMeta(CopperBlocks_im);
+
+        ItemMeta WoolBlocks_im = WoolBlocks.getItemMeta();
+        List<Component> WoolBlocksLore = new ArrayList<>();
+        WoolBlocksLore.add(text("8 Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        WoolBlocksLore.add(text(""));
+        WoolBlocksLore.add(text("8 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        WoolBlocks_im.lore(WoolBlocksLore);
+        WoolBlocks.setItemMeta(WoolBlocks_im);
 
 
 
@@ -115,7 +147,7 @@ public class CrystalBlitzItems {
         List<Component> BoostOrbLore = new ArrayList<>();
         BoostOrbLore.add(translatable("crystalized.orb.boost.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         BoostOrbLore.add(text(" "));
-        BoostOrbLore.add(text("20 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BoostOrbLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BoostOrb_im.lore(BoostOrbLore);
         BoostOrb.setItemMeta(BoostOrb_im);
 

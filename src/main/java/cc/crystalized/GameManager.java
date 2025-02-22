@@ -168,8 +168,8 @@ public class GameManager {
     private static void givePlayerItems(Player p) {
         PlayerInventory inv = p.getInventory();
 
-        inv.setItem(0, CrystalBlitzItems.WoodenSword);
-        inv.setItem(1, CrystalBlitzItems.WoodenPickaxe);
+        inv.setItem(0, new ItemStack(Material.WOODEN_SWORD));
+        inv.setItem(1, new ItemStack(Material.WOODEN_PICKAXE));
 
         switch (Teams.getPlayerTeam(p)) {
             case "blue":

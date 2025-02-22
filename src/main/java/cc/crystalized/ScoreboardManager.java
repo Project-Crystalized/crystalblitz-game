@@ -24,7 +24,7 @@ public class ScoreboardManager {
         obj.getScore("12").customName(translatable("crystalized.game.generic.team").append(text(": ")).append(translatable("crystalized.game.generic.team." + Teams.getPlayerTeam(player))));
 
         obj.getScore("11").setScore(11);
-        obj.getScore("11").customName(text("Gen. Speed: "));
+        obj.getScore("11").customName(translatable("crystalized.game.crystalblitz.genspeed"));
 
         obj.getScore("10").setScore(10);
         obj.getScore("10").customName(text(" "));

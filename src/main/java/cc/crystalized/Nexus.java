@@ -1,6 +1,7 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -16,6 +17,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
@@ -124,6 +127,14 @@ public class Nexus {
         ItemStack nexusshards = CrystalBlitzItems.NexusShard.clone();
         nexusshards.setAmount(4);
         p.getInventory().addItem(nexusshards);
+
+        List<ComponentLike> NexusBrokenText = new ArrayList<>();
+        NexusBrokenText.add(translatable("crystalized.game.crystalblitz." + t + "nexus"));
+        NexusBrokenText.add(text(p.getName()));
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(translatable("crystalized.game.crystalblitz.chat.nexusbroken", NexusBrokenText));
+        }
     }
 
     public void resetNexuses() {

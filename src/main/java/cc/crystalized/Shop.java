@@ -113,6 +113,8 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Defence").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, CrystalBlitzItems.ConcreteBlocks);
+        view.setItem(1, CrystalBlitzItems.CopperBlocks);
+        view.setItem(2, CrystalBlitzItems.WoolBlocks);
 
         p.openInventory(view);
     }
