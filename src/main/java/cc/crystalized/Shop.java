@@ -115,6 +115,8 @@ public class Shop{
         view.setItem(0, CrystalBlitzItems.ConcreteBlocks);
         view.setItem(1, CrystalBlitzItems.CopperBlocks);
         view.setItem(2, CrystalBlitzItems.WoolBlocks);
+        view.setItem(4, CrystalBlitzItems.IronChestplate);
+        view.setItem(5, CrystalBlitzItems.DiamondChestplate);
 
         p.openInventory(view);
     }
@@ -123,7 +125,7 @@ public class Shop{
         viewer = p;
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Utility").color(NamedTextColor.WHITE));
         view.clear();
-        view.setItem(0, CrystalBlitzItems.BoostOrb);
+        view.setItem(0, CrystalBlitzItems.BoostOrb_shop);
 
         p.openInventory(view);
     }

@@ -30,6 +30,7 @@ public class CrystalBlitzItems {
     public static ItemStack IronChestplate = new ItemStack(Material.IRON_CHESTPLATE);
     public static ItemStack DiamondChestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
 
+    public static ItemStack BoostOrb_shop = new ItemStack(Material.COAL);
     public static ItemStack BoostOrb = new ItemStack(Material.COAL);
 
     public static ItemStack WeakShard = new ItemStack(Material.COAL);
@@ -139,18 +140,40 @@ public class CrystalBlitzItems {
         WoolBlocks_im.lore(WoolBlocksLore);
         WoolBlocks.setItemMeta(WoolBlocks_im);
 
+        ItemMeta IronChestplate_im = IronChestplate.getItemMeta();
+        List<Component> IronChestplateLore = new ArrayList<>();
+        IronChestplateLore.add(text("description").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronChestplateLore.add(text(""));
+        IronChestplateLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        IronChestplate_im.lore(IronChestplateLore);
+        IronChestplate.setItemMeta(IronChestplate_im);
+
+        ItemMeta DiamondChestplate_im = DiamondChestplate.getItemMeta();
+        List<Component> DiamondChestplateLore = new ArrayList<>();
+        DiamondChestplateLore.add(text("description").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondChestplateLore.add(text(""));
+        DiamondChestplateLore.add(text("4 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        DiamondChestplate_im.lore(DiamondChestplateLore);
+        DiamondChestplate.setItemMeta(DiamondChestplate_im);
 
 
+
+        ItemMeta BoostOrbs_im = BoostOrb_shop.getItemMeta();
+        BoostOrbs_im.setCustomModelData(1);
+        BoostOrbs_im.displayName(translatable("crystalized.orb.boost.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        List<Component> BoostOrbsLore = new ArrayList<>();
+        BoostOrbsLore.add(translatable("crystalized.orb.boost.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        BoostOrbsLore.add(text(" "));
+        BoostOrbsLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BoostOrbs_im.lore(BoostOrbsLore);
+        BoostOrb_shop.setItemMeta(BoostOrbs_im);
         ItemMeta BoostOrb_im = BoostOrb.getItemMeta();
         BoostOrb_im.setCustomModelData(1);
         BoostOrb_im.displayName(translatable("crystalized.orb.boost.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         List<Component> BoostOrbLore = new ArrayList<>();
         BoostOrbLore.add(translatable("crystalized.orb.boost.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
-        BoostOrbLore.add(text(" "));
-        BoostOrbLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BoostOrb_im.lore(BoostOrbLore);
         BoostOrb.setItemMeta(BoostOrb_im);
-
 
 
         ItemMeta WeakShard_im = WeakShard.getItemMeta();

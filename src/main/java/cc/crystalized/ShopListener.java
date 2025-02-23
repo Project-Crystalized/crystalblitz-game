@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -54,8 +55,12 @@ public class ShopListener implements Listener {
                 if (p.getInventory().containsAtLeast(CrystalBlitzItems.WeakShard, WeakShard.getAmount())) {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                     p.getInventory().removeItem(WeakShard);
-                    p.getInventory().removeItem(new ItemStack(Material.WOODEN_SWORD));
-                    p.getInventory().addItem(new ItemStack(Material.STONE_SWORD));
+                    p.getInventory().remove(Material.WOODEN_SWORD);
+                    ItemStack item = new ItemStack(Material.STONE_SWORD);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().addItem(item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -72,8 +77,12 @@ public class ShopListener implements Listener {
                 if (p.getInventory().containsAtLeast(CrystalBlitzItems.WeakShard, WeakShard.getAmount())) {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                     p.getInventory().removeItem(WeakShard);
-                    p.getInventory().removeItem(new ItemStack(Material.WOODEN_PICKAXE));
-                    p.getInventory().addItem(new ItemStack(Material.STONE_PICKAXE));
+                    p.getInventory().remove(Material.WOODEN_PICKAXE);
+                    ItemStack item = new ItemStack(Material.STONE_PICKAXE);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().addItem(item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -88,9 +97,13 @@ public class ShopListener implements Listener {
                 if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, StrongShard.getAmount())) {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                     p.getInventory().removeItem(StrongShard);
-                    p.getInventory().removeItem(new ItemStack(Material.WOODEN_SWORD));
-                    p.getInventory().removeItem(new ItemStack(Material.STONE_SWORD));
-                    p.getInventory().addItem(new ItemStack(Material.IRON_SWORD));
+                    p.getInventory().remove(Material.WOODEN_SWORD);
+                    p.getInventory().remove(Material.STONE_SWORD);
+                    ItemStack item = new ItemStack(Material.IRON_SWORD);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().addItem(item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -105,9 +118,13 @@ public class ShopListener implements Listener {
                 if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, StrongShard.getAmount())) {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                     p.getInventory().removeItem(StrongShard);
-                    p.getInventory().removeItem(new ItemStack(Material.WOODEN_PICKAXE));
-                    p.getInventory().removeItem(new ItemStack(Material.STONE_PICKAXE));
-                    p.getInventory().addItem(new ItemStack(Material.IRON_PICKAXE));
+                    p.getInventory().remove(Material.WOODEN_PICKAXE);
+                    p.getInventory().remove(Material.STONE_PICKAXE);
+                    ItemStack item = new ItemStack(Material.IRON_PICKAXE);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().addItem(item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -122,10 +139,14 @@ public class ShopListener implements Listener {
                 if (p.getInventory().containsAtLeast(CrystalBlitzItems.NexusShard, Shard.getAmount())) {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                     p.getInventory().removeItem(Shard);
-                    p.getInventory().removeItem(new ItemStack(Material.WOODEN_SWORD));
-                    p.getInventory().removeItem(new ItemStack(Material.STONE_SWORD));
-                    p.getInventory().removeItem(new ItemStack(Material.IRON_SWORD));
-                    p.getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD));
+                    p.getInventory().remove(Material.WOODEN_SWORD);
+                    p.getInventory().remove(Material.STONE_SWORD);
+                    p.getInventory().remove(Material.IRON_SWORD);
+                    ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().addItem(item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -140,10 +161,14 @@ public class ShopListener implements Listener {
                 if (p.getInventory().containsAtLeast(CrystalBlitzItems.NexusShard, Shard.getAmount())) {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                     p.getInventory().removeItem(Shard);
-                    p.getInventory().removeItem(new ItemStack(Material.WOODEN_PICKAXE));
-                    p.getInventory().removeItem(new ItemStack(Material.STONE_PICKAXE));
-                    p.getInventory().removeItem(new ItemStack(Material.IRON_PICKAXE));
-                    p.getInventory().addItem(new ItemStack(Material.DIAMOND_PICKAXE));
+                    p.getInventory().remove(Material.WOODEN_PICKAXE);
+                    p.getInventory().remove(Material.STONE_PICKAXE);
+                    p.getInventory().remove(Material.IRON_PICKAXE);
+                    ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().addItem(item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -268,9 +293,59 @@ public class ShopListener implements Listener {
                 p.sendMessage(text("[!] Insufficient funds"));
             }
         }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.IronChestplate)) {
+            if (p.getInventory().getItem(38).getType().equals(Material.IRON_CHESTPLATE) || p.getInventory().getItem(38).getType().equals(Material.DIAMOND_CHESTPLATE)) {
+                p.sendMessage(text("[!] You already have this item or something better!"));
+            } else {
+                ItemStack Shard = CrystalBlitzItems.StrongShard.clone();
+                Shard.setAmount(10);
+                if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, Shard.getAmount())) {
+                    p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                    p.getInventory().removeItem(Shard);
+                    ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().setItem(38, item);
+
+                    ItemStack item2 = new ItemStack(Material.IRON_LEGGINGS);
+                    ItemMeta meta2 = item.getItemMeta();
+                    meta2.setUnbreakable(true);
+                    item2.setItemMeta(meta2);
+                    p.getInventory().setItem(37, item2);
+                } else {
+                    p.sendMessage(text("[!] Insufficient funds"));
+                }
+            }
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.DiamondChestplate)) {
+            if (p.getInventory().getItem(38).getType().equals(Material.DIAMOND_CHESTPLATE)) {
+                p.sendMessage(text("[!] You already have this item!"));
+            } else {
+                ItemStack Shard = CrystalBlitzItems.NexusShard.clone();
+                Shard.setAmount(4);
+                if (p.getInventory().containsAtLeast(CrystalBlitzItems.NexusShard, Shard.getAmount())) {
+                    p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                    p.getInventory().removeItem(Shard);
+                    ItemStack item = new ItemStack(Material.DIAMOND_CHESTPLATE);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().setItem(38, item);
+
+                    ItemStack item2 = new ItemStack(Material.DIAMOND_LEGGINGS);
+                    ItemMeta meta2 = item.getItemMeta();
+                    meta2.setUnbreakable(true);
+                    item2.setItemMeta(meta2);
+                    p.getInventory().setItem(37, item2);
+                } else {
+                    p.sendMessage(text("[!] Insufficient funds"));
+                }
+            }
+        }
 
         //Utility
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.BoostOrb)) {
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.BoostOrb_shop)) {
             ItemStack strong = CrystalBlitzItems.StrongShard.clone();
             strong.setAmount(10);
             if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount())) {
