@@ -126,6 +126,7 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Utility").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, CrystalBlitzItems.BoostOrb_shop);
+        view.setItem(1, CrystalBlitzItems.Gapples);
 
         p.openInventory(view);
     }

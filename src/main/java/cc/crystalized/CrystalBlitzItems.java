@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,6 +16,7 @@ import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
 
 public class CrystalBlitzItems {
+    //Offence
     public static ItemStack WoodenSword = new ItemStack(Material.WOODEN_SWORD);
     public static ItemStack WoodenPickaxe = new ItemStack(Material.WOODEN_PICKAXE);
     public static ItemStack StoneSword = new ItemStack(Material.STONE_SWORD);
@@ -23,33 +25,45 @@ public class CrystalBlitzItems {
     public static ItemStack IronPickaxe = new ItemStack(Material.IRON_PICKAXE);
     public static ItemStack DiamondSword = new ItemStack(Material.DIAMOND_SWORD);
     public static ItemStack DiamondPickaxe = new ItemStack(Material.DIAMOND_PICKAXE);
+    public static ItemStack Bow = new ItemStack(Material.BOW);
+    public static ItemStack MarksmanBow = new ItemStack(Material.BOW);
+    public static ItemStack RicochetBow = new ItemStack(Material.BOW);
+    public static ItemStack QuickChargeCrossbow = new ItemStack(Material.CROSSBOW);
+    public static ItemStack MultiCrossbow = new ItemStack(Material.CROSSBOW);
+    public static ItemStack ChargedCrossbow = new ItemStack(Material.CROSSBOW);
 
+    //Defence
     public static ItemStack ConcreteBlocks = new ItemStack(Material.TERRACOTTA);
     public static ItemStack CopperBlocks = new ItemStack(Material.COPPER_BLOCK);
     public static ItemStack WoolBlocks = new ItemStack(Material.WHITE_WOOL);
     public static ItemStack IronChestplate = new ItemStack(Material.IRON_CHESTPLATE);
     public static ItemStack DiamondChestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
 
+    //Utility
     public static ItemStack BoostOrb_shop = new ItemStack(Material.COAL);
-    public static ItemStack BoostOrb = new ItemStack(Material.COAL);
+    public static ItemStack BoostOrb = new ItemStack(Material.COAL); //The item you actually get, to prevent buy items that are in your hotbar
+
+    public static ItemStack Gapples = new ItemStack(Material.GOLDEN_APPLE);
+
+    //Displayed on the front page/no category
+    public static ItemStack Arrows = new ItemStack(Material.ARROW);
 
     public static ItemStack WeakShard = new ItemStack(Material.COAL);
     public static ItemStack StrongShard = new ItemStack(Material.COAL);
     public static ItemStack NexusShard = new ItemStack(Material.COAL);
 
-    public static ItemStack Arrows = new ItemStack(Material.ARROW);
-
     public static void SetupItems() {
+        //Offence
         ItemMeta WoodenSword_im = WoodenSword.getItemMeta();
         List<Component> WoodenSwordLore = new ArrayList<>();
-        WoodenSwordLore.add(text("Your starting sword, you'll need to upgrade this at some point.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        WoodenSwordLore.add(text("Your starting sword, you'll need to upgrade this at some point.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE)); //unused
         WoodenSword_im.lore(WoodenSwordLore);
         WoodenSword_im.setUnbreakable(true);
         WoodenSword.setItemMeta(WoodenSword_im);
 
         ItemMeta WoodenPickaxe_im = WoodenPickaxe.getItemMeta();
         List<Component> WoodenPickaxeLore = new ArrayList<>();
-        WoodenPickaxeLore.add(text("Your starting pickaxe, you'll need to upgrade this at some point.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        WoodenPickaxeLore.add(text("Your starting pickaxe, you'll need to upgrade this at some point.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE)); //unused
         WoodenPickaxe_im.lore(WoodenPickaxeLore);
         WoodenPickaxe_im.setUnbreakable(true);
         WoodenPickaxe.setItemMeta(WoodenPickaxe_im);
@@ -115,13 +129,14 @@ public class CrystalBlitzItems {
         DiamondPickaxe.setItemMeta(DiamondPickaxe_im);
 
 
-
+        //Defence
         ItemMeta ConcreteBlocks_im = ConcreteBlocks.getItemMeta();
         List<Component> ConcreteBlocksLore = new ArrayList<>();
         ConcreteBlocksLore.add(text("16 Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         ConcreteBlocksLore.add(text(""));
         ConcreteBlocksLore.add(text("8 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ConcreteBlocks_im.lore(ConcreteBlocksLore);
+        ConcreteBlocks.setAmount(16);
         ConcreteBlocks.setItemMeta(ConcreteBlocks_im);
 
         ItemMeta CopperBlocks_im = CopperBlocks.getItemMeta();
@@ -130,6 +145,7 @@ public class CrystalBlitzItems {
         CopperBlocksLore.add(text(""));
         CopperBlocksLore.add(text("10 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         CopperBlocks_im.lore(CopperBlocksLore);
+        CopperBlocks.setAmount(8);
         CopperBlocks.setItemMeta(CopperBlocks_im);
 
         ItemMeta WoolBlocks_im = WoolBlocks.getItemMeta();
@@ -138,6 +154,7 @@ public class CrystalBlitzItems {
         WoolBlocksLore.add(text(""));
         WoolBlocksLore.add(text("8 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         WoolBlocks_im.lore(WoolBlocksLore);
+        WoolBlocks.setAmount(8);
         WoolBlocks.setItemMeta(WoolBlocks_im);
 
         ItemMeta IronChestplate_im = IronChestplate.getItemMeta();
@@ -157,7 +174,7 @@ public class CrystalBlitzItems {
         DiamondChestplate.setItemMeta(DiamondChestplate_im);
 
 
-
+        //Utility
         ItemMeta BoostOrbs_im = BoostOrb_shop.getItemMeta();
         BoostOrbs_im.setCustomModelData(1);
         BoostOrbs_im.displayName(translatable("crystalized.orb.boost.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
@@ -175,7 +192,16 @@ public class CrystalBlitzItems {
         BoostOrb_im.lore(BoostOrbLore);
         BoostOrb.setItemMeta(BoostOrb_im);
 
+        ItemMeta Gapples_im = Gapples.getItemMeta();
+        List<Component> GapplesLore = new ArrayList<>();
+        GapplesLore.add(text("1 Gapple").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        GapplesLore.add(text(""));
+        GapplesLore.add(text("4 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        Gapples_im.lore(GapplesLore);
+        Gapples.setItemMeta(Gapples_im);
 
+
+        //Other/no category
         ItemMeta WeakShard_im = WeakShard.getItemMeta();
         WeakShard_im.customName(translatable("crystalized.item.weakshard.name").decoration(TextDecoration.ITALIC, false));
         WeakShard_im.setCustomModelData(17);

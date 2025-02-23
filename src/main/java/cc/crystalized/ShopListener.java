@@ -352,6 +352,19 @@ public class ShopListener implements Listener {
                 p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                 p.getInventory().removeItem(strong);
                 p.getInventory().addItem(CrystalBlitzItems.BoostOrb);
+            } else {
+                p.sendMessage(text("[!] Insufficient funds"));
+            }
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.Gapples)) {
+            ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+            strong.setAmount(4);
+            if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount())) {
+                p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                p.getInventory().removeItem(strong);
+                p.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
+            } else {
+                p.sendMessage(text("[!] Insufficient funds"));
             }
         }
 
