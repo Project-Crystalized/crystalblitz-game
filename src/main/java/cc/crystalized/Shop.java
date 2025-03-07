@@ -91,6 +91,8 @@ public class Shop{
         view.setItem(25, CategoryUtility);
         view.setItem(26, CategoryUtility);
 
+        view.setItem(36, CrystalBlitzItems.Arrows);
+
         p.openInventory(view);
     }
 
@@ -104,6 +106,9 @@ public class Shop{
         view.setItem(3, CrystalBlitzItems.IronPickaxe);
         view.setItem(4, CrystalBlitzItems.DiamondSword);
         view.setItem(5, CrystalBlitzItems.DiamondPickaxe);
+
+        view.setItem(9, CrystalBlitzItems.Bow);
+        view.setItem(10, CrystalBlitzItems.ChargedCrossbow);
 
         p.openInventory(view);
     }
@@ -125,7 +130,7 @@ public class Shop{
         viewer = p;
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Utility").color(NamedTextColor.WHITE));
         view.clear();
-        view.setItem(0, CrystalBlitzItems.BoostOrb_shop);
+        view.setItem(0, CrystalBlitzItems.BoostOrb);
         view.setItem(1, CrystalBlitzItems.Gapples);
 
         p.openInventory(view);

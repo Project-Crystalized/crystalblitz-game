@@ -56,11 +56,7 @@ public class ShopListener implements Listener {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                     p.getInventory().removeItem(WeakShard);
                     p.getInventory().remove(Material.WOODEN_SWORD);
-                    ItemStack item = new ItemStack(Material.STONE_SWORD);
-                    ItemMeta meta = item.getItemMeta();
-                    meta.setUnbreakable(true);
-                    item.setItemMeta(meta);
-                    p.getInventory().addItem(item);
+                    p.getInventory().addItem(CrystalBlitzItems.StoneSword_item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -78,11 +74,7 @@ public class ShopListener implements Listener {
                     p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                     p.getInventory().removeItem(WeakShard);
                     p.getInventory().remove(Material.WOODEN_PICKAXE);
-                    ItemStack item = new ItemStack(Material.STONE_PICKAXE);
-                    ItemMeta meta = item.getItemMeta();
-                    meta.setUnbreakable(true);
-                    item.setItemMeta(meta);
-                    p.getInventory().addItem(item);
+                    p.getInventory().addItem(CrystalBlitzItems.StonePickaxe_item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -99,11 +91,7 @@ public class ShopListener implements Listener {
                     p.getInventory().removeItem(StrongShard);
                     p.getInventory().remove(Material.WOODEN_SWORD);
                     p.getInventory().remove(Material.STONE_SWORD);
-                    ItemStack item = new ItemStack(Material.IRON_SWORD);
-                    ItemMeta meta = item.getItemMeta();
-                    meta.setUnbreakable(true);
-                    item.setItemMeta(meta);
-                    p.getInventory().addItem(item);
+                    p.getInventory().addItem(CrystalBlitzItems.IronSword_item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -120,11 +108,7 @@ public class ShopListener implements Listener {
                     p.getInventory().removeItem(StrongShard);
                     p.getInventory().remove(Material.WOODEN_PICKAXE);
                     p.getInventory().remove(Material.STONE_PICKAXE);
-                    ItemStack item = new ItemStack(Material.IRON_PICKAXE);
-                    ItemMeta meta = item.getItemMeta();
-                    meta.setUnbreakable(true);
-                    item.setItemMeta(meta);
-                    p.getInventory().addItem(item);
+                    p.getInventory().addItem(CrystalBlitzItems.IronPickaxe_item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -142,11 +126,7 @@ public class ShopListener implements Listener {
                     p.getInventory().remove(Material.WOODEN_SWORD);
                     p.getInventory().remove(Material.STONE_SWORD);
                     p.getInventory().remove(Material.IRON_SWORD);
-                    ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-                    ItemMeta meta = item.getItemMeta();
-                    meta.setUnbreakable(true);
-                    item.setItemMeta(meta);
-                    p.getInventory().addItem(item);
+                    p.getInventory().addItem(CrystalBlitzItems.DiamondSword_item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
@@ -164,14 +144,24 @@ public class ShopListener implements Listener {
                     p.getInventory().remove(Material.WOODEN_PICKAXE);
                     p.getInventory().remove(Material.STONE_PICKAXE);
                     p.getInventory().remove(Material.IRON_PICKAXE);
-                    ItemStack item = new ItemStack(Material.DIAMOND_PICKAXE);
-                    ItemMeta meta = item.getItemMeta();
-                    meta.setUnbreakable(true);
-                    item.setItemMeta(meta);
-                    p.getInventory().addItem(item);
+                    p.getInventory().addItem(CrystalBlitzItems.DiamondPickaxe_item);
                 } else {
                     p.sendMessage(text("[!] Insufficient funds"));
                 }
+            }
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.ChargedCrossbow)) {
+            ItemStack nexus = CrystalBlitzItems.NexusShard.clone();
+            nexus.setAmount(6);
+            ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+            strong.setAmount(20);
+            if ((p.getInventory().containsAtLeast(CrystalBlitzItems.NexusShard, nexus.getAmount())) && (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount()))) {
+                p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                p.getInventory().removeItem(nexus);
+                p.getInventory().removeItem(strong);
+                p.getInventory().addItem(CrystalBlitzItems.ChargedCrossbow_item);
+            } else {
+                p.sendMessage(text("[!] Insufficient funds"));
             }
         }
 
@@ -345,13 +335,13 @@ public class ShopListener implements Listener {
         }
 
         //Utility
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.BoostOrb_shop)) {
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.BoostOrb)) {
             ItemStack strong = CrystalBlitzItems.StrongShard.clone();
             strong.setAmount(10);
             if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount())) {
                 p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                 p.getInventory().removeItem(strong);
-                p.getInventory().addItem(CrystalBlitzItems.BoostOrb);
+                p.getInventory().addItem(CrystalBlitzItems.BoostOrb_item);
             } else {
                 p.sendMessage(text("[!] Insufficient funds"));
             }
@@ -363,6 +353,19 @@ public class ShopListener implements Listener {
                 p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                 p.getInventory().removeItem(strong);
                 p.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
+            } else {
+                p.sendMessage(text("[!] Insufficient funds"));
+            }
+        }
+
+        //No Category
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.Arrows)) {
+            ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+            strong.setAmount(2);
+            if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount())) {
+                p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                p.getInventory().removeItem(strong);
+                p.getInventory().addItem(CrystalBlitzItems.Arrows_item);
             } else {
                 p.sendMessage(text("[!] Insufficient funds"));
             }
