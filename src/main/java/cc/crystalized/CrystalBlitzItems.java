@@ -53,6 +53,7 @@ public class CrystalBlitzItems {
     public static ItemStack ConcreteBlocks = new ItemStack(Material.TERRACOTTA);
     public static ItemStack CopperBlocks = new ItemStack(Material.COPPER_BLOCK);
     public static ItemStack WoolBlocks = new ItemStack(Material.WHITE_WOOL);
+    public static ItemStack ChainmailChestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
     public static ItemStack IronChestplate = new ItemStack(Material.IRON_CHESTPLATE);
     public static ItemStack DiamondChestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
     public static ItemStack AntiAirTotem = new ItemStack(Material.COAL);

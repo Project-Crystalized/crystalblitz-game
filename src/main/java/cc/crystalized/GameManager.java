@@ -160,7 +160,7 @@ public class GameManager {
                 entity.setAI(false);
                 entity.setCustomNameVisible(true);
                 entity.customName(name);
-                entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, PotionEffect.INFINITE_DURATION, 0, false, false, false));
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, PotionEffect.INFINITE_DURATION, 200, false, false, false));
             });
         }
     }
