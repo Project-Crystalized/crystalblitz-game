@@ -218,11 +218,8 @@ public class CrystalBlitzItems {
         ItemMeta Bowitem_im = Bow_item.getItemMeta();
         List<Component> BowitemLore = new ArrayList<>();
         BowitemLore.add(text("pew pew thingy idfk").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
-        BowitemLore.add(text(""));
-        BowitemLore.add(text("25 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         Bowitem_im.lore(BowitemLore);
         Bowitem_im.setUnbreakable(true);
-        Bowitem_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         Bow_item.setItemMeta(Bowitem_im);
 
         ItemMeta ChargedCrossbow_im = ChargedCrossbow.getItemMeta();
