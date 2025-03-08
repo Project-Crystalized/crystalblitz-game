@@ -120,6 +120,7 @@ public class Shop{
         view.setItem(0, CrystalBlitzItems.ConcreteBlocks);
         view.setItem(1, CrystalBlitzItems.CopperBlocks);
         view.setItem(2, CrystalBlitzItems.WoolBlocks);
+        view.setItem(3, CrystalBlitzItems.ChainmailChestplate);
         view.setItem(4, CrystalBlitzItems.IronChestplate);
         view.setItem(5, CrystalBlitzItems.DiamondChestplate);
 

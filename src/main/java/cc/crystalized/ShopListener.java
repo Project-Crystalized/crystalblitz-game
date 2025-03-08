@@ -283,6 +283,31 @@ public class ShopListener implements Listener {
                 p.sendMessage(text("[!] Insufficient funds"));
             }
         }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.ChainmailChestplate)) {
+            if (p.getInventory().getItem(38).getType().equals(Material.CHAINMAIL_CHESTPLATE) || p.getInventory().getItem(38).getType().equals(Material.IRON_CHESTPLATE) || p.getInventory().getItem(38).getType().equals(Material.DIAMOND_CHESTPLATE)) {
+                p.sendMessage(text("[!] You already have this item or something better!"));
+            } else {
+                ItemStack Shard = CrystalBlitzItems.WeakShard.clone();
+                Shard.setAmount(40);
+                if (p.getInventory().containsAtLeast(CrystalBlitzItems.WeakShard, Shard.getAmount())) {
+                    p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                    p.getInventory().removeItem(Shard);
+                    ItemStack item = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+                    ItemMeta meta = item.getItemMeta();
+                    meta.setUnbreakable(true);
+                    item.setItemMeta(meta);
+                    p.getInventory().setItem(38, item);
+
+                    ItemStack item2 = new ItemStack(Material.CHAINMAIL_LEGGINGS);
+                    ItemMeta meta2 = item.getItemMeta();
+                    meta2.setUnbreakable(true);
+                    item2.setItemMeta(meta2);
+                    p.getInventory().setItem(37, item2);
+                } else {
+                    p.sendMessage(text("[!] Insufficient funds"));
+                }
+            }
+        }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.IronChestplate)) {
             if (p.getInventory().getItem(38).getType().equals(Material.IRON_CHESTPLATE) || p.getInventory().getItem(38).getType().equals(Material.DIAMOND_CHESTPLATE)) {
                 p.sendMessage(text("[!] You already have this item or something better!"));

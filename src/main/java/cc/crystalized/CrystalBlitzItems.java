@@ -8,6 +8,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.checkerframework.checker.units.qual.N;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -275,13 +276,21 @@ public class CrystalBlitzItems {
         WoolBlocks.setAmount(8);
         WoolBlocks.setItemMeta(WoolBlocks_im);
 
+        ItemMeta ChainmailChestplate_im = ChainmailChestplate.getItemMeta();
+        List<Component> ChainmailChestplateLore = new ArrayList<>();
+        ChainmailChestplateLore.add(text("description").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        ChainmailChestplateLore.add(text(""));
+        ChainmailChestplateLore.add(text("40 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ChainmailChestplate_im.lore(ChainmailChestplateLore);
+        ChainmailChestplate_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
+        ChainmailChestplate.setItemMeta(ChainmailChestplate_im);
+
         ItemMeta IronChestplate_im = IronChestplate.getItemMeta();
         List<Component> IronChestplateLore = new ArrayList<>();
         IronChestplateLore.add(text("description").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         IronChestplateLore.add(text(""));
         IronChestplateLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         IronChestplate_im.lore(IronChestplateLore);
-        IronChestplate_im.setUnbreakable(true);
         IronChestplate_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         IronChestplate.setItemMeta(IronChestplate_im);
 
@@ -291,7 +300,6 @@ public class CrystalBlitzItems {
         DiamondChestplateLore.add(text(""));
         DiamondChestplateLore.add(text("4 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         DiamondChestplate_im.lore(DiamondChestplateLore);
-        DiamondChestplate_im.setUnbreakable(true);
         DiamondChestplate_im.setTooltipStyle(new NamespacedKey("crystalized", "nexus_shard"));
         DiamondChestplate.setItemMeta(DiamondChestplate_im);
 
