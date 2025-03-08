@@ -24,6 +24,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -70,19 +72,94 @@ public class PlayerListener implements Listener {
         e.setCancelled(true);
     }
 
+    public void DowngradeItem (PlayerInventory inv, ItemStack originitem, ItemStack replacementitem) {
+        if (inv.contains(originitem)) {
+            inv.removeItem(originitem);
+            inv.addItem(replacementitem);
+        }
+    }
+
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         e.setCancelled(true);
         if (crystalBlitz.getInstance().gamemanager == null) {return;}
         Player p = e.getPlayer();
         p.setGameMode(GameMode.SPECTATOR);
-        p.teleport(
-                new Location(Bukkit.getWorld("world"),
-                        crystalBlitz.getInstance().mapdata.spectator_spawn[0],
-                        crystalBlitz.getInstance().mapdata.spectator_spawn[1],
-                        crystalBlitz.getInstance().mapdata.spectator_spawn[2]
-                )
+        Location loc = new Location(
+                Bukkit.getWorld("world"),
+                crystalBlitz.getInstance().mapdata.spectator_spawn[0],
+                crystalBlitz.getInstance().mapdata.spectator_spawn[1],
+                crystalBlitz.getInstance().mapdata.spectator_spawn[2]
         );
+        p.teleport(loc);
+
+        PlayerInventory inv = p.getInventory();
+        //Might be a mess but welp, too bad, im lazy and I cant think of anything better
+        //Could be optimised
+        if (inv.getChestplate().getType().equals(Material.DIAMOND_CHESTPLATE)) {
+            ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
+            ItemMeta meta = item.getItemMeta();
+            meta.setUnbreakable(true);
+            item.setItemMeta(meta);
+            inv.setChestplate(item);
+
+            ItemStack item2 = new ItemStack(Material.IRON_LEGGINGS);
+            ItemMeta meta2 = item.getItemMeta();
+            meta2.setUnbreakable(true);
+            item2.setItemMeta(meta2);
+            inv.setLeggings(item2);
+        }
+        else if (inv.getChestplate().getType().equals(Material.IRON_CHESTPLATE)) {
+            ItemStack item = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+            ItemMeta meta = item.getItemMeta();
+            meta.setUnbreakable(true);
+            item.setItemMeta(meta);
+            inv.setChestplate(item);
+
+            ItemStack item2 = new ItemStack(Material.CHAINMAIL_LEGGINGS);
+            ItemMeta meta2 = item.getItemMeta();
+            meta2.setUnbreakable(true);
+            item2.setItemMeta(meta2);
+            inv.setLeggings(item2);
+        }
+        else if (inv.getChestplate().getType().equals(Material.CHAINMAIL_CHESTPLATE)) {
+            crystalBlitz.getInstance().gamemanager.givePlayerItems(p); //Gives players leather armor
+        }
+
+        DowngradeItem(inv, CrystalBlitzItems.StoneSword_item, CrystalBlitzItems.WoodenSword);
+        DowngradeItem(inv, CrystalBlitzItems.IronSword_item, CrystalBlitzItems.StoneSword_item);
+        DowngradeItem(inv, CrystalBlitzItems.DiamondSword_item, CrystalBlitzItems.IronSword_item);
+
+        DowngradeItem(inv, CrystalBlitzItems.StonePickaxe_item, CrystalBlitzItems.WoodenPickaxe);
+        DowngradeItem(inv, CrystalBlitzItems.IronPickaxe_item, CrystalBlitzItems.StonePickaxe_item);
+        DowngradeItem(inv, CrystalBlitzItems.DiamondPickaxe_item, CrystalBlitzItems.IronPickaxe_item);
+
+        DowngradeItem(inv, CrystalBlitzItems.ChargedCrossbow_item, CrystalBlitzItems.Bow_item); //perhaps make this a crossbow instead of a bow?
+
+        inv.remove(Material.BLUE_CONCRETE);
+        inv.remove(Material.BLUE_WOOL);
+        inv.remove(Material.CYAN_CONCRETE);
+        inv.remove(Material.CYAN_WOOL);
+        inv.remove(Material.GREEN_CONCRETE);
+        inv.remove(Material.GREEN_WOOL);
+        inv.remove(Material.LIME_CONCRETE);
+        inv.remove(Material.LIME_WOOL);
+        inv.remove(Material.MAGENTA_CONCRETE);
+        inv.remove(Material.MAGENTA_WOOL);
+        inv.remove(Material.RED_CONCRETE);
+        inv.remove(Material.RED_WOOL);
+        inv.remove(Material.WHITE_CONCRETE);
+        inv.remove(Material.WHITE_WOOL);
+        inv.remove(Material.YELLOW_CONCRETE);
+        inv.remove(Material.YELLOW_WOOL);
+        inv.remove(Material.COPPER_BLOCK);
+
+        inv.remove(CrystalBlitzItems.BoostOrb_item);
+
+        inv.remove(Material.GOLDEN_APPLE);
+        inv.remove(Material.ARROW);
+        inv.remove(Material.SPECTRAL_ARROW);
+
         if (crystalBlitz.getInstance().gamemanager.getNexus(Teams.getPlayerTeam(p)).health != 0) {
             new BukkitRunnable() {
                 int timer = 5;

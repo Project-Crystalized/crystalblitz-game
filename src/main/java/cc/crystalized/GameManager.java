@@ -48,6 +48,8 @@ public class GameManager {
         setupEntities();
         for (Player p : Bukkit.getOnlinePlayers()) {
             givePlayerItems(p);
+            p.getInventory().setItem(0, new ItemStack(Material.WOODEN_SWORD));
+            p.getInventory().setItem(1, new ItemStack(Material.WOODEN_PICKAXE));
             Teams.setPlayerDisplayNames(p);
             p.setGameMode(GameMode.SURVIVAL);
             new ScoreboardManager(p);
@@ -165,11 +167,9 @@ public class GameManager {
         }
     }
 
-    private static void givePlayerItems(Player p) {
+    //Gives players leather armor of their team's colour, do anything else seperately
+    public static void givePlayerItems(Player p) {
         PlayerInventory inv = p.getInventory();
-
-        inv.setItem(0, new ItemStack(Material.WOODEN_SWORD));
-        inv.setItem(1, new ItemStack(Material.WOODEN_PICKAXE));
 
         switch (Teams.getPlayerTeam(p)) {
             case "blue":
