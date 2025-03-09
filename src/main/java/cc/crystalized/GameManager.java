@@ -36,9 +36,12 @@ public class GameManager {
 
     public Teams teams;
     public static ArrayList<Nexus> nexuses;
+    public BossbarManager bossbar = new BossbarManager();
 
     public GameManager() {
+
         teams = new Teams();
+
         Bukkit.getServer().sendMessage(text("Starting Game!"));
         for (Entity e : Bukkit.getWorld("world").getEntities()) {
             if (e instanceof Villager || e instanceof TextDisplay) {
@@ -67,13 +70,7 @@ public class GameManager {
             public void run() {
                 //Main game loop
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (p.getGameMode().equals(GameMode.SPECTATOR)) {
-                        //Do nothing
-                    } else {
-                        p.sendActionBar(
-                                text("todo: count shards and print them here")
-                        );
-                    }
+
                 }
 
                 if (crystalBlitz.getInstance().gamemanager == null) {
