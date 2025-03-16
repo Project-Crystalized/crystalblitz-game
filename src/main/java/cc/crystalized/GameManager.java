@@ -51,8 +51,8 @@ public class GameManager {
         setupEntities();
         for (Player p : Bukkit.getOnlinePlayers()) {
             givePlayerItems(p);
-            p.getInventory().setItem(0, new ItemStack(Material.WOODEN_SWORD));
-            p.getInventory().setItem(1, new ItemStack(Material.WOODEN_PICKAXE));
+            p.getInventory().setItem(0, CrystalBlitzItems.WoodenSword);
+            p.getInventory().setItem(1, CrystalBlitzItems.WoodenPickaxe);
             Teams.setPlayerDisplayNames(p);
             p.setGameMode(GameMode.SURVIVAL);
             new ScoreboardManager(p);
