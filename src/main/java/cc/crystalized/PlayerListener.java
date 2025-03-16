@@ -13,6 +13,8 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Waterlogged;
+import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -20,6 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -84,6 +87,16 @@ public class PlayerListener implements Listener {
         e.setCancelled(true);
         if (crystalBlitz.getInstance().gamemanager == null) {return;}
         Player p = e.getPlayer();
+
+        Entity entity = e.getDamageSource().getCausingEntity();
+        Player k = null;
+        if (entity != null && entity instanceof Player) {
+            k = (Player) entity;
+        } else if (k == null) {
+            k = p; //to prevent errors in console. can also make funny death messages
+        }
+
+
         p.setGameMode(GameMode.SPECTATOR);
         Location loc = new Location(
                 Bukkit.getWorld("world"),
@@ -159,6 +172,37 @@ public class PlayerListener implements Listener {
         inv.remove(Material.GOLDEN_APPLE);
         inv.remove(Material.ARROW);
         inv.remove(Material.SPECTRAL_ARROW);
+
+        //Death Message to server
+        Component deathprefix = text("[\uE103] ");
+        Component deathcauseicon = text(" [\uE103] "); //placeholder
+
+        ItemStack KillerMainHandItem = k.getInventory().getItemInMainHand();
+        ItemStack KillerOffHandItem = k.getInventory().getItemInOffHand();
+
+        if (e.getDamageSource().getDamageType().equals(DamageType.ARROW)) {
+            if (KillerMainHandItem.getType().toString().toLowerCase().contains("crossbow") || KillerOffHandItem.getType().toString().toLowerCase().contains("crossbow")) {
+                deathcauseicon = text(" \uE11E ");
+            } else if (KillerMainHandItem.getType().toString().toLowerCase().contains("bow") || KillerOffHandItem.getType().toString().toLowerCase().contains("bow")) {
+                deathcauseicon = text(" \uE102 ");
+            }
+        } else if (e.getDamageSource().getDamageType().equals(DamageType.PLAYER_ATTACK)) {
+            if (KillerMainHandItem.getType().toString().toLowerCase().contains("sword")) {
+                deathcauseicon = text(" \uE101 ");
+            } else if (KillerMainHandItem.getType().toString().toLowerCase().contains("axe")) {
+                deathcauseicon = text(" \uE11F ");
+            } else {
+                deathcauseicon = text(" [").append(KillerMainHandItem.effectiveName()).append(text("] "));
+            }
+        } else if (e.getDamageSource().getDamageType().equals(DamageType.HOT_FLOOR)) {
+            deathcauseicon = text(" [").append(translatable("block.minecraft.magma_block").append(text("] ")));
+        } else if (e.getDamageSource().getDamageType().equals(DamageType.FALL)) {
+            deathcauseicon = text(" [Fall Damage] ");
+        } else {
+            deathcauseicon  = text(" [Unknown Death Reason] ");
+        }
+
+        Bukkit.getServer().sendMessage(deathprefix.append(k.displayName()).append(deathcauseicon).append(p.displayName()));
 
         if (crystalBlitz.getInstance().gamemanager.getNexus(Teams.getPlayerTeam(p)).health != 0) {
             new BukkitRunnable() {
@@ -349,6 +393,15 @@ public class PlayerListener implements Listener {
             crystalBlitz.getInstance().gamemanager.ForceEndGame();
         }
     }
+
+    @EventHandler
+    public void OnInventoryMove(InventoryClickEvent e) {
+        ItemStack item = e.getCurrentItem();
+        if (item.getType().toString().toLowerCase().contains("helmet") || item.getType().toString().toLowerCase().contains("chestplate") || item.getType().toString().toLowerCase().contains("leggings") || item.getType().toString().toLowerCase().contains("boots")) {
+            e.setCancelled(true);
+        }
+    }
+
 }
 
 class CrystalShardBlock {

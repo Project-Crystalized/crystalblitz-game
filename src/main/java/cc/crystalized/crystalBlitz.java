@@ -2,6 +2,7 @@ package cc.crystalized;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,7 +27,17 @@ public final class crystalBlitz extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.getServer().getPluginManager().registerEvents(new ShopListener(), this);
 
-        Bukkit.getWorld("world").setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+        World w  = Bukkit.getWorld("world");
+
+        w.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
+        w.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        w.setGameRule(GameRule.DO_FIRE_TICK, false);
+        w.setGameRule(GameRule.DO_INSOMNIA, false);
+        w.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        w.setGameRule(GameRule.MOB_GRIEFING, false);
+        w.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
+        w.setGameRule(GameRule.NATURAL_REGENERATION, false);
+
 
         Shop.setupShop();
         CrystalBlitzItems.SetupItems();
