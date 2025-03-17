@@ -20,6 +20,8 @@ public class ShopListener implements Listener {
         HumanEntity p = e.getWhoClicked();
         Shop s = Shop.getShop(p1);
 
+        if (e.getCurrentItem() == null) {return;}
+
         if (e.getInventory() != s.view) {
             return;
         } else {

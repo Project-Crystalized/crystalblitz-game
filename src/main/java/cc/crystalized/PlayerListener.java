@@ -397,6 +397,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void OnInventoryMove(InventoryClickEvent e) {
         ItemStack item = e.getCurrentItem();
+        if (item == null) {return;}
         if (item.getType().toString().toLowerCase().contains("helmet") || item.getType().toString().toLowerCase().contains("chestplate") || item.getType().toString().toLowerCase().contains("leggings") || item.getType().toString().toLowerCase().contains("boots")) {
             e.setCancelled(true);
         }
