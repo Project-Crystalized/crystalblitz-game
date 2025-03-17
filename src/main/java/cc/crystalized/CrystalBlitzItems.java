@@ -226,7 +226,7 @@ public class CrystalBlitzItems {
         List<Component> ChargedCrossbowLore = new ArrayList<>();
         ChargedCrossbowLore.add(translatable("crystalized.crossbow.charged.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         ChargedCrossbowLore.add(text(""));
-        ChargedCrossbowLore.add(text("6 Nexus Shards & 20 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ChargedCrossbowLore.add(text("4 Nexus Shards & 20 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ChargedCrossbow_im.lore(ChargedCrossbowLore);
         ChargedCrossbow_im.customName(translatable("crystalized.crossbow.charged.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ChargedCrossbow_im.setCustomModelData(3);

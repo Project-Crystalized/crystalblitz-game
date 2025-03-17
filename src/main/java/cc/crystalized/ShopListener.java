@@ -154,7 +154,7 @@ public class ShopListener implements Listener {
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.ChargedCrossbow)) {
             ItemStack nexus = CrystalBlitzItems.NexusShard.clone();
-            nexus.setAmount(6);
+            nexus.setAmount(4);
             ItemStack strong = CrystalBlitzItems.StrongShard.clone();
             strong.setAmount(20);
             if ((p.getInventory().containsAtLeast(CrystalBlitzItems.NexusShard, nexus.getAmount())) && (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount()))) {
