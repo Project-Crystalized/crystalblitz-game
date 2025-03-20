@@ -407,13 +407,28 @@ public class PlayerListener implements Listener {
 
 class CrystalShardBlock {
     public CrystalShardBlock(Material input, Location loc, BlockData data) {
+        cc.crystalized.BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
+        int timer = 0;
+        switch (bossbar.currentstate) {
+            case BossBarStates.starting -> {
+                timer = crystalBlitz.getInstance().getRandomNumber(3, 9);
+            }
+            case BossBarStates.GenUpgradeI -> {
+                timer = crystalBlitz.getInstance().getRandomNumber(2, 7);
+            }
+            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing -> {
+                timer = crystalBlitz.getInstance().getRandomNumber(1, 5);
+            }
+        }
+
+        int finalTimer = timer; //I hate this
         new BukkitRunnable() {
-            int timer = crystalBlitz.getInstance().getRandomNumber(3, 9);
+            int timer2 = finalTimer;
 
             @Override
             public void run () {
 
-                if (timer == 0 || crystalBlitz.getInstance().gamemanager == null) {
+                if (timer2 == 0 || crystalBlitz.getInstance().gamemanager == null) {
                     loc.getBlock().setType(input);
                     Directional dir = (Directional) loc.getBlock().getBlockData();
                     Directional dir2 = (Directional) data;
@@ -427,7 +442,7 @@ class CrystalShardBlock {
                     loc.getBlock().getState().update();
                     cancel();
                 }
-                timer--;
+                timer2--;
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
     }

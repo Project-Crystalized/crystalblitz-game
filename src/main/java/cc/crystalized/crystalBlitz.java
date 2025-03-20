@@ -1,6 +1,7 @@
 package cc.crystalized;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -36,7 +37,8 @@ public final class crystalBlitz extends JavaPlugin {
         w.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         w.setGameRule(GameRule.MOB_GRIEFING, false);
         w.setGameRule(GameRule.RANDOM_TICK_SPEED, 0);
-        w.setGameRule(GameRule.NATURAL_REGENERATION, false);
+        w.setGameRule(GameRule.NATURAL_REGENERATION, true);
+        w.setDifficulty(Difficulty.HARD);
 
 
         Shop.setupShop();

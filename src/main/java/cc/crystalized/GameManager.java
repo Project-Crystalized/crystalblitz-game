@@ -37,6 +37,7 @@ public class GameManager {
     public Teams teams;
     public static ArrayList<Nexus> nexuses;
     public BossbarManager bossbar = new BossbarManager();
+    public WorldBorderManager worldborder = new WorldBorderManager();
 
     public GameManager() {
 

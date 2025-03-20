@@ -107,6 +107,11 @@ public class ScoreboardManager {
         yellow.suffix(text(""));
         obj.getScore("2").setScore(2);
 
+        Team genspeed = scoreboard.registerNewTeam("genspeed");
+        genspeed.addEntry("11");
+        genspeed.suffix(text(""));
+        obj.getScore("11").setScore(11);
+
         player.setScoreboard(scoreboard);
 
         new BukkitRunnable() {
@@ -115,11 +120,35 @@ public class ScoreboardManager {
                 if (crystalBlitz.getInstance().gamemanager == null) {
                     cancel();
                 } else {
+                    BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
                     if (floodgateapi.isFloodgatePlayer(player.getUniqueId())) {
                         //Bedrock
 
+                        switch (bossbar.currentstate) {
+                            case BossBarStates.starting -> {
+                                obj.getScore("11").customName(translatable("crystalized.game.crystalblitz.genspeed").append(text("0")));
+                            }
+                            case BossBarStates.GenUpgradeI -> {
+                                obj.getScore("11").customName(translatable("crystalized.game.crystalblitz.genspeed").append(text("I")));
+                            }
+                            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing -> {
+                                obj.getScore("11").customName(translatable("crystalized.game.crystalblitz.genspeed").append(text("II")));
+                            }
+                        }
+
                     } else {
                         //Java
+                        switch (bossbar.currentstate) {
+                            case BossBarStates.starting -> {
+                                genspeed.suffix(text("0"));
+                            }
+                            case BossBarStates.GenUpgradeI -> {
+                                genspeed.suffix(text("I"));
+                            }
+                            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing -> {
+                                genspeed.suffix(text("II"));
+                            }
+                        }
                         blue.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("blue").health)).append(text("/10)")));
                         cyan.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("cyan").health)).append(text("/10)")));
                         green.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("green").health)).append(text("/10)")));
@@ -131,7 +160,7 @@ public class ScoreboardManager {
                     }
                 }
             }
-        }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
+        }.runTaskTimer(crystalBlitz.getInstance(), 20, 1);
     }
 }
 

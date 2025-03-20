@@ -22,6 +22,8 @@ public class MapData {
     public int BuildLimit;
     public int DeathLimit;
     public double[] spectator_spawn;
+    public double[] border_mid;
+    public int border_size;
 
     //In order of:
     //blue, cyan, green, lime, magenta, red, yellow and white
@@ -55,6 +57,10 @@ public class MapData {
 
             this.DeathLimit = json.get("death_y_coord").getAsInt();
             this.BuildLimit = json.get("build_limit_y_coord").getAsInt();
+
+            JsonArray border_mid_ = json.get("border_mid").getAsJsonArray();
+            this.border_mid = new double[] {border_mid_.get(0).getAsDouble(), border_mid_.get(1).getAsDouble()};
+            this.border_size = json.get("border_size").getAsInt();
 
             JsonArray bluenexus = json.get("blue_nexus").getAsJsonArray();
             JsonArray cyannexus = json.get("cyan_nexus").getAsJsonArray();

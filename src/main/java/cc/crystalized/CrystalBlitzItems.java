@@ -229,7 +229,7 @@ public class CrystalBlitzItems {
         ChargedCrossbowLore.add(text("4 Nexus Shards & 20 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ChargedCrossbow_im.lore(ChargedCrossbowLore);
         ChargedCrossbow_im.customName(translatable("crystalized.crossbow.charged.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
-        ChargedCrossbow_im.setCustomModelData(3);
+        ChargedCrossbow_im.setItemModel(new NamespacedKey("crystalized", "charged_crossbow"));
         ChargedCrossbow_im.setTooltipStyle(new NamespacedKey("crystalized", "nexus_shard"));
         ChargedCrossbow.setItemMeta(ChargedCrossbow_im);
         ItemMeta ChargedCrossbowitem_im = ChargedCrossbow_item.getItemMeta();
@@ -237,7 +237,7 @@ public class CrystalBlitzItems {
         ChargedCrossbowitemLore.add(translatable("crystalized.crossbow.charged.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         ChargedCrossbowitem_im.lore(ChargedCrossbowitemLore);
         ChargedCrossbowitem_im.customName(translatable("crystalized.crossbow.charged.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
-        ChargedCrossbowitem_im.setCustomModelData(3);
+        ChargedCrossbowitem_im.setItemModel(new NamespacedKey("crystalized", "charged_crossbow"));
         ChargedCrossbowitem_im.setUnbreakable(true);
         ChargedCrossbow_item.setItemMeta(ChargedCrossbowitem_im);
 
@@ -303,7 +303,7 @@ public class CrystalBlitzItems {
 
         //Utility
         ItemMeta BoostOrbs_im = BoostOrb.getItemMeta();
-        BoostOrbs_im.setCustomModelData(1);
+        BoostOrbs_im.setItemModel(new NamespacedKey("crystalized", "boost_orb"));
         BoostOrbs_im.displayName(translatable("crystalized.orb.boost.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         List<Component> BoostOrbsLore = new ArrayList<>();
         BoostOrbsLore.add(translatable("crystalized.orb.boost.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
@@ -313,7 +313,7 @@ public class CrystalBlitzItems {
         BoostOrbs_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         BoostOrb.setItemMeta(BoostOrbs_im);
         ItemMeta BoostOrbitem_im = BoostOrb_item.getItemMeta();
-        BoostOrbitem_im.setCustomModelData(1);
+        BoostOrbitem_im.setItemModel(new NamespacedKey("crystalized", "boost_orb"));
         BoostOrbitem_im.displayName(translatable("crystalized.orb.boost.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         List<Component> BoostOrbLore = new ArrayList<>();
         BoostOrbLore.add(translatable("crystalized.orb.boost.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
@@ -346,19 +346,19 @@ public class CrystalBlitzItems {
 
         ItemMeta WeakShard_im = WeakShard.getItemMeta();
         WeakShard_im.customName(translatable("crystalized.item.weakshard.name").decoration(TextDecoration.ITALIC, false));
-        WeakShard_im.setCustomModelData(17);
+        WeakShard_im.setItemModel(new NamespacedKey("crystalized", "weak_shard"));
         WeakShard_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         WeakShard.setItemMeta(WeakShard_im);
 
         ItemMeta StrongShard_im = StrongShard.getItemMeta();
         StrongShard_im.customName(translatable("crystalized.item.stoneshard.name").decoration(TextDecoration.ITALIC, false));
-        StrongShard_im.setCustomModelData(18);
+        StrongShard_im.setItemModel(new NamespacedKey("crystalized", "strong_shard"));
         StrongShard_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         StrongShard.setItemMeta(StrongShard_im);
 
         ItemMeta NexusShard_im = NexusShard.getItemMeta();
         NexusShard_im.customName(translatable("crystalized.item.nexusshard.name").decoration(TextDecoration.ITALIC, false));
-        NexusShard_im.setCustomModelData(19);
+        NexusShard_im.setItemModel(new NamespacedKey("crystalized", "nexus_shard"));
         NexusShard_im.setTooltipStyle(new NamespacedKey("crystalized", "nexus_shard"));
         NexusShard.setItemMeta(NexusShard_im);
     }
