@@ -152,6 +152,21 @@ public class ShopListener implements Listener {
                 }
             }
         }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.Bow)) {
+            if (p.getInventory().contains(CrystalBlitzItems.Bow_item) || p.getInventory().contains(CrystalBlitzItems.ChargedCrossbow_item)) {
+                p.sendMessage(text("[!] You already have this item or something better!"));
+            } else {
+                ItemStack Shard = CrystalBlitzItems.StrongShard.clone();
+                Shard.setAmount(25);
+                if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, Shard.getAmount())) {
+                    p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                    p.getInventory().removeItem(Shard);
+                    p.getInventory().addItem(CrystalBlitzItems.Bow_item);
+                } else {
+                    p.sendMessage(text("[!] Insufficient funds"));
+                }
+            }
+        }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.ChargedCrossbow)) {
             ItemStack nexus = CrystalBlitzItems.NexusShard.clone();
             nexus.setAmount(4);
@@ -161,7 +176,19 @@ public class ShopListener implements Listener {
                 p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                 p.getInventory().removeItem(nexus);
                 p.getInventory().removeItem(strong);
+                p.getInventory().removeItem(CrystalBlitzItems.Bow_item);
                 p.getInventory().addItem(CrystalBlitzItems.ChargedCrossbow_item);
+            } else {
+                p.sendMessage(text("[!] Insufficient funds"));
+            }
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.WingedOrb)) {
+            ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+            strong.setAmount(35);
+            if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount())) {
+                p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
+                p.getInventory().removeItem(strong);
+                p.getInventory().addItem(CrystalBlitzItems.WingedOrb_item);
             } else {
                 p.sendMessage(text("[!] Insufficient funds"));
             }

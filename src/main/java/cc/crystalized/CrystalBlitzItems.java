@@ -48,6 +48,7 @@ public class CrystalBlitzItems {
     public static ItemStack ExplosiveOrb = new ItemStack(Material.COAL); //TODO, remove explosion destroying blocks before releasing this item
     public static ItemStack GrapplingOrb = new ItemStack(Material.COAL);
     public static ItemStack WingedOrb = new ItemStack(Material.COAL);
+    public static ItemStack WingedOrb_item = new ItemStack(Material.COAL);
     public static ItemStack PoisonOrb = new ItemStack(Material.COAL);
 
     //Defence
@@ -319,6 +320,24 @@ public class CrystalBlitzItems {
         BoostOrbLore.add(translatable("crystalized.orb.boost.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         BoostOrbitem_im.lore(BoostOrbLore);
         BoostOrb_item.setItemMeta(BoostOrbitem_im);
+
+        ItemMeta WingedOrb_im = WingedOrb.getItemMeta();
+        WingedOrb_im.setItemModel(new NamespacedKey("crystalized", "winged_orb"));
+        WingedOrb_im.displayName(translatable("crystalized.orb.winged.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        List<Component> WingedOrbLore = new ArrayList<>();
+        WingedOrbLore.add(translatable("crystalized.orb.winged.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        WingedOrbLore.add(text(""));
+        WingedOrbLore.add(text("35 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        WingedOrb_im.lore(WingedOrbLore);
+        WingedOrb_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
+        WingedOrb.setItemMeta(WingedOrb_im);
+        ItemMeta WingedOrbitem_im = WingedOrb_item.getItemMeta();
+        WingedOrbitem_im.setItemModel(new NamespacedKey("crystalized", "winged_orb"));
+        WingedOrbitem_im.displayName(translatable("crystalized.orb.winged.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        List<Component> WingedOrbitemLore = new ArrayList<>();
+        WingedOrbitemLore.add(translatable("crystalized.orb.winged.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        WingedOrbitem_im.lore(WingedOrbitemLore);
+        WingedOrb_item.setItemMeta(WingedOrbitem_im);
 
         ItemMeta Gapples_im = Gapples.getItemMeta();
         List<Component> GapplesLore = new ArrayList<>();
