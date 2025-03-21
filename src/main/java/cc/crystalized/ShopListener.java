@@ -364,7 +364,7 @@ public class ShopListener implements Listener {
         //Utility
         else if (e.getCurrentItem().equals(CrystalBlitzItems.BoostOrb)) {
             ItemStack strong = CrystalBlitzItems.StrongShard.clone();
-            strong.setAmount(10);
+            strong.setAmount(20);
             if (p.getInventory().containsAtLeast(CrystalBlitzItems.StrongShard, strong.getAmount())) {
                 p1.playSound(p, "minecraft:block.note_block.pling", 50, 2);
                 p.getInventory().removeItem(strong);

@@ -308,7 +308,7 @@ public class CrystalBlitzItems {
         List<Component> BoostOrbsLore = new ArrayList<>();
         BoostOrbsLore.add(translatable("crystalized.orb.boost.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         BoostOrbsLore.add(text(" "));
-        BoostOrbsLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BoostOrbsLore.add(text("20 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BoostOrbs_im.lore(BoostOrbsLore);
         BoostOrbs_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         BoostOrb.setItemMeta(BoostOrbs_im);
