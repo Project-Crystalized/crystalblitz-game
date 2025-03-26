@@ -1,6 +1,7 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
@@ -90,9 +91,8 @@ public class CrystalBlitzItems {
     public static ItemStack StrongShard = new ItemStack(Material.COAL);
     public static ItemStack NexusShard = new ItemStack(Material.COAL);
 
-    private static List<Component> PoisonOrbLoreValues;
-
     public static void SetupItems() {
+        List<ComponentLike> PoisonOrbLoreValues = new ArrayList<>();
         PoisonOrbLoreValues.add(text("4"));
         PoisonOrbLoreValues.add(text("5"));
 
