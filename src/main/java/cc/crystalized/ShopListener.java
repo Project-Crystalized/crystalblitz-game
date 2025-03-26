@@ -1,5 +1,6 @@
 package cc.crystalized;
 
+import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
@@ -9,12 +10,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.geysermc.floodgate.api.FloodgateApi;
+import org.geysermc.floodgate.util.DeviceOs;
 import org.jspecify.annotations.NonNull;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 
 public class ShopListener implements Listener {
 
@@ -85,6 +90,40 @@ public class ShopListener implements Listener {
             nothave.add(CrystalBlitzItems.IronPickaxe_item);
             nothave.add(CrystalBlitzItems.DiamondPickaxe_item);
             buyItem(p, Shop.ShardTypes.Strong, 10, remove, CrystalBlitzItems.IronPickaxe_item, nothave);
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.BreezeDagger)) {
+            List<ItemStack> remove = new ArrayList<>();
+            remove.add(CrystalBlitzItems.WoodenSword);
+            remove.add(CrystalBlitzItems.StoneSword_item);
+            buyItem(p, Shop.ShardTypes.Strong, 40, remove, CrystalBlitzItems.BreezeDagger_item, null);
+
+            String PCHint = "\uE10B";
+            String XboxHint = "\uE118";
+            String PSNHint = "\uE10C";
+            String NXHint = "\uE10E";
+            String a = null;
+            FloodgateApi fapi = FloodgateApi.getInstance();
+
+            if (fapi.isFloodgatePlayer(p.getUniqueId())) {
+                switch (fapi.getPlayer(p.getUniqueId()).getDeviceOs()) {
+                    case DeviceOs.XBOX -> {
+                        a = XboxHint;
+                    }
+                    case DeviceOs.NX -> {
+                        a = NXHint;
+                    }
+                    case DeviceOs.PS4 -> {
+                        a = PSNHint;
+                    }
+                    default -> {
+                        a = PCHint;
+                    }
+                }
+            } else {
+                a = PCHint;
+            }
+
+            p.showTitle(Title.title(translatable("crystalized.sword.wind.name"), text(a + " to Dash."), Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(5), Duration.ofSeconds(1))));
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.DiamondSword)) {
             List<ItemStack> remove = new ArrayList<>();

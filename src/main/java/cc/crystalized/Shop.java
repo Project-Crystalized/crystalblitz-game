@@ -115,11 +115,11 @@ public class Shop{
         view.clear();
         view.setItem(10, CrystalBlitzItems.StoneSword);
         view.setItem(11, CrystalBlitzItems.StonePickaxe);
-        view.setItem(12, CrystalBlitzItems.IronSword);
-        view.setItem(13, CrystalBlitzItems.IronPickaxe);
-        view.setItem(14, CrystalBlitzItems.DiamondSword);
-        view.setItem(15, CrystalBlitzItems.DiamondPickaxe);
-        view.setItem(16, CrystalBlitzItems.BreezeDagger);
+        view.setItem(12, CrystalBlitzItems.BreezeDagger);
+        view.setItem(13, CrystalBlitzItems.IronSword);
+        view.setItem(14, CrystalBlitzItems.IronPickaxe);
+        view.setItem(15, CrystalBlitzItems.DiamondSword);
+        view.setItem(16, CrystalBlitzItems.DiamondPickaxe);
         view.setItem(19, CrystalBlitzItems.Bow);
         view.setItem(20, CrystalBlitzItems.ChargedCrossbow);
         view.setItem(21, CrystalBlitzItems.WingedOrb);

@@ -5,6 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -213,6 +214,7 @@ public class CrystalBlitzItems {
         BreezeDagger_im.customName(translatable("crystalized.sword.wind.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BreezeDagger_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         BreezeDagger_im.setItemModel(new NamespacedKey("crystalized", "breeze_dagger"));
+        BreezeDagger_im.addEnchant(Enchantment.KNOCKBACK, 1, true);
         BreezeDagger.setItemMeta(BreezeDagger_im);
         BreezeDagger.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         ItemMeta BreezeDaggeritem_im = BreezeDagger_item.getItemMeta();
@@ -222,6 +224,7 @@ public class CrystalBlitzItems {
         BreezeDaggeritem_im.customName(translatable("crystalized.sword.wind.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BreezeDaggeritem_im.setItemModel(new NamespacedKey("crystalized", "breeze_dagger"));
         BreezeDaggeritem_im.setUnbreakable(true);
+        BreezeDagger_im.addEnchant(Enchantment.KNOCKBACK, 1, true);
         BreezeDagger_item.setItemMeta(BreezeDaggeritem_im);
         BreezeDagger_item.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 

@@ -141,6 +141,7 @@ public class PlayerListener implements Listener {
 
         DowngradeItem(inv, CrystalBlitzItems.StoneSword_item, CrystalBlitzItems.WoodenSword);
         DowngradeItem(inv, CrystalBlitzItems.IronSword_item, CrystalBlitzItems.StoneSword_item);
+        DowngradeItem(inv, CrystalBlitzItems.BreezeDagger_item, CrystalBlitzItems.StoneSword_item);
         DowngradeItem(inv, CrystalBlitzItems.DiamondSword_item, CrystalBlitzItems.IronSword_item);
 
         DowngradeItem(inv, CrystalBlitzItems.StonePickaxe_item, CrystalBlitzItems.WoodenPickaxe);
