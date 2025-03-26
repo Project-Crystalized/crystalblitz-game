@@ -15,6 +15,19 @@ import static net.kyori.adventure.text.Component.text;
 
 public class Shop{
 
+    public enum ShardTypes {
+        Weak,
+        Strong,
+        Nexus
+    }
+
+    public enum ArmourType {
+        Leather,
+        Chainmail,
+        Iron,
+        Diamond
+    }
+
     private static Player viewer;
 
     public static ItemStack CategoryOffence = new ItemStack(Material.RED_STAINED_GLASS_PANE);
@@ -106,9 +119,10 @@ public class Shop{
         view.setItem(13, CrystalBlitzItems.IronPickaxe);
         view.setItem(14, CrystalBlitzItems.DiamondSword);
         view.setItem(15, CrystalBlitzItems.DiamondPickaxe);
-        view.setItem(16, CrystalBlitzItems.Bow);
-        view.setItem(19, CrystalBlitzItems.ChargedCrossbow);
-        view.setItem(20, CrystalBlitzItems.WingedOrb);
+        view.setItem(16, CrystalBlitzItems.BreezeDagger);
+        view.setItem(19, CrystalBlitzItems.Bow);
+        view.setItem(20, CrystalBlitzItems.ChargedCrossbow);
+        view.setItem(21, CrystalBlitzItems.WingedOrb);
 
         p.openInventory(view);
     }

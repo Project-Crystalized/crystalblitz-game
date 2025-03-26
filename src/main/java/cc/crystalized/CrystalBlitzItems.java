@@ -35,6 +35,8 @@ public class CrystalBlitzItems {
     public static ItemStack DiamondSword_item = new ItemStack(Material.DIAMOND_SWORD);
     public static ItemStack DiamondPickaxe = new ItemStack(Material.DIAMOND_PICKAXE);
     public static ItemStack DiamondPickaxe_item = new ItemStack(Material.DIAMOND_PICKAXE);
+    public static ItemStack BreezeDagger = new ItemStack(Material.STONE_SWORD);
+    public static ItemStack BreezeDagger_item = new ItemStack(Material.STONE_SWORD);
     public static ItemStack SlimeSword = new ItemStack(Material.STONE_SWORD);
     public static ItemStack PufferfishSword = new ItemStack(Material.STONE_SWORD);
     public static ItemStack Bow = new ItemStack(Material.BOW);
@@ -105,7 +107,6 @@ public class CrystalBlitzItems {
         StoneSwordLore.add(text(" "));
         StoneSwordLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StoneSword_im.lore(StoneSwordLore);
-        StoneSword_im.setUnbreakable(true);
         StoneSword_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         StoneSword.setItemMeta(StoneSword_im);
         StoneSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -123,7 +124,6 @@ public class CrystalBlitzItems {
         StonePickaxeLore.add(text(" "));
         StonePickaxeLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StonePickaxe_im.lore(StonePickaxeLore);
-        StonePickaxe_im.setUnbreakable(true);
         StonePickaxe_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         StonePickaxe.setItemMeta(StonePickaxe_im);
         StonePickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -141,7 +141,6 @@ public class CrystalBlitzItems {
         IronSwordLore.add(text(""));
         IronSwordLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         IronSword_im.lore(IronSwordLore);
-        IronSword_im.setUnbreakable(true);
         IronSword_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         IronSword.setItemMeta(IronSword_im);
         IronSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -159,7 +158,6 @@ public class CrystalBlitzItems {
         IronPickaxeLore.add(text(""));
         IronPickaxeLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         IronPickaxe_im.lore(IronPickaxeLore);
-        IronPickaxe_im.setUnbreakable(true);
         IronPickaxe_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         IronPickaxe.setItemMeta(IronPickaxe_im);
         IronPickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -178,7 +176,6 @@ public class CrystalBlitzItems {
         DiamondSwordLore.add(text(""));
         DiamondSwordLore.add(text("2 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         DiamondSword_im.lore(DiamondSwordLore);
-        DiamondSword_im.setUnbreakable(true);
         DiamondSword_im.setTooltipStyle(new NamespacedKey("crystalized", "nexus_shard"));
         DiamondSword.setItemMeta(DiamondSword_im);
         DiamondSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -196,7 +193,6 @@ public class CrystalBlitzItems {
         DiamondPickaxeLore.add(text(""));
         DiamondPickaxeLore.add(text("2 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         DiamondPickaxe_im.lore(DiamondPickaxeLore);
-        DiamondPickaxe_im.setUnbreakable(true);
         DiamondPickaxe_im.setTooltipStyle(new NamespacedKey("crystalized", "nexus_shard"));
         DiamondPickaxe.setItemMeta(DiamondPickaxe_im);
         DiamondPickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -207,6 +203,27 @@ public class CrystalBlitzItems {
         DiamondPickaxeitem_im.setUnbreakable(true);
         DiamondPickaxe_item.setItemMeta(DiamondPickaxeitem_im);
         DiamondPickaxe_item.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+
+        ItemMeta BreezeDagger_im = BreezeDagger.getItemMeta();
+        List<Component> BreezeDaggerLore = new ArrayList<>();
+        BreezeDaggerLore.add(translatable("crystalized.sword.wind.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        BreezeDaggerLore.add(text(""));
+        BreezeDaggerLore.add(text("40 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BreezeDagger_im.lore(BreezeDaggerLore);
+        BreezeDagger_im.customName(translatable("crystalized.sword.wind.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BreezeDagger_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
+        BreezeDagger_im.setItemModel(new NamespacedKey("crystalized", "breeze_dagger"));
+        BreezeDagger.setItemMeta(BreezeDagger_im);
+        BreezeDagger.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        ItemMeta BreezeDaggeritem_im = BreezeDagger_item.getItemMeta();
+        List<Component> BreezeDaggeritemLore = new ArrayList<>();
+        BreezeDaggeritemLore.add(translatable("crystalized.sword.wind.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        BreezeDaggeritem_im.lore(BreezeDaggeritemLore);
+        BreezeDaggeritem_im.customName(translatable("crystalized.sword.wind.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BreezeDaggeritem_im.setItemModel(new NamespacedKey("crystalized", "breeze_dagger"));
+        BreezeDaggeritem_im.setUnbreakable(true);
+        BreezeDagger_item.setItemMeta(BreezeDaggeritem_im);
+        BreezeDagger_item.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         ItemMeta Bow_im = Bow.getItemMeta();
         List<Component> BowLore = new ArrayList<>();
