@@ -9,7 +9,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.checkerframework.checker.units.qual.N;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import static net.kyori.adventure.text.Component.translatable;
 
 public class CrystalBlitzItems {
     //ItemStacks with the _item suffix are the items you get when clicking in shop. This is to Make the lore different and prevent a bug where you can buy items in your inventory
-    //Some Items are unused currently but have references here (eg, PoisonOrb). If you're using IntelliJ, Purple names are used but Greyed out names aren't
+    //Some Items are unused currently but have references here. If you're using IntelliJ, Purple/Pink names are used but Greyed out names aren't
 
     //Offence
     public static ItemStack WoodenSword = new ItemStack(Material.WOODEN_SWORD); //This
@@ -38,21 +37,20 @@ public class CrystalBlitzItems {
     public static ItemStack DiamondPickaxe_item = new ItemStack(Material.DIAMOND_PICKAXE);
     public static ItemStack BreezeDagger = new ItemStack(Material.STONE_SWORD);
     public static ItemStack BreezeDagger_item = new ItemStack(Material.STONE_SWORD);
-    public static ItemStack SlimeSword = new ItemStack(Material.STONE_SWORD);
-    public static ItemStack PufferfishSword = new ItemStack(Material.STONE_SWORD);
     public static ItemStack Bow = new ItemStack(Material.BOW);
     public static ItemStack Bow_item = new ItemStack(Material.BOW);
     public static ItemStack MarksmanBow = new ItemStack(Material.BOW);
-    public static ItemStack RicochetBow = new ItemStack(Material.BOW);
-    public static ItemStack QuickChargeCrossbow = new ItemStack(Material.CROSSBOW);
-    public static ItemStack MultiCrossbow = new ItemStack(Material.CROSSBOW);
+    public static ItemStack MarksmanBow_item = new ItemStack(Material.BOW);
     public static ItemStack ChargedCrossbow = new ItemStack(Material.CROSSBOW);
     public static ItemStack ChargedCrossbow_item = new ItemStack(Material.CROSSBOW);
     public static ItemStack ExplosiveOrb = new ItemStack(Material.COAL); //TODO, remove explosion destroying blocks before releasing this item
+    public static ItemStack ExplosiveOrb_item = new ItemStack(Material.COAL);
     public static ItemStack GrapplingOrb = new ItemStack(Material.COAL);
+    public static ItemStack GrapplingOrb_item = new ItemStack(Material.COAL);
     public static ItemStack WingedOrb = new ItemStack(Material.COAL);
     public static ItemStack WingedOrb_item = new ItemStack(Material.COAL);
     public static ItemStack PoisonOrb = new ItemStack(Material.COAL);
+    public static ItemStack PoisonOrb_item = new ItemStack(Material.COAL);
 
     //Defence
     public static ItemStack ConcreteBlocks = new ItemStack(Material.TERRACOTTA);
@@ -62,17 +60,23 @@ public class CrystalBlitzItems {
     public static ItemStack IronChestplate = new ItemStack(Material.IRON_CHESTPLATE);
     public static ItemStack DiamondChestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
     public static ItemStack AntiAirTotem = new ItemStack(Material.COAL);
+    public static ItemStack AntiAirTotem_item = new ItemStack(Material.COAL);
     public static ItemStack CloudTotem = new ItemStack(Material.COAL);
+    public static ItemStack CloudTotem_item = new ItemStack(Material.COAL);
     public static ItemStack DefenceTotem = new ItemStack(Material.COAL);
+    public static ItemStack DefenceTotem_item = new ItemStack(Material.COAL);
     public static ItemStack HealingTotem = new ItemStack(Material.COAL);
+    public static ItemStack HealingTotem_item = new ItemStack(Material.COAL);
     public static ItemStack LaunchTotem = new ItemStack(Material.COAL);
+    public static ItemStack LaunchTotem_item = new ItemStack(Material.COAL);
     public static ItemStack SlimeTotem = new ItemStack(Material.COAL);
+    public static ItemStack SlimeTotem_item = new ItemStack(Material.COAL);
 
     //Utility
     public static ItemStack BoostOrb = new ItemStack(Material.COAL);
     public static ItemStack BoostOrb_item = new ItemStack(Material.COAL);
     public static ItemStack BridgeOrb = new ItemStack(Material.COAL);
-
+    public static ItemStack BridgeOrb_item = new ItemStack(Material.COAL);
     public static ItemStack Gapples = new ItemStack(Material.GOLDEN_APPLE);
 
     //Displayed on the front page/no category
@@ -86,7 +90,13 @@ public class CrystalBlitzItems {
     public static ItemStack StrongShard = new ItemStack(Material.COAL);
     public static ItemStack NexusShard = new ItemStack(Material.COAL);
 
+    private static List<Component> PoisonOrbLoreValues;
+
     public static void SetupItems() {
+        PoisonOrbLoreValues.add(text("4"));
+        PoisonOrbLoreValues.add(text("5"));
+
+        //These may be ordered incorrectly, Im too lazy to fix it and its not a big deal
         //Offence
         ItemMeta WoodenSword_im = WoodenSword.getItemMeta();
         List<Component> WoodenSwordLore = new ArrayList<>();
@@ -262,6 +272,40 @@ public class CrystalBlitzItems {
         ChargedCrossbowitem_im.setUnbreakable(true);
         ChargedCrossbow_item.setItemMeta(ChargedCrossbowitem_im);
 
+        ItemMeta ExplosiveOrb_im = ExplosiveOrb.getItemMeta();
+        List<Component> ExplosiveOrbLore = new ArrayList<>();
+        ExplosiveOrbLore.add(translatable("crystalized.orb.explosive.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        ExplosiveOrbLore.add(text(""));
+        ExplosiveOrbLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ExplosiveOrb_im.lore(ExplosiveOrbLore);
+        ExplosiveOrb_im.customName(translatable("crystalized.orb.explosive.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ExplosiveOrb_im.setItemModel(new NamespacedKey("crystalized", "explosive_orb"));
+        ExplosiveOrb.setItemMeta(ExplosiveOrb_im);
+        ItemMeta ExplosiveOrbitem_im = ExplosiveOrb_item.getItemMeta();
+        List<Component> ExplosiveOrbitemLore = new ArrayList<>();
+        ExplosiveOrbitemLore.add(translatable("crystalized.orb.explosive.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        ExplosiveOrbitem_im.lore(ExplosiveOrbitemLore);
+        ExplosiveOrbitem_im.customName(translatable("crystalized.orb.explosive.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ExplosiveOrbitem_im.setItemModel(new NamespacedKey("crystalized", "explosive_orb"));
+        ExplosiveOrb_item.setItemMeta(ExplosiveOrbitem_im);
+
+        ItemMeta GrapplingOrb_im = GrapplingOrb.getItemMeta();
+        List<Component> GrapplingOrbLore = new ArrayList<>();
+        GrapplingOrbLore.add(translatable("crystalized.orb.grappling.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        GrapplingOrbLore.add(text(""));
+        GrapplingOrbLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        GrapplingOrb_im.lore(GrapplingOrbLore);
+        GrapplingOrb_im.customName(translatable("crystalized.orb.grappling.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        GrapplingOrb_im.setItemModel(new NamespacedKey("crystalized", "grappling_orb"));
+        GrapplingOrb.setItemMeta(GrapplingOrb_im);
+        ItemMeta GrapplingOrbitem_im = GrapplingOrb_item.getItemMeta();
+        List<Component> GrapplingOrbitemLore = new ArrayList<>();
+        GrapplingOrbitemLore.add(translatable("crystalized.orb.grappling.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        GrapplingOrbitem_im.lore(GrapplingOrbitemLore);
+        GrapplingOrbitem_im.customName(translatable("crystalized.orb.grappling.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        GrapplingOrbitem_im.setItemModel(new NamespacedKey("crystalized", "grappling_orb"));
+        GrapplingOrb_item.setItemMeta(GrapplingOrbitem_im);
+
 
         //Defence
         ItemMeta ConcreteBlocks_im = ConcreteBlocks.getItemMeta();
@@ -321,6 +365,42 @@ public class CrystalBlitzItems {
         DiamondChestplate_im.setTooltipStyle(new NamespacedKey("crystalized", "nexus_shard"));
         DiamondChestplate.setItemMeta(DiamondChestplate_im);
 
+        ItemMeta AntiAirTotem_im = AntiAirTotem.getItemMeta();
+        List<Component> AntiAirTotemLore = new ArrayList<>();
+        AntiAirTotemLore.add(translatable("crystalized.totem.antiair.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        AntiAirTotemLore.add(text(""));
+        AntiAirTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        AntiAirTotem_im.lore(AntiAirTotemLore);
+        AntiAirTotem_im.customName(translatable("crystalized.totem.antiair.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        AntiAirTotem_im.setItemModel(new NamespacedKey("crystalized", "antiair_totem"));
+        AntiAirTotem.setItemMeta(AntiAirTotem_im);
+        ItemMeta AntiAirTotemitem_im = AntiAirTotem_item.getItemMeta();
+        List<Component> AntiAirTotemitemLore = new ArrayList<>();
+        AntiAirTotemitemLore.add(translatable("crystalized.totem.antiair.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        AntiAirTotemitem_im.lore(AntiAirTotemitemLore);
+        AntiAirTotemitem_im.customName(translatable("crystalized.totem.antiair.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        AntiAirTotemitem_im.setItemModel(new NamespacedKey("crystalized", "antiair_totem"));
+        AntiAirTotem_item.setItemMeta(AntiAirTotemitem_im);
+
+        ItemMeta CloudTotem_im = CloudTotem.getItemMeta();
+        List<Component> CloudTotemLore = new ArrayList<>();
+        CloudTotemLore.add(translatable("crystalized.totem.cloud.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        CloudTotemLore.add(text(""));
+        CloudTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        CloudTotem_im.lore(CloudTotemLore);
+        CloudTotem_im.customName(translatable("crystalized.totem.cloud.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        CloudTotem_im.setItemModel(new NamespacedKey("crystalized", "cloud_totem"));
+        CloudTotem.setItemMeta(CloudTotem_im);
+        ItemMeta CloudTotemitem_im = CloudTotem_item.getItemMeta();
+        List<Component> CloudTotemitemLore = new ArrayList<>();
+        CloudTotemitemLore.add(translatable("crystalized.totem.cloud.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        CloudTotemitem_im.lore(CloudTotemitemLore);
+        CloudTotemitem_im.customName(translatable("crystalized.totem.cloud.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        CloudTotemitem_im.setItemModel(new NamespacedKey("crystalized", "cloud_totem"));
+        CloudTotem_item.setItemMeta(CloudTotemitem_im);
+
+        ItemMeta DefenceTotem_im = DefenceTotem.getItemMeta();
+
 
         //Utility
         ItemMeta BoostOrbs_im = BoostOrb.getItemMeta();
@@ -358,6 +438,41 @@ public class CrystalBlitzItems {
         WingedOrbitemLore.add(translatable("crystalized.orb.winged.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         WingedOrbitem_im.lore(WingedOrbitemLore);
         WingedOrb_item.setItemMeta(WingedOrbitem_im);
+
+        ItemMeta PoisonOrb_im = PoisonOrb.getItemMeta();
+        List<Component> PoisonOrbLore = new ArrayList<>();
+        PoisonOrbLore.add(translatable("crystalized.orb.poison.desc", PoisonOrbLoreValues).decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        PoisonOrbLore.add(text(""));
+        PoisonOrbLore.add(text("price here"));
+        PoisonOrb_im.lore(PoisonOrbLore);
+        PoisonOrb_im.customName(translatable("crystalized.orb.poison.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        PoisonOrb_im.setItemModel(new NamespacedKey("crystalized", "poison_orb"));
+        PoisonOrb.setItemMeta(PoisonOrb_im);
+        ItemMeta PoisonOrbitem_im = PoisonOrb_item.getItemMeta();
+        List<Component> PoisonOrbitemLore = new ArrayList<>();
+        PoisonOrbitemLore.add(translatable("crystalized.orb.poison.desc", PoisonOrbLoreValues).decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        PoisonOrbitem_im.lore(PoisonOrbitemLore);
+        PoisonOrbitem_im.customName(translatable("crystalized.orb.poison.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        PoisonOrbitem_im.setItemModel(new NamespacedKey("crystalized", "poison_orb"));
+        PoisonOrb_item.setItemMeta(PoisonOrbitem_im);
+
+        ItemMeta BridgeOrb_im = BridgeOrb.getItemMeta();
+        List<Component> BridgeOrbLore = new ArrayList<>();
+        BridgeOrbLore.add(translatable("crystalized.orb.bridge.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        BridgeOrbLore.add(text(""));
+        BridgeOrbLore.add(text("price here"));
+        BridgeOrb_im.lore(BridgeOrbLore);
+        BridgeOrb_im.customName(translatable("crystalized.orb.bridge.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BridgeOrb_im.setItemModel(new NamespacedKey("crystalized", "bridge_orb"));
+        BridgeOrb.setItemMeta(BridgeOrb_im);
+        ItemMeta BridgeOrbitem_im = BridgeOrb_item.getItemMeta();
+        List<Component> BridgeOrbitemLore = new ArrayList<>();
+        BridgeOrbitemLore.add(translatable("crystalized.orb.bridge.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        BridgeOrbitem_im.lore(BridgeOrbitemLore);
+        BridgeOrbitem_im.customName(translatable("crystalized.orb.bridge.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BridgeOrbitem_im.setItemModel(new NamespacedKey("crystalized", "bridge_orb"));
+        BridgeOrb_item.setItemMeta(BridgeOrbitem_im);
+
 
         ItemMeta Gapples_im = Gapples.getItemMeta();
         List<Component> GapplesLore = new ArrayList<>();

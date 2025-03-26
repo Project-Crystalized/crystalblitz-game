@@ -268,7 +268,7 @@ public class ShopListener implements Listener {
         }
     }
 
-    //I hate this class but this should make the InventoryClickEvent more clean
+    //I hate this but this should make the InventoryClickEvent more clean
     private void buyItem(HumanEntity p, Shop.ShardTypes shard, int price, List<ItemStack> WhatToRemove, @NonNull ItemStack WhatToGive, List<ItemStack> MustNotHave
     ) {
         ItemStack shardtype = null;
@@ -370,7 +370,7 @@ public class ShopListener implements Listener {
                     }
                     case Shop.ArmourType.Iron -> {
                         item.setType(Material.IRON_CHESTPLATE);
-                        item.setType(Material.IRON_LEGGINGS);
+                        item2.setType(Material.IRON_LEGGINGS);
                     }
                     case Shop.ArmourType.Diamond -> {
                         //Do nothing, its already diamond armour lol
