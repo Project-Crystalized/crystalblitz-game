@@ -310,7 +310,7 @@ public class CrystalBlitzItems {
         //Defence
         ItemMeta ConcreteBlocks_im = ConcreteBlocks.getItemMeta();
         List<Component> ConcreteBlocksLore = new ArrayList<>();
-        ConcreteBlocksLore.add(text("16 Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        ConcreteBlocksLore.add(text("8 Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         ConcreteBlocksLore.add(text(""));
         ConcreteBlocksLore.add(text("8 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ConcreteBlocks_im.lore(ConcreteBlocksLore);
