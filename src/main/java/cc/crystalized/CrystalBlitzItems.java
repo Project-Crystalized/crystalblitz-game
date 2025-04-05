@@ -10,6 +10,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -234,7 +236,10 @@ public class CrystalBlitzItems {
         BreezeDaggeritem_im.customName(translatable("crystalized.sword.wind.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BreezeDaggeritem_im.setItemModel(new NamespacedKey("crystalized", "breeze_dagger"));
         BreezeDaggeritem_im.setUnbreakable(true);
-        BreezeDagger_im.addEnchant(Enchantment.KNOCKBACK, 1, true);
+        BreezeDagger_im.addEnchant(Enchantment.KNOCKBACK, 2, true);
+        PersistentDataContainer BreezeDagger_PDC = BreezeDaggeritem_im.getPersistentDataContainer();
+        BreezeDagger_PDC.set(new NamespacedKey("namespace", "key"), PersistentDataType.INTEGER, 1);
+        BreezeDagger_PDC.set(new NamespacedKey("crystalized", "bd_recharge"), PersistentDataType.BOOLEAN, true);
         BreezeDagger_item.setItemMeta(BreezeDaggeritem_im);
         BreezeDagger_item.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
