@@ -102,21 +102,22 @@ public class CrystalBlitzItems {
         //Offence
         ItemMeta WoodenSword_im = WoodenSword.getItemMeta();
         List<Component> WoodenSwordLore = new ArrayList<>();
-        WoodenSwordLore.add(text("Your starting sword, you'll need to upgrade this at some point.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE)); //unused
+        WoodenSwordLore.add(translatable("crystalized.sword.wood.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         WoodenSword_im.lore(WoodenSwordLore);
         WoodenSword_im.setUnbreakable(true);
         WoodenSword.setItemMeta(WoodenSword_im);
 
         ItemMeta WoodenPickaxe_im = WoodenPickaxe.getItemMeta();
         List<Component> WoodenPickaxeLore = new ArrayList<>();
-        WoodenPickaxeLore.add(text("Your starting pickaxe, you'll need to upgrade this at some point.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE)); //unused
+        WoodenPickaxeLore.add(translatable("crystalized.item.pickaxe.wooden.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        WoodenPickaxeLore.add(translatable("crystalized.item.pickaxe.wooden.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         WoodenPickaxe_im.lore(WoodenPickaxeLore);
         WoodenPickaxe_im.setUnbreakable(true);
         WoodenPickaxe.setItemMeta(WoodenPickaxe_im);
 
         ItemMeta StoneSword_im = StoneSword.getItemMeta();
         List<Component> StoneSwordLore = new ArrayList<>();
-        StoneSwordLore.add(text("Stone sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        StoneSwordLore.add(translatable("crystalized.sword.stone.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StoneSwordLore.add(text(" "));
         StoneSwordLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StoneSword_im.lore(StoneSwordLore);
@@ -125,7 +126,7 @@ public class CrystalBlitzItems {
         StoneSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         ItemMeta StoneSworditem_im = StoneSword_item.getItemMeta();
         List<Component> StoneSworditemLore = new ArrayList<>();
-        StoneSworditemLore.add(text("Stone sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        StoneSworditemLore.add(translatable("crystalized.sword.stone.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StoneSworditem_im.lore(StoneSworditemLore);
         StoneSworditem_im.setUnbreakable(true);
         StoneSword_item.setItemMeta(StoneSworditem_im);
@@ -133,7 +134,8 @@ public class CrystalBlitzItems {
 
         ItemMeta StonePickaxe_im = StonePickaxe.getItemMeta();
         List<Component> StonePickaxeLore = new ArrayList<>();
-        StonePickaxeLore.add(text("Stone pickaxe description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        StonePickaxeLore.add(translatable("crystalized.item.pickaxe.stone.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        StonePickaxeLore.add(translatable("crystalized.item.pickaxe.stone.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StonePickaxeLore.add(text(" "));
         StonePickaxeLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StonePickaxe_im.lore(StonePickaxeLore);
@@ -142,7 +144,8 @@ public class CrystalBlitzItems {
         StonePickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         ItemMeta StonePickaxeitem_im = StonePickaxe_item.getItemMeta();
         List<Component> StonePickaxeitemLore = new ArrayList<>();
-        StonePickaxeitemLore.add(text("Stone pickaxe description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        StonePickaxeitemLore.add(translatable("crystalized.item.pickaxe.stone.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        StonePickaxeitemLore.add(translatable("crystalized.item.pickaxe.stone.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StonePickaxeitem_im.lore(StonePickaxeitemLore);
         StonePickaxeitem_im.setUnbreakable(true);
         StonePickaxe_item.setItemMeta(StonePickaxeitem_im);
@@ -150,7 +153,7 @@ public class CrystalBlitzItems {
 
         ItemMeta IronSword_im = IronSword.getItemMeta();
         List<Component> IronSwordLore = new ArrayList<>();
-        IronSwordLore.add(text("Iron sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronSwordLore.add(translatable("crystalized.sword.iron.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         IronSwordLore.add(text(""));
         IronSwordLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         IronSword_im.lore(IronSwordLore);
@@ -159,7 +162,7 @@ public class CrystalBlitzItems {
         IronSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         ItemMeta IronSworditem_im = IronSword_item.getItemMeta();
         List<Component> IronSworditemLore = new ArrayList<>();
-        IronSworditemLore.add(text("Iron sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronSworditemLore.add(translatable("crystalized.sword.iron.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         IronSworditem_im.lore(IronSworditemLore);
         IronSworditem_im.setUnbreakable(true);
         IronSword_item.setItemMeta(IronSworditem_im);
@@ -167,7 +170,8 @@ public class CrystalBlitzItems {
 
         ItemMeta IronPickaxe_im = IronPickaxe.getItemMeta();
         List<Component> IronPickaxeLore = new ArrayList<>();
-        IronPickaxeLore.add(text("Iron sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronPickaxeLore.add(translatable("crystalized.item.pickaxe.iron.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronPickaxeLore.add(translatable("crystalized.item.pickaxe.iron.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         IronPickaxeLore.add(text(""));
         IronPickaxeLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         IronPickaxe_im.lore(IronPickaxeLore);
@@ -176,7 +180,8 @@ public class CrystalBlitzItems {
         IronPickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         ItemMeta IronPickaxeitem_im = IronPickaxe_item.getItemMeta();
         List<Component> IronPickaxeitemLore = new ArrayList<>();
-        IronPickaxeitemLore.add(text("Iron sword description here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronPickaxeitemLore.add(translatable("crystalized.item.pickaxe.iron.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        IronPickaxeitemLore.add(translatable("crystalized.item.pickaxe.iron.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         IronPickaxeitem_im.lore(IronPickaxeitemLore);
         IronPickaxeitem_im.setUnbreakable(true);
         IronPickaxe_item.setItemMeta(IronPickaxeitem_im);
@@ -185,7 +190,7 @@ public class CrystalBlitzItems {
 
         ItemMeta DiamondSword_im = DiamondSword.getItemMeta();
         List<Component> DiamondSwordLore = new ArrayList<>();
-        DiamondSwordLore.add(text("most powerful sword").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondSwordLore.add(translatable("crystalized.sword.diamond.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         DiamondSwordLore.add(text(""));
         DiamondSwordLore.add(text("2 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         DiamondSword_im.lore(DiamondSwordLore);
@@ -194,7 +199,7 @@ public class CrystalBlitzItems {
         DiamondSword.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         ItemMeta DiamondSworditem_im = DiamondSword_item.getItemMeta();
         List<Component> DiamondSworditemLore = new ArrayList<>();
-        DiamondSworditemLore.add(text("most powerful sword").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondSworditemLore.add(translatable("crystalized.sword.diamond.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         DiamondSworditem_im.lore(DiamondSworditemLore);
         DiamondSworditem_im.setUnbreakable(true);
         DiamondSword_item.setItemMeta(DiamondSworditem_im);
@@ -202,7 +207,8 @@ public class CrystalBlitzItems {
 
         ItemMeta DiamondPickaxe_im = DiamondPickaxe.getItemMeta();
         List<Component> DiamondPickaxeLore = new ArrayList<>();
-        DiamondPickaxeLore.add(text("most powerful pickaxe").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondPickaxeLore.add(translatable("crystalized.item.pickaxe.diamond.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondPickaxeLore.add(translatable("crystalized.item.pickaxe.diamond.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         DiamondPickaxeLore.add(text(""));
         DiamondPickaxeLore.add(text("2 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         DiamondPickaxe_im.lore(DiamondPickaxeLore);
@@ -211,7 +217,8 @@ public class CrystalBlitzItems {
         DiamondPickaxe.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         ItemMeta DiamondPickaxeitem_im = DiamondPickaxe_item.getItemMeta();
         List<Component> DiamondPickaxeitemLore = new ArrayList<>();
-        DiamondPickaxeitemLore.add(text("most powerful pickaxe").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondPickaxeitemLore.add(translatable("crystalized.item.pickaxe.diamond.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DiamondPickaxeitemLore.add(translatable("crystalized.item.pickaxe.diamond.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         DiamondPickaxeitem_im.lore(DiamondPickaxeitemLore);
         DiamondPickaxeitem_im.setUnbreakable(true);
         DiamondPickaxe_item.setItemMeta(DiamondPickaxeitem_im);
@@ -237,15 +244,12 @@ public class CrystalBlitzItems {
         BreezeDaggeritem_im.setItemModel(new NamespacedKey("crystalized", "breeze_dagger"));
         BreezeDaggeritem_im.setUnbreakable(true);
         BreezeDagger_im.addEnchant(Enchantment.KNOCKBACK, 2, true);
-        PersistentDataContainer BreezeDagger_PDC = BreezeDaggeritem_im.getPersistentDataContainer();
-        BreezeDagger_PDC.set(new NamespacedKey("namespace", "key"), PersistentDataType.INTEGER, 1);
-        BreezeDagger_PDC.set(new NamespacedKey("crystalized", "bd_recharge"), PersistentDataType.BOOLEAN, true);
         BreezeDagger_item.setItemMeta(BreezeDaggeritem_im);
         BreezeDagger_item.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 
         ItemMeta Bow_im = Bow.getItemMeta();
         List<Component> BowLore = new ArrayList<>();
-        BowLore.add(text("pew pew thingy idfk").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        BowLore.add(translatable("crystalized.bow.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         BowLore.add(text(""));
         BowLore.add(text("25 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         Bow_im.lore(BowLore);
@@ -253,7 +257,7 @@ public class CrystalBlitzItems {
         Bow.setItemMeta(Bow_im);
         ItemMeta Bowitem_im = Bow_item.getItemMeta();
         List<Component> BowitemLore = new ArrayList<>();
-        BowitemLore.add(text("pew pew thingy idfk").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        BowitemLore.add(translatable("crystalized.bow.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         Bowitem_im.lore(BowitemLore);
         Bowitem_im.setUnbreakable(true);
         Bow_item.setItemMeta(Bowitem_im);
@@ -405,6 +409,72 @@ public class CrystalBlitzItems {
         CloudTotem_item.setItemMeta(CloudTotemitem_im);
 
         ItemMeta DefenceTotem_im = DefenceTotem.getItemMeta();
+        List<Component> DefenceTotemLore = new ArrayList<>();
+        DefenceTotemLore.add(translatable("crystalized.totem.defence.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DefenceTotemLore.add(text(""));
+        DefenceTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        DefenceTotem_im.lore(DefenceTotemLore);
+        DefenceTotem_im.customName(translatable("crystalized.totem.defence.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        DefenceTotem_im.setItemModel(new NamespacedKey("crystalized", "defence_totem"));
+        DefenceTotem.setItemMeta(DefenceTotem_im);
+        ItemMeta DefenceTotemitem_im = DefenceTotem_item.getItemMeta();
+        List<Component> DefenceTotemitemLore = new ArrayList<>();
+        DefenceTotemitemLore.add(translatable("crystalized.totem.defence.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        DefenceTotemitem_im.lore(DefenceTotemitemLore);
+        DefenceTotemitem_im.customName(translatable("crystalized.totem.defence.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        DefenceTotemitem_im.setItemModel(new NamespacedKey("crystalized", "defence_totem"));
+        DefenceTotem_item.setItemMeta(DefenceTotemitem_im);
+
+        ItemMeta HealingTotem_im = HealingTotem.getItemMeta();
+        List<Component> HealingTotemLore = new ArrayList<>();
+        HealingTotemLore.add(translatable("crystalized.totem.healing.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        HealingTotemLore.add(text(""));
+        HealingTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        HealingTotem_im.lore(HealingTotemLore);
+        HealingTotem_im.customName(translatable("crystalized.totem.healing.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        HealingTotem_im.setItemModel(new NamespacedKey("crystalized", "healing_totem"));
+        HealingTotem.setItemMeta(HealingTotem_im);
+        ItemMeta HealingTotemitem_im = HealingTotem_item.getItemMeta();
+        List<Component> HealingTotemitemLore = new ArrayList<>();
+        HealingTotemitemLore.add(translatable("crystalized.totem.healing.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        HealingTotemitem_im.lore(HealingTotemitemLore);
+        HealingTotemitem_im.customName(translatable("crystalized.totem.healing.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        HealingTotemitem_im.setItemModel(new NamespacedKey("crystalized", "healing_totem"));
+        HealingTotem_item.setItemMeta(HealingTotemitem_im);
+
+        ItemMeta LaunchTotem_im = LaunchTotem.getItemMeta();
+        List<Component> LaunchTotemLore = new ArrayList<>();
+        LaunchTotemLore.add(translatable("crystalized.totem.launch.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        LaunchTotemLore.add(text(""));
+        LaunchTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        LaunchTotem_im.lore(LaunchTotemLore);
+        LaunchTotem_im.customName(translatable("crystalized.totem.launch.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        LaunchTotem_im.setItemModel(new NamespacedKey("crystalized", "launch_totem"));
+        LaunchTotem.setItemMeta(LaunchTotem_im);
+        ItemMeta LaunchTotemitem_im = LaunchTotem_item.getItemMeta();
+        List<Component> LaunchTotemitemLore = new ArrayList<>();
+        LaunchTotemitemLore.add(translatable("crystalized.totem.launch.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        LaunchTotemitem_im.lore(LaunchTotemitemLore);
+        LaunchTotemitem_im.customName(translatable("crystalized.totem.launch.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        LaunchTotemitem_im.setItemModel(new NamespacedKey("crystalized", "launch_totem"));
+        LaunchTotem_item.setItemMeta(LaunchTotemitem_im);
+
+        ItemMeta SlimeTotem_im = SlimeTotem.getItemMeta();
+        List<Component> SlimeTotemLore = new ArrayList<>();
+        SlimeTotemLore.add(translatable("crystalized.totem.slime.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        SlimeTotemLore.add(text(""));
+        SlimeTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        SlimeTotem_im.lore(SlimeTotemLore);
+        SlimeTotem_im.customName(translatable("crystalized.totem.slime.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        SlimeTotem_im.setItemModel(new NamespacedKey("crystalized", "slime_totem"));
+        SlimeTotem.setItemMeta(SlimeTotem_im);
+        ItemMeta SlimeTotemitem_im = SlimeTotem_item.getItemMeta();
+        List<Component> SlimeTotemitemLore = new ArrayList<>();
+        SlimeTotemitemLore.add(translatable("crystalized.totem.slime.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        SlimeTotemitem_im.lore(SlimeTotemitemLore);
+        SlimeTotemitem_im.customName(translatable("crystalized.totem.slime.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        SlimeTotemitem_im.setItemModel(new NamespacedKey("crystalized", "slime_totem"));
+        SlimeTotem_item.setItemMeta(SlimeTotemitem_im);
 
 
         //Utility

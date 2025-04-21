@@ -96,15 +96,19 @@ public class PlayerListener implements Listener {
             k = p; //to prevent errors in console. can also make funny death messages
         }
 
-
         p.setGameMode(GameMode.SPECTATOR);
-        Location loc = new Location(
+        Location loc = new Location( //TODO this doesnt work for some reason
                 Bukkit.getWorld("world"),
                 crystalBlitz.getInstance().mapdata.spectator_spawn[0],
                 crystalBlitz.getInstance().mapdata.spectator_spawn[1],
                 crystalBlitz.getInstance().mapdata.spectator_spawn[2]
         );
         p.teleport(loc);
+
+        if (k != null) {
+            PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(k);
+            kpd.kills++;
+        }
 
         PlayerInventory inv = p.getInventory();
         //Might be a mess but welp, too bad, im lazy and I cant think of anything better
@@ -227,6 +231,8 @@ public class PlayerListener implements Listener {
             }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
         } else {
             p.sendMessage(text("[!] You're eliminated from the game!"));
+            PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+            pd.isEliminated = true;
         }
     }
 

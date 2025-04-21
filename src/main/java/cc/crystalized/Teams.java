@@ -8,8 +8,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
+
+import static net.kyori.adventure.text.Component.text;
 
 public class Teams {
 
@@ -32,6 +35,8 @@ public class Teams {
     public static final TextColor TEAM_RED = TextColor.color(0xF74036);
     public static final TextColor TEAM_WHITE = TextColor.color(0xFFFFFF);
     public static final TextColor TEAM_YELLOW = TextColor.color(0xFBE059);
+
+    public static final List<TeamData> team_datas = TeamData.create_teams();
 
     public Teams() {
         List<String> playerlist = new ArrayList<>();
@@ -58,7 +63,7 @@ public class Teams {
         }
 
         if (Bukkit.getOnlinePlayers().isEmpty()) {
-            Bukkit.getServer().sendMessage(Component.text("\nStarting the game requires a player to be online. Please login to the server and try again.\n"));
+            Bukkit.getServer().sendMessage(text("\nStarting the game requires a player to be online. Please login to the server and try again.\n"));
             return;
         } else {
             new BukkitRunnable() {
@@ -221,23 +226,164 @@ public class Teams {
 
     public static void setPlayerDisplayNames(Player player) {
         if (blue.contains(player.getName())) {
-            player.displayName(Component.text("\uE120 ").append(Component.text(player.getName()).color(TEAM_BLUE)));
+            player.displayName(text("\uE120 ").append(text(player.getName()).color(TEAM_BLUE)));
         } else if (cyan.contains(player.getName())) {
-            player.displayName(Component.text("\uE121 ").append(Component.text(player.getName()).color(TEAM_CYAN)));
+            player.displayName(text("\uE121 ").append(text(player.getName()).color(TEAM_CYAN)));
         } else if (green.contains(player.getName())) {
-            player.displayName(Component.text("\uE122 ").append(Component.text(player.getName()).color(TEAM_GREEN)));
+            player.displayName(text("\uE122 ").append(text(player.getName()).color(TEAM_GREEN)));
         } else if (lime.contains(player.getName())) {
-            player.displayName(Component.text("\uE123 ").append(Component.text(player.getName()).color(TEAM_LIME)));
+            player.displayName(text("\uE123 ").append(text(player.getName()).color(TEAM_LIME)));
         } else if (magenta.contains(player.getName())) {
-            player.displayName(Component.text("\uE124 ").append(Component.text(player.getName()).color(TEAM_MAGENTA)));
+            player.displayName(text("\uE124 ").append(text(player.getName()).color(TEAM_MAGENTA)));
         } else if (red.contains(player.getName())) {
-            player.displayName(Component.text("\uE125 ").append(Component.text(player.getName()).color(TEAM_RED)));
+            player.displayName(text("\uE125 ").append(text(player.getName()).color(TEAM_RED)));
         } else if (white.contains(player.getName())) {
-            player.displayName(Component.text("\uE126 ").append(Component.text(player.getName()).color(TEAM_WHITE)));
+            player.displayName(text("\uE126 ").append(text(player.getName()).color(TEAM_WHITE)));
         } else if (yellow.contains(player.getName())) {
-            player.displayName(Component.text("\uE127 ").append(Component.text(player.getName()).color(TEAM_YELLOW)));
+            player.displayName(text("\uE127 ").append(text(player.getName()).color(TEAM_YELLOW)));
         } else {
-            player.displayName(Component.text("[Unknown Team]").append(Component.text(player.getName())));
+            player.displayName(text("[Unknown Team]").append(text(player.getName())));
         }
+    }
+
+    public static List<String> get_team_from_string(String s) {
+        if (s.equals("blue")) {
+            return blue;
+        } else if (s.equals("cyan")) {
+            return cyan;
+        } else if (s.equals("green")) {
+            return green;
+        } else if (s.equals("lime")) {
+            return lime;
+        } else if (s.equals("magenta")) {
+            return magenta;
+        } else if (s.equals("red")) {
+            return red;
+        } else if (s.equals("white")) {
+            return white;
+        } else if (s.equals("yellow")) {
+            return yellow;
+        } else {
+            return null;
+        }
+    }
+}
+
+//I hate this class still.
+//I just copied everything from knockoff I dont wanna write this shit again
+class TeamStatus{
+    enum Status {
+        Alive,
+        Dead
+    }
+
+    public static HashMap<String, Status> team_statuses = new HashMap<>();
+
+    private static void update_team_status(String team) {
+        int counter = 0;
+        for (String p_name : Teams.get_team_from_string(team)) {
+            Player p = Bukkit.getPlayer(p_name);
+            PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+            if (pd == null) {
+                return;
+            }
+            if (!pd.isEliminated) {
+                counter++;
+            }
+        }
+        //Why cyan?
+        if (Teams.cyan.size() == 0) {
+            team_statuses.put(team, Status.Dead);
+        } else if (counter == Teams.cyan.size()) {
+            team_statuses.put(team, Status.Alive);
+        } else {
+            team_statuses.put(team, Status.Dead);
+        }
+    }
+
+    private static boolean is_only_team_alive(String team) {
+        if (team_statuses.get(team) == Status.Dead) {
+            return false;
+        }
+
+        for (String loop_team : team_statuses.keySet()) {
+            if (loop_team == team) {
+                continue;
+            }
+            if (team_statuses.get(loop_team) == Status.Alive) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void Init() {
+        team_statuses.clear();
+        for (TeamData td : Teams.team_datas) {
+            if (Teams.get_team_from_string(td.name).isEmpty()) {
+                team_statuses.put(td.name, Status.Dead);
+            } else {
+                team_statuses.put(td.name, Status.Alive);
+            }
+        }
+
+        if (Bukkit.getOnlinePlayers().size() == 1) {
+            Bukkit.getServer().sendMessage(text(
+                    "1 player detected, To end the game, run \"/crystalBlitz end\" as a player with op. The game will not end automatically due to player size"));
+            return;
+        }
+
+        new BukkitRunnable() {
+            public void run() {
+
+                for (TeamData td : Teams.team_datas) {
+                    if (crystalBlitz.getInstance().gamemanager == null) {
+                        cancel();
+                    }
+                    // Check if all players in the team are alive. If not set them to dead
+                    update_team_status(td.name);
+                }
+
+
+                for (TeamData td : Teams.team_datas) {
+                    if (is_only_team_alive(td.name)) {
+                        GameManager.StartEndGame(td.name);
+                        cancel();
+                        return;
+                    }
+                }
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 20, 1);
+    }
+
+}
+
+class TeamData{
+    public final String name;
+
+    public static List<TeamData> create_teams() {
+        List<TeamData> list = new ArrayList<>();
+        list.add(new TeamData("blue"));
+        list.add(new TeamData("cyan"));
+        list.add(new TeamData("green"));
+        list.add(new TeamData("lime"));
+        list.add(new TeamData("magenta"));
+        list.add(new TeamData("red"));
+        list.add(new TeamData("white"));
+        list.add(new TeamData("yellow"));
+        return list;
+    }
+
+    public static TeamData get_team_data(String s) {
+        for (TeamData td : Teams.team_datas) {
+            if (td.name.equals(s)) {
+                return td;
+            }
+        }
+        return null;
+    }
+
+    public TeamData(String n) {
+        this.name = n;
     }
 }

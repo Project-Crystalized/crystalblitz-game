@@ -1,6 +1,8 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -14,14 +16,15 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.geysermc.floodgate.api.FloodgateApi;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.Duration;
+import java.util.*;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class GameManager {
 
@@ -38,10 +41,12 @@ public class GameManager {
     public static ArrayList<Nexus> nexuses;
     public BossbarManager bossbar = new BossbarManager();
     public WorldBorderManager worldborder = new WorldBorderManager();
+    public static List<PlayerData> playerDatas = new ArrayList<>();
 
     public GameManager() {
 
         teams = new Teams();
+        TeamStatus.Init();
 
         Bukkit.getServer().sendMessage(text("Starting Game!"));
         for (Entity e : Bukkit.getWorld("world").getEntities()) {
@@ -64,6 +69,7 @@ public class GameManager {
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[2]
             );
             p.teleport(ploc);
+            playerDatas.add(new PlayerData(p));
         }
 
         new BukkitRunnable() {
@@ -71,7 +77,9 @@ public class GameManager {
             public void run() {
                 //Main game loop
                 for (Player p : Bukkit.getOnlinePlayers()) {
-
+                    if (p.getGameMode().equals(GameMode.SURVIVAL) && p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit) {
+                        p.setHealth(0);
+                    }
                 }
 
                 if (crystalBlitz.getInstance().gamemanager == null) {
@@ -222,5 +230,138 @@ public class GameManager {
         lam.setUnbreakable(true);
         i.setItemMeta(lam);
         return i;
+    }
+
+    public static void StartEndGame(String winning_team) {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            switch (winning_team.toLowerCase()) {
+                case "blue" -> {
+                    p.showTitle(Title.title(
+                            text("\\uE120 ").append(translatable("crystalized.game.generic.team.blue").color(Teams.TEAM_BLUE)).append(text(" \\uE120")),
+                            translatable("crystalized.game.knockoff.win").color(YELLOW),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+                case "cyan" -> {
+                    p.showTitle(Title.title(
+                            text("\\uE121 ").append(translatable("crystalized.game.generic.team.cyan").color(Teams.TEAM_CYAN)).append(text(" \\uE121")),
+                            translatable("crystalized.game.knockoff.win").color(YELLOW),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+                case "green" -> {
+                    p.showTitle(Title.title(
+                            text("\\uE122 ").append(translatable("crystalized.game.generic.team.green").color(Teams.TEAM_GREEN)).append(text(" \\uE122")),
+                            translatable("crystalized.game.knockoff.win").color(YELLOW),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+                case "lime" -> {
+                    p.showTitle(Title.title(
+                            text("\\uE123 ").append(translatable("crystalized.game.generic.team.lime").color(Teams.TEAM_LIME)).append(text(" \\uE123")),
+                            translatable("crystalized.game.knockoff.win").color(YELLOW),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+                case "magenta" -> {
+                    p.showTitle(Title.title(
+                            text("\\uE124 ").append(translatable("crystalized.game.generic.team.magenta").color(Teams.TEAM_MAGENTA)).append(text(" \\uE124")),
+                            translatable("crystalized.game.knockoff.win").color(YELLOW),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+                case "red" -> {
+                    p.showTitle(Title.title(
+                            text("\\uE125 ").append(translatable("crystalized.game.generic.team.red").color(Teams.TEAM_RED)).append(text(" \\uE125")),
+                            translatable("crystalized.game.knockoff.win").color(YELLOW),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+                case "white" -> {
+                    p.showTitle(Title.title(
+                            text("\\uE126 ").append(translatable("crystalized.game.generic.team.white").color(Teams.TEAM_WHITE)).append(text(" \\uE126")),
+                            translatable("crystalized.game.knockoff.win").color(YELLOW),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+                case "yellow" -> {
+                    p.showTitle(Title.title(
+                            text("\\uE127 ").append(translatable("crystalized.game.generic.team.yellow").color(Teams.TEAM_YELLOW)).append(text(" \\uE127")),
+                            translatable("crystalized.game.knockoff.win").color(YELLOW),
+                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+                default -> {
+                    p.showTitle(Title.title(text(winning_team), translatable("crystalized.game.knockoff.win").color(YELLOW), Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
+                }
+            }
+        }
+
+        new BukkitRunnable() {
+            int timer = 0;
+            FloodgateApi floodgateapi = FloodgateApi.getInstance();
+
+            @Override
+            public void run() {
+                switch (timer) {
+                    case 2:
+                        Collections.sort(playerDatas, new PlayerDataComparator());
+                        Collections.reverse(playerDatas);
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            if (floodgateapi.isFloodgatePlayer(p.getUniqueId())) {
+                                p.sendMessage(Component.text("-".repeat(40)).color(GOLD));
+                            } else {
+                                p.sendMessage(Component.text(" ".repeat(55)).color(GOLD).decoration(TextDecoration.STRIKETHROUGH,  true));
+                            }
+                        }
+                        Bukkit.getServer().sendMessage(Component.text("")
+                                .append(Component.text("\n").append(Component.translatable("crystalized.game.crystalblitz.name").color(GOLD)).append(Component.text(" \uE108").color(WHITE)))
+                                .append(Component.text("\n").append(Component.translatable("crystalized.game.generic.gameresults").color(BLUE)))
+                        );
+                        if (playerDatas.size() > 0) {
+                            PlayerData first = playerDatas.get(0);
+                            Bukkit.getServer().sendMessage(Component.text("   1st. ")
+                                    .append(Component.text(first.p.getName())).color(GREEN).append(text(" ".repeat(20 - first.p.getName().length())))
+                                    .append(Component.text("" + first.kills))
+                            );
+                        }
+                        if (playerDatas.size() > 1) {
+                            PlayerData second = playerDatas.get(1);
+                            Bukkit.getServer().sendMessage(Component.text("   2nd. ")
+                                    .append(Component.text(second.p.getName())).color(YELLOW).append(text(" ".repeat(20 - second.p.getName().length())))
+                                    .append(Component.text("" + second.kills))
+                            );
+                        }
+                        if (playerDatas.size() > 2) {
+                            PlayerData third = playerDatas.get(2);
+                            Bukkit.getServer().sendMessage(Component.text("   3rd. ")
+                                    .append(Component.text(third.p.getName())).color(YELLOW).append(text(" ".repeat(20 - third.p.getName().length())))
+                                    .append(Component.text("" + third.kills))
+                            );
+                        }
+
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            if (floodgateapi.isFloodgatePlayer(p.getUniqueId())) {
+                                p.sendMessage(Component.text("-".repeat(40)).color(GOLD));
+                            } else {
+                                p.sendMessage(Component.text(" ".repeat(55)).color(GOLD).decoration(TextDecoration.STRIKETHROUGH,  true));
+                            }
+                        }
+                        break;
+                    case 12, 13, 14:
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            player.playSound(player, "minecraft:block.note_block.hat", SoundCategory.MASTER,50, 1); //TODO placeholder sound
+                        }
+                        break;
+                    case 15:
+                        ForceEndGame();
+                        cancel();
+                        break;
+                }
+                timer++;
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 20,20);
+    }
+
+    public static PlayerData getPlayerData(Player p) {
+        for (PlayerData pd : playerDatas) {
+            if (pd.p == p) {
+                return pd;
+            }
+        }
+
+        return null;
     }
 }

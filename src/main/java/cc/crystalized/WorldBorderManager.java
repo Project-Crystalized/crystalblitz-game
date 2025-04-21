@@ -30,7 +30,6 @@ public class WorldBorderManager {
 
     public void ShrinkBorder() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            p.sendMessage(translatable("crystalized.game.crystalblitz.chat.worldborder").color(NamedTextColor.RED));
             p.showTitle(Title.title(text("World Border Shrinking").color(NamedTextColor.RED), text("")));
             p.playSound(p, "minecraft:block.note_block.harp",  50, 1); //TODO Placeholder sound
         }

@@ -3,11 +3,13 @@ package cc.crystalized;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 
 public class BossbarManager {
 
@@ -30,6 +32,13 @@ public class BossbarManager {
                 }
                 timer--;
                 ChangeBossbarText();
+
+                if (timer == 60 && currentstate == BossBarStates.GenUpgradeII) {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        //TODO add a sound or smth here
+                        p.sendMessage(translatable("crystalized.game.crystalblitz.chat.worldborder").color(NamedTextColor.RED));
+                    }
+                }
 
                 if (timer == 0) {
                     switch (currentstate) {

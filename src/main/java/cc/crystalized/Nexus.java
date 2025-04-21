@@ -132,6 +132,9 @@ public class Nexus {
         NexusBrokenText.add(translatable("crystalized.game.crystalblitz." + t + "nexus"));
         NexusBrokenText.add(text(p.getName()));
 
+        PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+        kpd.nexus_kills++;
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(translatable("crystalized.game.crystalblitz.chat.nexusbroken", NexusBrokenText));
         }
