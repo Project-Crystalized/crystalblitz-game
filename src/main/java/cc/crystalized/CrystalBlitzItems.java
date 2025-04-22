@@ -228,7 +228,7 @@ public class CrystalBlitzItems {
         List<Component> BreezeDaggerLore = new ArrayList<>();
         BreezeDaggerLore.add(translatable("crystalized.sword.wind.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         BreezeDaggerLore.add(text(""));
-        BreezeDaggerLore.add(text("40 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        BreezeDaggerLore.add(text("30 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BreezeDagger_im.lore(BreezeDaggerLore);
         BreezeDagger_im.customName(translatable("crystalized.sword.wind.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BreezeDagger_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));

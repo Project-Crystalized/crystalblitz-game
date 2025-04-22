@@ -82,6 +82,18 @@ public class GameManager {
                 }
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
+
+        new BukkitRunnable() {
+            public void run() {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (!p.getWorldBorder().isInside(p.getLocation()) && p.getGameMode().equals(GameMode.SURVIVAL)) {
+                        //Fake hurt thingy, probably a better way of doing this
+                        p.setHealth(p.getHealth() - 1);
+                        p.playSound(p, "minecraft:entity.generic.hurt", 50, 1);
+                    }
+                }
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 15);
     }
 
     public static void ForceEndGame() {

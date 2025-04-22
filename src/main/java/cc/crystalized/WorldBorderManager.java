@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import java.util.concurrent.TimeUnit;
 
 import static net.kyori.adventure.text.Component.text;
-import static net.kyori.adventure.text.Component.translatable;
 
 public class WorldBorderManager {
 
@@ -20,8 +19,6 @@ public class WorldBorderManager {
         MapData mapdata = crystalBlitz.getInstance().mapdata;
         border.setCenter(mapdata.border_mid[0] + 0.5, mapdata.border_mid[1] + 0.5);
         border.setSize(mapdata.border_size * 2);
-        border.setDamageAmount(1);
-        border.setDamageBuffer(1);
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.setWorldBorder(border);
