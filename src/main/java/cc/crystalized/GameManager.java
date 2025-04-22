@@ -88,7 +88,11 @@ public class GameManager {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (!p.getWorldBorder().isInside(p.getLocation()) && p.getGameMode().equals(GameMode.SURVIVAL)) {
                         //Fake hurt thingy, probably a better way of doing this
-                        p.setHealth(p.getHealth() - 1);
+                        if (p.getHealth() < 1) {
+                            p.setHealth(0);
+                        } else {
+                            p.setHealth(p.getHealth() - 1);
+                        }
                         p.playSound(p, "minecraft:entity.generic.hurt", 50, 1);
                     }
                 }
