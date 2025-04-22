@@ -1,15 +1,23 @@
 package cc.crystalized;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
+
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public final class crystalBlitz extends JavaPlugin {
 
@@ -53,9 +61,45 @@ public final class crystalBlitz extends JavaPlugin {
                 if (is_force_starting) {
                     is_force_starting = false;
                     new BukkitRunnable() {
+                        int timer = 0;
                         public void run() {
-                            gamemanager = new GameManager();
-                            cancel();
+                            timer++;
+                            switch (timer) {
+                                case 3 -> {
+                                    for (Player player : Bukkit.getOnlinePlayers()) {
+                                        player.showTitle(Title.title(translatable("crystalized.game.generic.startingin").color(GREEN), text("3").color(RED)
+                                                        .append(Component.text(" 2 1").color(GRAY))
+                                                ,Title.Times.times(Duration.ofMillis(0), Duration.ofSeconds(1), Duration.ofSeconds(1))));
+                                        player.playSound(player, "crystalized:effect.countdown", 50, 1);
+                                    }
+                                }
+                                case 4 -> {
+                                    for (Player player : Bukkit.getOnlinePlayers()) {
+                                        player.showTitle(Title.title(translatable("crystalized.game.generic.startingin").color(GREEN), text("3").color(GRAY)
+                                                        .append(Component.text(" 2").color(RED))
+                                                        .append(Component.text(" 1").color(GRAY))
+                                                ,Title.Times.times(Duration.ofMillis(0), Duration.ofSeconds(1), Duration.ofSeconds(1))));
+                                        player.playSound(player, "crystalized:effect.countdown", 50, 1);
+                                    }
+                                }
+                                case 5 -> {
+                                    for (Player player : Bukkit.getOnlinePlayers()) {
+                                        player.showTitle(Title.title(translatable("crystalized.game.generic.startingin").color(GREEN), text("3 2 ").color(GRAY)
+                                                        .append(Component.text("1").color(RED))
+                                                ,Title.Times.times(Duration.ofMillis(0), Duration.ofSeconds(1), Duration.ofSeconds(1))));
+                                        player.playSound(player, "crystalized:effect.countdown", 50, 1);
+                                    }
+                                }
+                                case 6 -> {
+                                    for (Player player : Bukkit.getOnlinePlayers()) {
+                                        player.showTitle(Title.title(translatable("crystalized.game.generic.go").color(GOLD), text(" "),
+                                                Title.Times.times(Duration.ofMillis(0), Duration.ofSeconds(1), Duration.ofSeconds(1))));
+                                        player.playSound(player, "crystalized:effect.countdown_end", 50, 1);
+                                    }
+                                    gamemanager = new GameManager();
+                                    cancel();
+                                }
+                            }
                         }
                     }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
                 }
