@@ -1,6 +1,7 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
@@ -11,7 +12,6 @@ import org.bukkit.entity.TextDisplay;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -27,15 +27,6 @@ import static net.kyori.adventure.text.Component.translatable;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class GameManager {
-
-    /*
-    TODO
-
-    Sort out teams
-    TP players to correct Locations
-    Colour armor
-
-     */
 
     public Teams teams;
     public static ArrayList<Nexus> nexuses;
@@ -62,6 +53,9 @@ public class GameManager {
             Teams.setPlayerDisplayNames(p);
             p.setGameMode(GameMode.SURVIVAL);
             new ScoreboardManager(p);
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                p.unlistPlayer(player);
+            }
 
             Location ploc = new Location(Bukkit.getWorld("world"),
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
@@ -80,6 +74,7 @@ public class GameManager {
                     if (p.getGameMode().equals(GameMode.SURVIVAL) && p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit) {
                         p.setHealth(0);
                     }
+                    TabMenu.sendTabMenu(p);
                 }
 
                 if (crystalBlitz.getInstance().gamemanager == null) {
@@ -363,5 +358,56 @@ public class GameManager {
         }
 
         return null;
+    }
+}
+
+class TabMenu {
+
+    static Component StatsPlayerList = text("");
+    static Component alive = text("[Alive] ").color(WHITE);
+    static Component dead = text("[Dead] ").color(WHITE);
+    static Component eliminated = text("[Eliminated] ").color(WHITE);
+
+    private static void addToStatsString(Component s) {
+        StatsPlayerList = StatsPlayerList.append(s);
+    }
+
+    public static void sendTabMenu(Player p) {
+        StatsPlayerList = text("");
+        Teams t = crystalBlitz.getInstance().gamemanager.teams;
+
+        p.sendPlayerListHeader(
+                text("\n")
+                        .append(text("Crystalized: Crystal Blitz").color(LIGHT_PURPLE))
+                        .append(text("\n"))
+        );
+
+
+        addToStatsString(text("---------------------------------------------------\n").color(GRAY));
+        for (TeamData td : t.team_datas) {
+            List<String> team = t.get_team_from_string(td.name); //probably unsafe, im just shooting in the dark to see if this works
+            if (team.size() == 0) {
+                //Do nothing
+            } else {
+                addToStatsString(text("\n").append(text(td.symbol)).append(translatable("crystalized.game.generic.team." + td.name).color(TextColor.color(td.color.asRGB()))).append(text("\n")));
+                for (String s : team) {
+                    Player player = Bukkit.getPlayer(s);
+                    PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(player);
+                    if (pd.isEliminated) {
+                        addToStatsString(eliminated);
+                    } else if (player.getGameMode().equals(GameMode.SPECTATOR)) {
+                        addToStatsString(dead);
+                    } else {
+                        addToStatsString(alive);
+                    }
+                    addToStatsString(text("").append(player.displayName()).append(text(" \uE101: " + pd.kills)).append(text(" \uE101(N): " + pd.nexus_kills)).append(text(" \uE103: " + pd.deaths)).append(text("\n")));
+                }
+            }
+        }
+        addToStatsString(text("\n---------------------------------------------------\n\n").color(GRAY)
+                .append(text("Crystal Blitz Version: " + crystalBlitz.getInstance().getDescription().getVersion())).color(DARK_GRAY).append(text("\n"))
+        );
+
+        p.sendPlayerListFooter(StatsPlayerList);
     }
 }

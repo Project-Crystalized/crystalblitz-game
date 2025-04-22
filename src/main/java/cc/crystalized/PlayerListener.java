@@ -54,6 +54,7 @@ public class PlayerListener implements Listener {
             p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             p.setGameMode(GameMode.ADVENTURE);
             p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 0, false, false, true));
+            //TODO make this look better
             p.sendPlayerListHeaderAndFooter(
                     //Header
                     text("\nCrystalized: Crystal Blitz\n"),
@@ -105,10 +106,12 @@ public class PlayerListener implements Listener {
         );
         p.teleport(loc);
 
-        if (k != null) {
+        if (k != null && k != p) {
             PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(k);
             kpd.kills++;
         }
+        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+        pd.deaths++;
 
         PlayerInventory inv = p.getInventory();
         //Might be a mess but welp, too bad, im lazy and I cant think of anything better
@@ -231,7 +234,6 @@ public class PlayerListener implements Listener {
             }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
         } else {
             p.sendMessage(text("[!] You're eliminated from the game!"));
-            PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
             pd.isEliminated = true;
         }
     }

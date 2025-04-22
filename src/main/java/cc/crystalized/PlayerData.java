@@ -10,6 +10,7 @@ public class PlayerData {
     boolean isEliminated = false;
     int kills = 0;
     int nexus_kills = 0;
+    int deaths = 0;
 
     public PlayerData(Player player) {
         p = player;

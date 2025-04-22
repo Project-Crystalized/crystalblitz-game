@@ -3,6 +3,7 @@ package cc.crystalized;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -360,21 +361,23 @@ class TeamStatus{
 
 class TeamData{
     public final String name;
+    public final Color color;
+    public final String symbol;
 
     public static List<TeamData> create_teams() {
         List<TeamData> list = new ArrayList<>();
-        list.add(new TeamData("blue"));
-        list.add(new TeamData("cyan"));
-        list.add(new TeamData("green"));
-        list.add(new TeamData("lime"));
-        list.add(new TeamData("magenta"));
-        list.add(new TeamData("red"));
-        list.add(new TeamData("white"));
-        list.add(new TeamData("yellow"));
+        list.add(new TeamData("blue", Color.fromRGB(0x0A42BB), "\uE120 "));
+        list.add(new TeamData("cyan", Color.fromRGB(0x157D91), "\uE121 "));
+        list.add(new TeamData("green", Color.fromRGB(0x0A971E), "\uE122 "));
+        list.add(new TeamData("lime", Color.fromRGB(0x67E555), "\uE123 "));
+        list.add(new TeamData("magenta", Color.fromRGB(0xDA50E0), "\uE124 "));
+        list.add(new TeamData("red", Color.fromRGB(0xF74036), "\uE125 "));
+        list.add(new TeamData("white", Color.fromRGB(0xFFFFFF), "\uE126 "));
+        list.add(new TeamData("yellow", Color.fromRGB(0xFBE059), "\uE127 "));
         return list;
     }
 
-    public static TeamData get_team_data(String s) {
+    public static TeamData get_team_data(String s, String s2) {
         for (TeamData td : Teams.team_datas) {
             if (td.name.equals(s)) {
                 return td;
@@ -383,7 +386,9 @@ class TeamData{
         return null;
     }
 
-    public TeamData(String n) {
-        this.name = n;
+    public TeamData(String name, Color color, String symbol) {
+        this.name = name;
+        this.color = color;
+        this.symbol = symbol;
     }
 }
