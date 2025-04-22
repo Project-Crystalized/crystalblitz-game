@@ -243,7 +243,7 @@ public class CrystalBlitzItems {
         BreezeDaggeritem_im.customName(translatable("crystalized.sword.wind.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BreezeDaggeritem_im.setItemModel(new NamespacedKey("crystalized", "breeze_dagger"));
         BreezeDaggeritem_im.setUnbreakable(true);
-        BreezeDagger_im.addEnchant(Enchantment.KNOCKBACK, 2, true);
+        BreezeDaggeritem_im.addEnchant(Enchantment.KNOCKBACK, 1, true);
         BreezeDagger_item.setItemMeta(BreezeDaggeritem_im);
         BreezeDagger_item.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
 

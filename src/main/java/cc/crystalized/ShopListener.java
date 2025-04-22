@@ -3,7 +3,6 @@ package cc.crystalized;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -95,7 +94,9 @@ public class ShopListener implements Listener {
             List<ItemStack> remove = new ArrayList<>();
             remove.add(CrystalBlitzItems.WoodenSword);
             remove.add(CrystalBlitzItems.StoneSword_item);
-            buyItem(p, Shop.ShardTypes.Strong, 40, remove, CrystalBlitzItems.BreezeDagger_item, null);
+            List<ItemStack> nothave = new ArrayList<>();
+            nothave.add(CrystalBlitzItems.BreezeDagger_item);
+            buyItem(p, Shop.ShardTypes.Strong, 30, remove, CrystalBlitzItems.BreezeDagger_item, nothave);
 
             String PCHint = "\uE10B";
             String XboxHint = "\uE118";
