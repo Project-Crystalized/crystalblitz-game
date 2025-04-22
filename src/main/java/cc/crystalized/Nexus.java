@@ -23,6 +23,7 @@ import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public class Nexus {
 
@@ -32,6 +33,27 @@ public class Nexus {
     public Nexus(String t) {
         team = t;
         HealthBar(t);
+    }
+
+    public Component getColoredHealth() {
+        switch (health) {
+            case 10, 9 -> {
+                return text("(" + health + "/10)").color(GREEN);
+            }
+            case 8, 7 -> {
+                return text("(" + health + "/10)").color(DARK_GREEN);
+            }
+            case 6, 5 -> {
+                return text("(" + health + "/10)").color(YELLOW);
+            }
+            case 4, 3 -> {
+                return text("(" + health + "/10)").color(GOLD);
+            }
+            case 2, 1, 0 -> {
+                return text("(" + health + "/10)").color(RED);
+            }
+        }
+        return text("(" + health + "/10)").color(WHITE);
     }
 
     public String getTeam() {

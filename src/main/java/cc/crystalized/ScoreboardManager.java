@@ -135,6 +135,14 @@ public class ScoreboardManager {
                                 obj.getScore("11").customName(translatable("crystalized.game.crystalblitz.genspeed").append(text("II")));
                             }
                         }
+                        obj.getScore("9").customName(translatable("crystalized.game.generic.team.blue").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("blue").getColoredHealth()));
+                        obj.getScore("8").customName(translatable("crystalized.game.generic.team.cyan").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("cyan").getColoredHealth()));
+                        obj.getScore("7").customName(translatable("crystalized.game.generic.team.green").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("green").getColoredHealth()));
+                        obj.getScore("6").customName(translatable("crystalized.game.generic.team.lime").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("lime").getColoredHealth()));
+                        obj.getScore("5").customName(translatable("crystalized.game.generic.team.magenta").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("magenta").getColoredHealth()));
+                        obj.getScore("4").customName(translatable("crystalized.game.generic.team.red").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("red").getColoredHealth()));
+                        obj.getScore("3").customName(translatable("crystalized.game.generic.team.white").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("white").getColoredHealth()));
+                        obj.getScore("2").customName(translatable("crystalized.game.generic.team.yellow").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("yellow").getColoredHealth()));
 
                     } else {
                         //Java
@@ -149,14 +157,14 @@ public class ScoreboardManager {
                                 genspeed.suffix(text("II"));
                             }
                         }
-                        blue.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("blue").health)).append(text("/10)")));
-                        cyan.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("cyan").health)).append(text("/10)")));
-                        green.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("green").health)).append(text("/10)")));
-                        lime.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("lime").health)).append(text("/10)")));
-                        magenta.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("magenta").health)).append(text("/10)")));
-                        red.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("red").health)).append(text("/10)")));
-                        white.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("white").health)).append(text("/10)")));
-                        yellow.suffix(text("(").append(text(crystalBlitz.getInstance().gamemanager.getNexus("yellow").health)).append(text("/10)")));
+                        blue.suffix(crystalBlitz.getInstance().gamemanager.getNexus("blue").getColoredHealth());
+                        cyan.suffix(crystalBlitz.getInstance().gamemanager.getNexus("cyan").getColoredHealth());
+                        green.suffix(crystalBlitz.getInstance().gamemanager.getNexus("green").getColoredHealth());
+                        lime.suffix(crystalBlitz.getInstance().gamemanager.getNexus("lime").getColoredHealth());
+                        magenta.suffix(crystalBlitz.getInstance().gamemanager.getNexus("magenta").getColoredHealth());
+                        red.suffix(crystalBlitz.getInstance().gamemanager.getNexus("red").getColoredHealth());
+                        white.suffix(crystalBlitz.getInstance().gamemanager.getNexus("white").getColoredHealth());
+                        yellow.suffix(crystalBlitz.getInstance().gamemanager.getNexus("yellow").getColoredHealth());
                     }
                 }
             }
