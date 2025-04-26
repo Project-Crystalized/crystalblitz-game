@@ -96,6 +96,9 @@ public class GameManager {
                         p.playSound(p, "minecraft:entity.generic.hurt", 50, 1);
                     }
                 }
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    cancel();
+                }
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 15);
     }
