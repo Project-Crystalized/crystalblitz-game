@@ -158,35 +158,35 @@ public class ShopListener implements Listener {
             switch (Teams.getPlayerTeam(p1)) {
                 case "blue" -> {
                     item = new ItemStack(Material.BLUE_CONCRETE);
-                    item.setAmount(8);
+                    item.setAmount(16);
                 }
                 case "cyan" -> {
                     item = new ItemStack(Material.CYAN_CONCRETE);
-                    item.setAmount(8);
+                    item.setAmount(16);
                 }
                 case "green" -> {
                     item = new ItemStack(Material.GREEN_CONCRETE);
-                    item.setAmount(8);
+                    item.setAmount(16);
                 }
                 case "lime" -> {
                     item = new ItemStack(Material.LIME_CONCRETE);
-                    item.setAmount(8);
+                    item.setAmount(16);
                 }
                 case "magenta" -> {
                     item = new ItemStack(Material.MAGENTA_CONCRETE);
-                    item.setAmount(8);
+                    item.setAmount(16);
                 }
                 case "red" -> {
                     item = new ItemStack(Material.RED_CONCRETE);
-                    item.setAmount(8);
+                    item.setAmount(16);
                 }
                 case "white" -> {
                     item = new ItemStack(Material.WHITE_CONCRETE);
-                    item.setAmount(8);
+                    item.setAmount(16);
                 }
                 case "yellow" -> {
                     item = new ItemStack(Material.YELLOW_CONCRETE);
-                    item.setAmount(8);
+                    item.setAmount(16);
                 }
             }
             buyItem(p, Shop.ShardTypes.Weak, 8, null, item, null);
