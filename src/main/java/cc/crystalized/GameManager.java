@@ -248,52 +248,53 @@ public class GameManager {
 
     public static void StartEndGame(String winning_team) {
         for (Player p : Bukkit.getOnlinePlayers()) {
+            p.playSound(p, "crystalized:effect.ls_game_won", 50, 1);
             switch (winning_team.toLowerCase()) {
                 case "blue" -> {
                     p.showTitle(Title.title(
-                            text("\\uE120 ").append(translatable("crystalized.game.generic.team.blue").color(Teams.TEAM_BLUE)).append(text(" \\uE120")),
+                            text("\uE120 ").append(translatable("crystalized.game.generic.team.blue").color(Teams.TEAM_BLUE)).append(text(" \uE120")),
                             translatable("crystalized.game.knockoff.win").color(YELLOW),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
                 }
                 case "cyan" -> {
                     p.showTitle(Title.title(
-                            text("\\uE121 ").append(translatable("crystalized.game.generic.team.cyan").color(Teams.TEAM_CYAN)).append(text(" \\uE121")),
+                            text("\uE121 ").append(translatable("crystalized.game.generic.team.cyan").color(Teams.TEAM_CYAN)).append(text(" \uE121")),
                             translatable("crystalized.game.knockoff.win").color(YELLOW),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
                 }
                 case "green" -> {
                     p.showTitle(Title.title(
-                            text("\\uE122 ").append(translatable("crystalized.game.generic.team.green").color(Teams.TEAM_GREEN)).append(text(" \\uE122")),
+                            text("\uE122 ").append(translatable("crystalized.game.generic.team.green").color(Teams.TEAM_GREEN)).append(text(" \uE122")),
                             translatable("crystalized.game.knockoff.win").color(YELLOW),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
                 }
                 case "lime" -> {
                     p.showTitle(Title.title(
-                            text("\\uE123 ").append(translatable("crystalized.game.generic.team.lime").color(Teams.TEAM_LIME)).append(text(" \\uE123")),
+                            text("\uE123 ").append(translatable("crystalized.game.generic.team.lime").color(Teams.TEAM_LIME)).append(text(" \uE123")),
                             translatable("crystalized.game.knockoff.win").color(YELLOW),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
                 }
                 case "magenta" -> {
                     p.showTitle(Title.title(
-                            text("\\uE124 ").append(translatable("crystalized.game.generic.team.magenta").color(Teams.TEAM_MAGENTA)).append(text(" \\uE124")),
+                            text("\uE124 ").append(translatable("crystalized.game.generic.team.magenta").color(Teams.TEAM_MAGENTA)).append(text(" \uE124")),
                             translatable("crystalized.game.knockoff.win").color(YELLOW),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
                 }
                 case "red" -> {
                     p.showTitle(Title.title(
-                            text("\\uE125 ").append(translatable("crystalized.game.generic.team.red").color(Teams.TEAM_RED)).append(text(" \\uE125")),
+                            text("\uE125 ").append(translatable("crystalized.game.generic.team.red").color(Teams.TEAM_RED)).append(text(" \uE125")),
                             translatable("crystalized.game.knockoff.win").color(YELLOW),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
                 }
                 case "white" -> {
                     p.showTitle(Title.title(
-                            text("\\uE126 ").append(translatable("crystalized.game.generic.team.white").color(Teams.TEAM_WHITE)).append(text(" \\uE126")),
+                            text("\uE126 ").append(translatable("crystalized.game.generic.team.white").color(Teams.TEAM_WHITE)).append(text(" \uE126")),
                             translatable("crystalized.game.knockoff.win").color(YELLOW),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
                 }
                 case "yellow" -> {
                     p.showTitle(Title.title(
-                            text("\\uE127 ").append(translatable("crystalized.game.generic.team.yellow").color(Teams.TEAM_YELLOW)).append(text(" \\uE127")),
+                            text("\uE127 ").append(translatable("crystalized.game.generic.team.yellow").color(Teams.TEAM_YELLOW)).append(text(" \uE127")),
                             translatable("crystalized.game.knockoff.win").color(YELLOW),
                             Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
                 }
@@ -321,7 +322,7 @@ public class GameManager {
                             }
                         }
                         Bukkit.getServer().sendMessage(Component.text("")
-                                .append(Component.text("\n").append(Component.translatable("crystalized.game.crystalblitz.name").color(GOLD)).append(Component.text(" \uE108").color(WHITE)))
+                                .append(Component.text("\n").append(Component.translatable("crystalized.game.crystalblitz.name").color(LIGHT_PURPLE)).append(Component.text(" ").color(WHITE))) //TODO add symbol here
                                 .append(Component.text("\n").append(Component.translatable("crystalized.game.generic.gameresults").color(BLUE)))
                         );
                         if (playerDatas.size() > 0) {
