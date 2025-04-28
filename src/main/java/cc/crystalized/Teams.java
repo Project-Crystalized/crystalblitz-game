@@ -39,7 +39,7 @@ public class Teams {
 
     public static final List<TeamData> team_datas = TeamData.create_teams();
 
-    public Teams() {
+    public Teams(GameManager.GameTypes type) {
         List<String> playerlist = new ArrayList<>();
 
         teams.clear();
@@ -84,102 +84,211 @@ public class Teams {
                 }
             }.runTaskTimer(crystalBlitz.getInstance(), 20 ,1);
 
-            if (playerlist.size() > 0) {
-                if (blue.isEmpty()) {
-                    blue.add(playerlist.get(0));
+            //TODO we should rework this so its not long, this could probably be done cleaner
+            switch (type) {
+                case GameManager.GameTypes.StandardSolos -> {
+                    //comment so intellij isn't annoying
+                    if (playerlist.size() > 0) {
+                        if (blue.isEmpty()) {
+                            blue.add(playerlist.get(0));
+                            if (playerlist.size() > 8) {
+                                blue.add(playerlist.get(8));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + blue + " in Team Blue");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.SEVERE, "Tried to add a player to team Blue but the player list is 0. Please report this as you shouldn't be able to get this error");
+                        throw new RuntimeException();
+                    }
+
+                    if (playerlist.size() > 1) { //If the player list is 2 or greater
+                        if (cyan.isEmpty()) {
+                            cyan.add(playerlist.get(1));
+                            if (playerlist.size() > 9) {
+                                cyan.add(playerlist.get(9));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + cyan + " in Team Cyan");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.WARNING, "No player(s) available for Cyan team (FYI: Recommend getting an alt account or someone else to join. 2 or more players is recommended)");
+                    }
+
+                    if (playerlist.size() > 2) { //If the player list is 3 or greater
+                        if (green.isEmpty()) {
+                            green.add(playerlist.get(2));
+                            if (playerlist.size() > 10) {
+                                green.add(playerlist.get(10));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + green + " in Team Green");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Green team");
+                    }
+
+                    if (playerlist.size() > 3) { //If the player list is 5 or greater
+                        if (lime.isEmpty()) {
+                            lime.add(playerlist.get(3));
+                            if (playerlist.size() > 11) {
+                                lime.add(playerlist.get(11));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + lime + " in Team Lime");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Lime team");
+                    }
+
+                    if (playerlist.size() > 4) { //If the player list is 6 or greater
+                        if (magenta.isEmpty()) {
+                            magenta.add(playerlist.get(4));
+                            if (playerlist.size() > 12) {
+                                magenta.add(playerlist.get(12));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + magenta + " in Team Magenta");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Magenta team");
+                    }
+
+                    if (playerlist.size() > 5) { //If the player list is 10 or greater
+                        if (red.isEmpty()) {
+                            red.add(playerlist.get(5));
+                            if (playerlist.size() > 13) {
+                                red.add(playerlist.get(13));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + red + " in Team Red");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Red team");
+                    }
+
+                    if (playerlist.size() > 6) { //If the player list is 11 or greater
+                        if (white.isEmpty()) {
+                            white.add(playerlist.get(6));
+                            if (playerlist.size() > 14) {
+                                white.add(playerlist.get(14));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + white + " in Team White");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for White team");
+                    }
+
+                    if (playerlist.size() > 7) { //If the player list is 12
+                        if (yellow.isEmpty()) {
+                            yellow.add(playerlist.get(7));
+                            if (playerlist.size() > 15) {
+                                yellow.add(playerlist.get(15));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + yellow + " in Team Yellow");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Yellow team");
+                    }
+                }
+                case GameManager.GameTypes.StandardDuos -> {
+                    if (playerlist.size() > 0) {
+                        if (blue.isEmpty()) {
+                            blue.add(playerlist.get(0));
+                            if (playerlist.size() > 1) {
+                                blue.add(playerlist.get(1));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + blue + " in Team Blue");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.SEVERE, "Tried to add a player to team Blue but the player list is 0. Please report this as you shouldn't be able to get this error");
+                        throw new RuntimeException();
+                    }
+
+                    if (playerlist.size() > 2) {
+                        if (cyan.isEmpty()) {
+                            cyan.add(playerlist.get(2));
+                            if (playerlist.size() > 3) {
+                                cyan.add(playerlist.get(3));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + cyan + " in Team Cyan");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.WARNING, "No player(s) available for Cyan team (FYI: Recommend getting an alt account or someone else to join. 2 or more players is recommended)");
+                    }
+
+                    if (playerlist.size() > 4) {
+                        if (green.isEmpty()) {
+                            green.add(playerlist.get(4));
+                            if (playerlist.size() > 5) {
+                                green.add(playerlist.get(5));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + green + " in Team Green");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Green team");
+                    }
+
+                    if (playerlist.size() > 6) {
+                        if (lime.isEmpty()) {
+                            lime.add(playerlist.get(6));
+                            if (playerlist.size() > 7) {
+                                lime.add(playerlist.get(7));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + lime + " in Team Lime");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Lime team");
+                    }
+
                     if (playerlist.size() > 8) {
-                        blue.add(playerlist.get(8));
+                        if (magenta.isEmpty()) {
+                            magenta.add(playerlist.get(8));
+                            if (playerlist.size() > 9) {
+                                magenta.add(playerlist.get(9));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + magenta + " in Team Magenta");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Magenta team");
                     }
-                    Bukkit.getLogger().log(Level.INFO, "Player(s) " + blue + " in Team Blue");
-                }
-            }else {
-                Bukkit.getLogger().log(Level.SEVERE, "Tried to add a player to team Blue but the player list is 0. Please report this as you shouldn't be able to get this error");
-                throw new RuntimeException();
-            }
 
-            if (playerlist.size() > 1) { //If the player list is 2 or greater
-                if (cyan.isEmpty()) {
-                    cyan.add(playerlist.get(1));
-                    if (playerlist.size() > 9) {
-                        cyan.add(playerlist.get(9));
-                    }
-                    Bukkit.getLogger().log(Level.INFO, "Player(s) " + cyan + " in Team Cyan");
-                }
-            }else {
-                Bukkit.getLogger().log(Level.WARNING, "No player(s) available for Cyan team (FYI: Recommend getting an alt account or someone else to join. 2 or more players is recommended)");
-            }
-
-            if (playerlist.size() > 2) { //If the player list is 3 or greater
-                if (green.isEmpty()) {
-                    green.add(playerlist.get(2));
                     if (playerlist.size() > 10) {
-                        green.add(playerlist.get(10));
+                        if (red.isEmpty()) {
+                            red.add(playerlist.get(10));
+                            if (playerlist.size() > 11) {
+                                red.add(playerlist.get(11));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + red + " in Team Red");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Red team");
                     }
-                    Bukkit.getLogger().log(Level.INFO, "Player(s) " + green + " in Team Green");
-                }
-            }else {
-                Bukkit.getLogger().log(Level.INFO, "No player(s) available for Green team");
-            }
 
-            if (playerlist.size() > 3) { //If the player list is 5 or greater
-                if (lime.isEmpty()) {
-                    lime.add(playerlist.get(3));
-                    if (playerlist.size() > 11) {
-                        lime.add(playerlist.get(11));
-                    }
-                    Bukkit.getLogger().log(Level.INFO, "Player(s) " + lime + " in Team Lime");
-                }
-            }else {
-                Bukkit.getLogger().log(Level.INFO, "No player(s) available for Lime team");
-            }
-
-            if (playerlist.size() > 4) { //If the player list is 6 or greater
-                if (magenta.isEmpty()) {
-                    magenta.add(playerlist.get(4));
                     if (playerlist.size() > 12) {
-                        magenta.add(playerlist.get(12));
+                        if (white.isEmpty()) {
+                            white.add(playerlist.get(12));
+                            if (playerlist.size() > 13) {
+                                white.add(playerlist.get(13));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + white + " in Team White");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for White team");
                     }
-                    Bukkit.getLogger().log(Level.INFO, "Player(s) " + magenta + " in Team Magenta");
-                }
-            }else {
-                Bukkit.getLogger().log(Level.INFO, "No player(s) available for Magenta team");
-            }
 
-            if (playerlist.size() > 5) { //If the player list is 10 or greater
-                if (red.isEmpty()) {
-                    red.add(playerlist.get(5));
-                    if (playerlist.size() > 13) {
-                        red.add(playerlist.get(13));
-                    }
-                    Bukkit.getLogger().log(Level.INFO, "Player(s) " + red + " in Team Red");
-                }
-            }else {
-                Bukkit.getLogger().log(Level.INFO, "No player(s) available for Red team");
-            }
-
-            if (playerlist.size() > 6) { //If the player list is 11 or greater
-                if (white.isEmpty()) {
-                    white.add(playerlist.get(6));
                     if (playerlist.size() > 14) {
-                        white.add(playerlist.get(14));
+                        if (yellow.isEmpty()) {
+                            yellow.add(playerlist.get(14));
+                            if (playerlist.size() > 15) {
+                                yellow.add(playerlist.get(15));
+                            }
+                            Bukkit.getLogger().log(Level.INFO, "Player(s) " + yellow + " in Team Yellow");
+                        }
+                    }else {
+                        Bukkit.getLogger().log(Level.INFO, "No player(s) available for Yellow team");
                     }
-                    Bukkit.getLogger().log(Level.INFO, "Player(s) " + white + " in Team White");
                 }
-            }else {
-                Bukkit.getLogger().log(Level.INFO, "No player(s) available for White team");
+                default -> {
+                    throw new RuntimeException("Unknown GameManager.GameTypes \"" + type + "\". Please report this bug and provide reproduction steps to getting this error.");
+                }
             }
 
-            if (playerlist.size() > 7) { //If the player list is 12
-                if (yellow.isEmpty()) {
-                    yellow.add(playerlist.get(7));
-                    if (playerlist.size() > 15) {
-                        yellow.add(playerlist.get(15));
-                    }
-                    Bukkit.getLogger().log(Level.INFO, "Player(s) " + yellow + " in Team Yellow");
-                }
-            }else {
-                Bukkit.getLogger().log(Level.INFO, "No player(s) available for Yellow team");
-            }
+
         }
     }
 
@@ -292,10 +401,13 @@ class TeamStatus{
                 counter++;
             }
         }
+
+        List<String> td = Teams.get_team_from_string(team);
+
         //Why cyan?
-        if (Teams.cyan.size() == 0) {
+        if (td.size() == 0) {
             team_statuses.put(team, Status.Dead);
-        } else if (counter == Teams.cyan.size()) {
+        } else if (counter == td.size()) {
             team_statuses.put(team, Status.Alive);
         } else {
             team_statuses.put(team, Status.Dead);

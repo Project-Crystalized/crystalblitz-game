@@ -59,6 +59,11 @@ public final class crystalBlitz extends JavaPlugin {
                     return;
                 }
                 if (is_force_starting) {
+                    if (Bukkit.getOnlinePlayers().size() > 16) {
+                        Bukkit.getServer().sendMessage(text("[!] Too many players are online, aborting game as theres no compatible mode to support " + Bukkit.getOnlinePlayers().size() + " players. Make sure the player size in server.properties is capped to 16 maximum."));
+                        return;
+                    }
+
                     is_force_starting = false;
                     new BukkitRunnable() {
                         int timer = 0;
@@ -96,7 +101,11 @@ public final class crystalBlitz extends JavaPlugin {
                                                 Title.Times.times(Duration.ofMillis(0), Duration.ofSeconds(1), Duration.ofSeconds(1))));
                                         player.playSound(player, "crystalized:effect.countdown_end", 50, 1);
                                     }
-                                    gamemanager = new GameManager();
+                                    if (Bukkit.getOnlinePlayers().size() < 8 || Bukkit.getOnlinePlayers().size() == 8) {
+                                        gamemanager = new GameManager(GameManager.GameTypes.StandardSolos);
+                                    } else if (Bukkit.getOnlinePlayers().size() < 16 || Bukkit.getOnlinePlayers().size() < 16) {
+                                        gamemanager = new GameManager(GameManager.GameTypes.StandardDuos);
+                                    }
                                     cancel();
                                 }
                             }
@@ -110,6 +119,10 @@ public final class crystalBlitz extends JavaPlugin {
     @Override
     public void onDisable() {
 
+    }
+
+    public void forceStartGame(GameManager.GameTypes type) {
+        gamemanager = new GameManager(type);
     }
 
     public static crystalBlitz getInstance() {

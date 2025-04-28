@@ -25,8 +25,24 @@ public class Commands implements CommandExecutor {
         if (args[0] == null) {return false;}
         switch (args[0]) {
             case "start":
-                crystalBlitz.getInstance().is_force_starting = true;
-                return true;
+                if (args.length == 1) {
+                    commandSender.sendMessage("[!] Missing arguments, /crystalblitz start [solo/duo]");
+                    return true;
+                }
+                switch (args[1]) {
+                    case "solo" -> {
+                        crystalBlitz.getInstance().forceStartGame(GameManager.GameTypes.StandardSolos);
+                        return true;
+                    }
+                    case "duo" -> {
+                        crystalBlitz.getInstance().forceStartGame(GameManager.GameTypes.StandardDuos);
+                        return true;
+                    }
+                    default -> {
+                        commandSender.sendMessage("[!] Incorrect arguments, /crystalblitz start [solo/duo]");
+                        return true;
+                    }
+                }
             case "end":
                 crystalBlitz.getInstance().gamemanager.ForceEndGame();
                 return true;

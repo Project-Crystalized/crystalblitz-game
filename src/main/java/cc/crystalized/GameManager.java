@@ -34,9 +34,14 @@ public class GameManager {
     public WorldBorderManager worldborder = new WorldBorderManager();
     public static List<PlayerData> playerDatas = new ArrayList<>();
 
-    public GameManager() {
+    enum GameTypes {
+        StandardSolos,
+        StandardDuos,
+    }
 
-        teams = new Teams();
+    public GameManager(GameTypes type) {
+
+        teams = new Teams(type);
         TeamStatus.Init();
 
         Bukkit.getServer().sendMessage(text("Starting Game!"));
