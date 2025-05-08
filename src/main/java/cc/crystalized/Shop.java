@@ -144,9 +144,12 @@ public class Shop{
         viewer = p;
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Utility").color(NamedTextColor.WHITE));
         view.clear();
-        view.setItem(10, CrystalBlitzItems.BoostOrb);
-        view.setItem(11, CrystalBlitzItems.Gapples);
-        view.setItem(12, CrystalBlitzItems.WingedOrb);
+        view.setItem(10, CrystalBlitzItems.Gapples);
+        view.setItem(19, CrystalBlitzItems.BoostOrb);
+        view.setItem(20, CrystalBlitzItems.WingedOrb);
+        view.setItem(21, CrystalBlitzItems.GrapplingOrb);
+        view.setItem(28, CrystalBlitzItems.CloudTotem);
+        view.setItem(29, CrystalBlitzItems.AntiAirTotem);
 
         p.openInventory(view);
     }

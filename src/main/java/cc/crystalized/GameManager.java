@@ -6,6 +6,8 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
@@ -77,7 +79,7 @@ public class GameManager {
                 //Main game loop
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (p.getGameMode().equals(GameMode.SURVIVAL) && p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit) {
-                        p.setHealth(0);
+                        p.damage(40, DamageSource.builder(DamageType.OUT_OF_WORLD).build());
                     }
                     TabMenu.sendTabMenu(p);
                 }
@@ -92,13 +94,13 @@ public class GameManager {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (!p.getWorldBorder().isInside(p.getLocation()) && p.getGameMode().equals(GameMode.SURVIVAL)) {
-                        //Fake hurt thingy, probably a better way of doing this
-                        if (p.getHealth() < 1) {
+                        p.damage(1, DamageSource.builder(DamageType.OUTSIDE_BORDER).build());
+                        /*if (p.getHealth() < 1) {
                             p.setHealth(0);
                         } else {
                             p.setHealth(p.getHealth() - 1);
                         }
-                        p.playSound(p, "minecraft:entity.generic.hurt", 50, 1);
+                        p.playSound(p, "minecraft:entity.generic.hurt", 50, 1);*/
                     }
                 }
                 if (crystalBlitz.getInstance().gamemanager == null) {

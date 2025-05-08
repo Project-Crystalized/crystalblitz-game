@@ -258,6 +258,15 @@ public class ShopListener implements Listener {
         else if (e.getCurrentItem().equals(CrystalBlitzItems.Gapples)) {
             buyItem(p, Shop.ShardTypes.Strong, 4, null, new ItemStack(Material.GOLDEN_APPLE), null);
         }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.GrapplingOrb)) {
+            buyItem(p, Shop.ShardTypes.Strong, 20, null, CrystalBlitzItems.GrapplingOrb_item, null);
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.CloudTotem)) {
+            buyItem(p, Shop.ShardTypes.Strong, 30, null, CrystalBlitzItems.CloudTotem_item, null);
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.AntiAirTotem)) {
+            buyItem(p, Shop.ShardTypes.Strong, 30, null, CrystalBlitzItems.AntiAirTotem_item, null);
+        }
 
         //No Category
         else if (e.getCurrentItem().equals(CrystalBlitzItems.Arrows)) {

@@ -93,8 +93,15 @@ public class PlayerListener implements Listener {
         Player k = null;
         if (entity != null && entity instanceof Player) {
             k = (Player) entity;
-        } else if (k == null) {
-            k = p; //to prevent errors in console. can also make funny death messages
+        } else if (entity == null) {
+            k = null;
+        }
+
+        Component killer;
+        if (k == null) {
+            killer = text("");
+        } else {
+            killer = k.displayName();
         }
 
         p.setGameMode(GameMode.SPECTATOR);
@@ -106,7 +113,7 @@ public class PlayerListener implements Listener {
         );
         p.teleport(loc);
 
-        if (k != null && k != p) {
+        if (k != null) {
             PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(k);
             kpd.kills++;
         }
@@ -202,6 +209,10 @@ public class PlayerListener implements Listener {
             } else {
                 deathcauseicon = text(" [").append(KillerMainHandItem.effectiveName()).append(text("] "));
             }
+        } else if (e.getDamageSource().getDamageType().equals(DamageType.OUTSIDE_BORDER)) {
+            deathcauseicon = text(" [").append(translatable("World Border").append(text("] ")));
+        } else if (e.getDamageSource().getDamageType().equals(DamageType.OUT_OF_WORLD)) {
+            deathcauseicon = text(" [").append(translatable("Void").append(text("] ")));
         } else if (e.getDamageSource().getDamageType().equals(DamageType.HOT_FLOOR)) {
             deathcauseicon = text(" [").append(translatable("block.minecraft.magma_block").append(text("] ")));
         } else if (e.getDamageSource().getDamageType().equals(DamageType.FALL)) {
@@ -210,7 +221,7 @@ public class PlayerListener implements Listener {
             deathcauseicon  = text(" [Unknown Death Reason] ");
         }
 
-        Bukkit.getServer().sendMessage(deathprefix.append(k.displayName()).append(deathcauseicon).append(p.displayName()));
+        Bukkit.getServer().sendMessage(deathprefix.append(killer).append(deathcauseicon).append(p.displayName()));
 
         if (crystalBlitz.getInstance().gamemanager.getNexus(Teams.getPlayerTeam(p)).health != 0) {
             new BukkitRunnable() {

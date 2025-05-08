@@ -302,7 +302,7 @@ public class CrystalBlitzItems {
         List<Component> GrapplingOrbLore = new ArrayList<>();
         GrapplingOrbLore.add(translatable("crystalized.orb.grappling.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         GrapplingOrbLore.add(text(""));
-        GrapplingOrbLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        GrapplingOrbLore.add(text("20 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         GrapplingOrb_im.lore(GrapplingOrbLore);
         GrapplingOrb_im.customName(translatable("crystalized.orb.grappling.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         GrapplingOrb_im.setItemModel(new NamespacedKey("crystalized", "grappling_orb"));
@@ -378,7 +378,7 @@ public class CrystalBlitzItems {
         List<Component> AntiAirTotemLore = new ArrayList<>();
         AntiAirTotemLore.add(translatable("crystalized.totem.antiair.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         AntiAirTotemLore.add(text(""));
-        AntiAirTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        AntiAirTotemLore.add(text("30 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         AntiAirTotem_im.lore(AntiAirTotemLore);
         AntiAirTotem_im.customName(translatable("crystalized.totem.antiair.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         AntiAirTotem_im.setItemModel(new NamespacedKey("crystalized", "antiair_totem"));
@@ -395,7 +395,7 @@ public class CrystalBlitzItems {
         List<Component> CloudTotemLore = new ArrayList<>();
         CloudTotemLore.add(translatable("crystalized.totem.cloud.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         CloudTotemLore.add(text(""));
-        CloudTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        CloudTotemLore.add(text("30 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         CloudTotem_im.lore(CloudTotemLore);
         CloudTotem_im.customName(translatable("crystalized.totem.cloud.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         CloudTotem_im.setItemModel(new NamespacedKey("crystalized", "cloud_totem"));
