@@ -167,6 +167,15 @@ public class GameManager {
         return null;
     }
 
+    public void destroyAllNexuses() {
+        for (Nexus n : nexuses) {
+            n.destroyNexus(n.getTeam());
+        }
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            p.playSound(p, "crystalized:effect.nexus_crystal_destroyed", 50, 1);
+        }
+    }
+
     private static void setupEntities() {
         Component name = text("Shop");
 

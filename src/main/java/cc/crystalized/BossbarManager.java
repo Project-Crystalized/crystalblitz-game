@@ -33,10 +33,9 @@ public class BossbarManager {
                 timer--;
                 ChangeBossbarText();
 
-                if (timer == 60 && currentstate == BossBarStates.GenUpgradeII) {
+                if (timer == 30 && currentstate == BossBarStates.GenUpgradeII) {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        //TODO add a sound or smth here
-                        p.sendMessage(translatable("crystalized.game.crystalblitz.chat.worldborder").color(NamedTextColor.RED));
+                        p.sendMessage(text("All Nexuses will be destroyed shortly!"));
                     }
                 }
 
@@ -44,14 +43,32 @@ public class BossbarManager {
                     switch (currentstate) {
                         case starting -> {
                             currentstate = BossBarStates.GenUpgradeI;
+                            for (Player p : Bukkit.getOnlinePlayers()) {
+                                p.sendMessage(text("Weak and Strong node generators have been Upgraded!"));
+                            }
                             timer = timerdefaultvalue;
                         }
                         case GenUpgradeI -> {
                             currentstate = BossBarStates.GenUpgradeII;
-                            timer = timerdefaultvalue;
+                            for (Player p : Bukkit.getOnlinePlayers()) {
+                                p.sendMessage(text("Weak and Strong node generators have been Upgraded!"));
+                            }
+                            timer = 30;
                         }
                         case GenUpgradeII -> {
+                            currentstate = BossBarStates.NexusDestroyed;
+                            for (Player p : Bukkit.getOnlinePlayers()) {
+                                //TODO add a sound or smth here
+                                p.sendMessage(translatable("crystalized.game.crystalblitz.chat.worldborder").color(NamedTextColor.RED));
+                            }
+                            crystalBlitz.getInstance().gamemanager.destroyAllNexuses();
+                            timer = 60;
+                        }
+                        case NexusDestroyed -> {
                             currentstate = BossBarStates.WorldBorderClosing;
+                            for (Player p : Bukkit.getOnlinePlayers()) {
+                                p.sendMessage(text("World border closing!")); //TODO translatable
+                            }
                             timer = 1;
                         }
                         case WorldBorderClosing -> {
@@ -65,6 +82,7 @@ public class BossbarManager {
         }.runTaskTimer(crystalBlitz.getInstance(), 0, 20);
     }
 
+    //TODO make these translatable
     private void ChangeBossbarText() {
         switch (currentstate) {
             case starting -> {
@@ -74,6 +92,9 @@ public class BossbarManager {
                 bar.name(text("Next Gen. Upgrade (II): ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case GenUpgradeII -> {
+                bar.name(text("All Nexuses will be destroyed in: ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
+            }
+            case NexusDestroyed -> {
                 bar.name(text("World Border Closing in: ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case WorldBorderClosing -> {
@@ -87,5 +108,6 @@ enum BossBarStates{
     starting,
     GenUpgradeI,
     GenUpgradeII,
+    NexusDestroyed,
     WorldBorderClosing
 }

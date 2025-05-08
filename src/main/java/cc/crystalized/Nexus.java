@@ -130,6 +130,22 @@ public class Nexus {
         }
     }
 
+    public void destroyNexus(String t) {
+        Location blockloc1 = new Location(Bukkit.getWorld("world"),
+                crystalBlitz.getInstance().mapdata.getNexus(t)[0],
+                crystalBlitz.getInstance().mapdata.getNexus(t)[1],
+                crystalBlitz.getInstance().mapdata.getNexus(t)[2]
+        );
+        Location blockloc2 = new Location(Bukkit.getWorld("world"),
+                crystalBlitz.getInstance().mapdata.getNexus(t)[0],
+                crystalBlitz.getInstance().mapdata.getNexus(t)[1] + 1,
+                crystalBlitz.getInstance().mapdata.getNexus(t)[2]
+        );
+        blockloc1.getBlock().setType(Material.DIORITE);
+        blockloc2.getBlock().setType(Material.DIORITE);
+        health = 0;
+    }
+
     private void destroyNexus(String t, Player p) {
         p.playSound(p, "crystalized:effect.nexus_crystal_destroyed", 50, 1);
         Location blockloc1 = new Location(Bukkit.getWorld("world"),

@@ -32,7 +32,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.logging.Level;
 
@@ -90,10 +89,10 @@ public class PlayerListener implements Listener {
         Player p = e.getPlayer();
 
         Entity entity = e.getDamageSource().getCausingEntity();
-        Player k = null;
-        if (entity != null && entity instanceof Player) {
+        Player k;
+        if (entity instanceof Player) {
             k = (Player) entity;
-        } else if (entity == null) {
+        } else {
             k = null;
         }
 
@@ -192,8 +191,15 @@ public class PlayerListener implements Listener {
         Component deathprefix = text("[\uE103] ");
         Component deathcauseicon = text(" [\uE103] "); //placeholder
 
-        ItemStack KillerMainHandItem = k.getInventory().getItemInMainHand();
-        ItemStack KillerOffHandItem = k.getInventory().getItemInOffHand();
+        ItemStack KillerMainHandItem;
+        ItemStack KillerOffHandItem;
+        if (k == null) {
+            KillerMainHandItem = new ItemStack(Material.AIR);
+            KillerOffHandItem = new ItemStack(Material.AIR);
+        } else {
+            KillerMainHandItem = k.getInventory().getItemInMainHand();
+            KillerOffHandItem = k.getInventory().getItemInOffHand();
+        }
 
         if (e.getDamageSource().getDamageType().equals(DamageType.ARROW)) {
             if (KillerMainHandItem.getType().toString().toLowerCase().contains("crossbow") || KillerOffHandItem.getType().toString().toLowerCase().contains("crossbow")) {
