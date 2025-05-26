@@ -37,6 +37,7 @@ public class GameManager {
     public static List<PlayerData> playerDatas = new ArrayList<>();
 
     enum GameTypes {
+        Custom,
         StandardSolos,
         StandardDuos,
     }
@@ -53,10 +54,8 @@ public class GameManager {
             }
         }
         setupEntities();
-        for (Player p : Bukkit.getOnlinePlayers()) {
+        for (Player p : crystalBlitz.getInstance().getOnlinePlayers()) {
             givePlayerItems(p);
-            p.getInventory().setItem(0, CrystalBlitzItems.WoodenSword);
-            p.getInventory().setItem(1, CrystalBlitzItems.WoodenPickaxe);
             Teams.setPlayerDisplayNames(p);
             p.setGameMode(GameMode.SURVIVAL);
             new ScoreboardManager(p);
@@ -64,12 +63,26 @@ public class GameManager {
                 p.unlistPlayer(player);
             }
 
+            p.getInventory().setItem(0, CrystalBlitzItems.WoodenSword);
+            p.getInventory().setItem(1, CrystalBlitzItems.WoodenPickaxe);
             Location ploc = new Location(Bukkit.getWorld("world"),
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[2]
             );
             p.teleport(ploc);
+            playerDatas.add(new PlayerData(p));
+        }
+        for (String s : teams.spectator) {
+            Player p = Bukkit.getPlayer(s);
+            Teams.setPlayerDisplayNames(p);
+            p.teleport(new Location(Bukkit.getWorld("world"),
+                    crystalBlitz.getInstance().mapdata.spectator_spawn[0],
+                    crystalBlitz.getInstance().mapdata.spectator_spawn[1],
+                    crystalBlitz.getInstance().mapdata.spectator_spawn[2]
+            ));
+            p.setGameMode(GameMode.SPECTATOR);
+            new ScoreboardManager(p);
             playerDatas.add(new PlayerData(p));
         }
 
@@ -181,25 +194,29 @@ public class GameManager {
 
         nexuses = new ArrayList<Nexus>();
         for (String team: Teams.teams) {
-            Nexus n = new Nexus(team);
-            nexuses.add(n);
+            if (!team.equals("spectator")) {
+                Nexus n = new Nexus(team);
+                nexuses.add(n);
+            }
         }
 
         for (String team : Teams.teams) {
-            Location loc = new Location(
-                    Bukkit.getWorld("world"),
-                    crystalBlitz.getInstance().mapdata.getShop(team)[0] + 0.5,
-                    crystalBlitz.getInstance().mapdata.getShop(team)[1],
-                    crystalBlitz.getInstance().mapdata.getShop(team)[2] + 0.5
-            );
-            Villager shop = Bukkit.getWorld("world").spawn(loc, Villager.class, entity -> {
-                entity.setGravity(true);
-                entity.setInvulnerable(true);
-                entity.setAI(false);
-                entity.setCustomNameVisible(true);
-                entity.customName(name);
-                entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, PotionEffect.INFINITE_DURATION, 200, false, false, false));
-            });
+            if (!team.equals("spectator")) {
+                Location loc = new Location(
+                        Bukkit.getWorld("world"),
+                        crystalBlitz.getInstance().mapdata.getShop(team)[0] + 0.5,
+                        crystalBlitz.getInstance().mapdata.getShop(team)[1],
+                        crystalBlitz.getInstance().mapdata.getShop(team)[2] + 0.5
+                );
+                Villager shop = Bukkit.getWorld("world").spawn(loc, Villager.class, entity -> {
+                    entity.setGravity(true);
+                    entity.setInvulnerable(true);
+                    entity.setAI(false);
+                    entity.setCustomNameVisible(true);
+                    entity.customName(name);
+                    entity.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, PotionEffect.INFINITE_DURATION, 200, false, false, false));
+                });
+            }
         }
     }
 
@@ -249,8 +266,8 @@ public class GameManager {
                 inv.setBoots(colorArmor(Color.fromRGB(0xFBE059), new ItemStack(Material.LEATHER_BOOTS)));
                 break;
             default:
-                p.sendMessage(text(".getPlayerTeam() with your name produced \"" + Teams.getPlayerTeam(p) + "\", You should not get this message"));
-                throw new RuntimeException();
+                //Do nothing, would throw a runtime exception but I implemented the spectator team which doesn't play the game normally
+                break;
         }
     }
 

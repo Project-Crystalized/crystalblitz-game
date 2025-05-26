@@ -12,8 +12,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
@@ -26,6 +29,7 @@ public final class crystalBlitz extends JavaPlugin {
     public final MapData mapdata = new MapData();
     public GameManager gamemanager;
     public boolean is_force_starting = false;
+    private int configVersion = 0;
 
     @Override
     public void onEnable() {
@@ -48,9 +52,15 @@ public final class crystalBlitz extends JavaPlugin {
         w.setGameRule(GameRule.NATURAL_REGENERATION, true);
         w.setDifficulty(Difficulty.HARD);
 
-
         Shop.setupShop();
         CrystalBlitzItems.SetupItems();
+
+        //Config stuff
+        saveResource("config.yml", false); //I dont trust this
+        if (getConfig().getInt("version") != 1) {
+            configVersion = getConfig().getInt("version");
+            getLogger().log(Level.SEVERE, "Invalid Version, Please update your config. Expecting 1 but found " + configVersion + ". You may experience fatal issues.");
+        }
 
         new BukkitRunnable() {
             @Override
@@ -126,5 +136,16 @@ public final class crystalBlitz extends JavaPlugin {
 
     public int getRandomNumber(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
+    }
+
+    public List<Player> getOnlinePlayers() {
+        List<Player> players = new ArrayList<>();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!Teams.getPlayerTeam(p).equals("spectator")) {
+                players.add(p);
+            }
+        }
+
+        return players;
     }
 }

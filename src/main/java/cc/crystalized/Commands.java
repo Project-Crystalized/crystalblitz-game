@@ -25,22 +25,28 @@ public class Commands implements CommandExecutor {
         if (args[0] == null) {return false;}
         switch (args[0]) {
             case "start":
-                if (args.length == 1) {
-                    commandSender.sendMessage("[!] Missing arguments, /crystalblitz start [solo/duo]");
+                crystalBlitz.getInstance().reloadConfig();
+                if (crystalBlitz.getInstance().getConfig().getBoolean("teams.enable")) {
+                    crystalBlitz.getInstance().forceStartGame(GameManager.GameTypes.Custom);
                     return true;
-                }
-                switch (args[1]) {
-                    case "solo" -> {
-                        crystalBlitz.getInstance().forceStartGame(GameManager.GameTypes.StandardSolos);
+                } else {
+                    if (args.length == 1) {
+                        commandSender.sendMessage("[!] Missing arguments, /crystalblitz start [solo/duo]");
                         return true;
                     }
-                    case "duo" -> {
-                        crystalBlitz.getInstance().forceStartGame(GameManager.GameTypes.StandardDuos);
-                        return true;
-                    }
-                    default -> {
-                        commandSender.sendMessage("[!] Incorrect arguments, /crystalblitz start [solo/duo]");
-                        return true;
+                    switch (args[1]) {
+                        case "solo" -> {
+                            crystalBlitz.getInstance().forceStartGame(GameManager.GameTypes.StandardSolos);
+                            return true;
+                        }
+                        case "duo" -> {
+                            crystalBlitz.getInstance().forceStartGame(GameManager.GameTypes.StandardDuos);
+                            return true;
+                        }
+                        default -> {
+                            commandSender.sendMessage("[!] Incorrect arguments, /crystalblitz start [solo/duo]");
+                            return true;
+                        }
                     }
                 }
             case "end":

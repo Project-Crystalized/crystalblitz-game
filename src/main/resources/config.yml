@@ -1,0 +1,22 @@
+# Crystalized: Crystal Blitz config
+
+teams:
+    # When true, enables the below options to work, allowing for teams to be created manually instead of randomly generated.
+    # These should be changed either when the server is shutdown, or when the game hasn't started (aka, in the waiting lobby)
+    enable: false
+
+    # Configure Teams here
+    # These values will be read when the game starts, no need for a server restart.
+    # When adding Bedrock players, make sure to include the floodgate prefix ("." by default) to their username.
+    spectator: ["iCorrosion", "Delieve"]
+    blue: ["Callum_Is_Bad"]
+    cyan: [".CallumIsBad6502"]
+    green: []
+    lime: []
+    magenta: []
+    red: []
+    yellow: []
+    white: []
+
+# Don't change this
+version: 1

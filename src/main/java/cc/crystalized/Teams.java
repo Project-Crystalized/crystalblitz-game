@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -19,6 +20,7 @@ public class Teams {
 
     public static List<String> teams = new ArrayList<>();
 
+    public static List<String> spectator = new ArrayList<>();
     public static List<String> blue = new ArrayList<>();
     public static List<String> cyan = new ArrayList<>();
     public static List<String> green = new ArrayList<>();
@@ -28,6 +30,7 @@ public class Teams {
     public static List<String> white = new ArrayList<>();
     public static List<String> yellow = new ArrayList<>();
 
+    public static final TextColor TEAM_SPECTATOR = TextColor.color(0xFFFFFF);
     public static final TextColor TEAM_BLUE = TextColor.color(0x0A42BB);
     public static final TextColor TEAM_CYAN = TextColor.color(0x157D91);
     public static final TextColor TEAM_GREEN = TextColor.color(0x0A971E);
@@ -43,6 +46,7 @@ public class Teams {
         List<String> playerlist = new ArrayList<>();
 
         teams.clear();
+        teams.add("spectator");
         teams.add("blue");
         teams.add("cyan");
         teams.add("green");
@@ -86,6 +90,57 @@ public class Teams {
 
             //TODO we should rework this so its not long, this could probably be done cleaner
             switch (type) {
+                // This is very unsafe considering server hosts can put anything in the config, we're expecting strings, so if they put anything else thats their problem.
+                // Theres also the possibility that one person can be in multiple teams, thats also the server host's problem and not ours
+                case GameManager.GameTypes.Custom -> {
+                    FileConfiguration config = crystalBlitz.getInstance().getConfig();
+                    Object[] config_spectator = config.getList("teams.spectator").toArray();
+                    Object[] config_blue = config.getList("teams.blue").toArray();
+                    Object[] config_cyan = config.getList("teams.cyan").toArray();
+                    Object[] config_green = config.getList("teams.green").toArray();
+                    Object[] config_lime = config.getList("teams.lime").toArray();
+                    Object[] config_magenta = config.getList("teams.magenta").toArray();
+                    Object[] config_red = config.getList("teams.red").toArray();
+                    Object[] config_yellow = config.getList("teams.yellow").toArray();
+                    Object[] config_white = config.getList("teams.white").toArray();
+
+                    for (Object o : config_spectator) {
+                        String s = (String) o;
+                        spectator.add(Bukkit.getPlayer(s).getName());
+                    }
+                    for (Object o : config_blue) {
+                        String s = (String) o;
+                        blue.add(Bukkit.getPlayer(s).getName());
+                    }
+                    for (Object o : config_cyan) {
+                        String s = (String) o;
+                        cyan.add(Bukkit.getPlayer(s).getName());
+                    }
+                    for (Object o : config_green) {
+                        String s = (String) o;
+                        green.add(Bukkit.getPlayer(s).getName());
+                    }
+                    for (Object o : config_lime) {
+                        String s = (String) o;
+                        lime.add(Bukkit.getPlayer(s).getName());
+                    }
+                    for (Object o : config_magenta) {
+                        String s = (String) o;
+                        magenta.add(Bukkit.getPlayer(s).getName());
+                    }
+                    for (Object o : config_red) {
+                        String s = (String) o;
+                        red.add(Bukkit.getPlayer(s).getName());
+                    }
+                    for (Object o : config_yellow) {
+                        String s = (String) o;
+                        yellow.add(Bukkit.getPlayer(s).getName());
+                    }
+                    for (Object o : config_white) {
+                        String s = (String) o;
+                        white.add(Bukkit.getPlayer(s).getName());
+                    }
+                }
                 case GameManager.GameTypes.StandardSolos -> {
                     //comment so intellij isn't annoying
                     if (playerlist.size() > 0) {
@@ -293,7 +348,9 @@ public class Teams {
     }
 
     public static String getPlayerTeam(Player player) {
-        if (blue.contains(player.getName())) {
+        if (spectator.contains(player.getName())) {
+            return "spectator";
+        } else if (blue.contains(player.getName())) {
             return "blue";
         } else if (cyan.contains(player.getName())) {
             return "cyan";
@@ -315,7 +372,9 @@ public class Teams {
     }
 
     public static void DisconnectPlayer(String Player) {
-        if (blue.contains(Player)) {
+        if (spectator.contains(Player)) {
+            spectator.remove(spectator.indexOf(Player));
+        } else if (blue.contains(Player)) {
             blue.remove(blue.indexOf(Player));
         } else if (cyan.contains(Player)) {
             cyan.remove(cyan.indexOf(Player));
@@ -335,7 +394,9 @@ public class Teams {
     }
 
     public static void setPlayerDisplayNames(Player player) {
-        if (blue.contains(player.getName())) {
+        if (spectator.contains(player.getName())) {
+            player.displayName(text("[Spectator] ").append(text(player.getName()).color(TEAM_SPECTATOR)));
+        } else if (blue.contains(player.getName())) {
             player.displayName(text("\uE120 ").append(text(player.getName()).color(TEAM_BLUE)));
         } else if (cyan.contains(player.getName())) {
             player.displayName(text("\uE121 ").append(text(player.getName()).color(TEAM_CYAN)));
@@ -357,7 +418,9 @@ public class Teams {
     }
 
     public static List<String> get_team_from_string(String s) {
-        if (s.equals("blue")) {
+        if (s.equals("spectator")) {
+            return spectator;
+        } else if (s.equals("blue")) {
             return blue;
         } else if (s.equals("cyan")) {
             return cyan;
@@ -404,7 +467,6 @@ class TeamStatus{
 
         List<String> td = Teams.get_team_from_string(team);
 
-        //Why cyan?
         if (td.size() == 0) {
             team_statuses.put(team, Status.Dead);
         } else if (counter == td.size()) {
