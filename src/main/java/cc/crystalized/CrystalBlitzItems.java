@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.checkerframework.checker.units.qual.N;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -306,6 +307,7 @@ public class CrystalBlitzItems {
         GrapplingOrb_im.lore(GrapplingOrbLore);
         GrapplingOrb_im.customName(translatable("crystalized.orb.grappling.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         GrapplingOrb_im.setItemModel(new NamespacedKey("crystalized", "grappling_orb"));
+        GrapplingOrb_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         GrapplingOrb.setItemMeta(GrapplingOrb_im);
         ItemMeta GrapplingOrbitem_im = GrapplingOrb_item.getItemMeta();
         List<Component> GrapplingOrbitemLore = new ArrayList<>();
@@ -382,6 +384,7 @@ public class CrystalBlitzItems {
         AntiAirTotem_im.lore(AntiAirTotemLore);
         AntiAirTotem_im.customName(translatable("crystalized.totem.antiair.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         AntiAirTotem_im.setItemModel(new NamespacedKey("crystalized", "antiair_totem"));
+        AntiAirTotem_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         AntiAirTotem.setItemMeta(AntiAirTotem_im);
         ItemMeta AntiAirTotemitem_im = AntiAirTotem_item.getItemMeta();
         List<Component> AntiAirTotemitemLore = new ArrayList<>();
@@ -399,6 +402,7 @@ public class CrystalBlitzItems {
         CloudTotem_im.lore(CloudTotemLore);
         CloudTotem_im.customName(translatable("crystalized.totem.cloud.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         CloudTotem_im.setItemModel(new NamespacedKey("crystalized", "cloud_totem"));
+        CloudTotem_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         CloudTotem.setItemMeta(CloudTotem_im);
         ItemMeta CloudTotemitem_im = CloudTotem_item.getItemMeta();
         List<Component> CloudTotemitemLore = new ArrayList<>();
