@@ -43,16 +43,16 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        e.joinMessage(text(""));
+        p.setHealth(20);
+        p.setFoodLevel(20);
+        p.getInventory().clear();
+        p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 0, false, false, true));
 
         if (crystalBlitz.getInstance().gamemanager == null) {
-            e.joinMessage(text(""));
             p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(Bukkit.getWorld("world")));
-            p.getInventory().clear();
-            p.setHealth(20);
-            p.setFoodLevel(20);
             p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             p.setGameMode(GameMode.ADVENTURE);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 0, false, false, true));
             //TODO make this look better
             p.sendPlayerListHeaderAndFooter(
                     //Header
@@ -66,7 +66,20 @@ public class PlayerListener implements Listener {
             new QueueScoreboard(p);
 
         } else {
-            p.kick(text("A game is currently is progress, try joining again later.").color(NamedTextColor.RED));
+            //p.kick(text("A game is currently is progress, try joining again later.").color(NamedTextColor.RED));
+            Location loc = new Location(
+                    Bukkit.getWorld("world"),
+                    crystalBlitz.getInstance().mapdata.spectator_spawn[0],
+                    crystalBlitz.getInstance().mapdata.spectator_spawn[1],
+                    crystalBlitz.getInstance().mapdata.spectator_spawn[2]
+            );
+            p.teleport(loc);
+            p.setGameMode(GameMode.SPECTATOR);
+            if (!Teams.spectator.contains(p.getName())) {
+                Teams.spectator.add(p.getName());
+            }
+            p.sendMessage(text("[!] You joined a game that was already in progress, You've been put in Spectator."));
+            p.setWorldBorder(crystalBlitz.getInstance().gamemanager.worldborder.border);
         }
     }
 
@@ -103,13 +116,14 @@ public class PlayerListener implements Listener {
             killer = k.displayName();
         }
 
-        p.setGameMode(GameMode.SPECTATOR);
-        Location loc = new Location( //TODO this doesnt work for some reason
+
+        Location loc = new Location(
                 Bukkit.getWorld("world"),
                 crystalBlitz.getInstance().mapdata.spectator_spawn[0],
                 crystalBlitz.getInstance().mapdata.spectator_spawn[1],
                 crystalBlitz.getInstance().mapdata.spectator_spawn[2]
         );
+        p.setGameMode(GameMode.SPECTATOR);
         p.teleport(loc);
 
         if (k != null) {
