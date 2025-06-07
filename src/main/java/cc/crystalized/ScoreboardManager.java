@@ -203,7 +203,7 @@ class QueueScoreboard {
 
         Team QueuePlayer = scoreboard.registerNewTeam("QueuePlayers");
         QueuePlayer.addEntry("2");
-        QueuePlayer.suffix(text("Placeholder"));
+        QueuePlayer.suffix(text(" "));
         obj.getScore("2").setScore(2);
 
         Team QueueMap = scoreboard.registerNewTeam("QueueMap");
