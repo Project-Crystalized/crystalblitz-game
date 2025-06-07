@@ -81,6 +81,11 @@ public class PlayerListener implements Listener {
             }
             p.sendMessage(text("[!] You joined a game that was already in progress, You've been put in Spectator."));
             p.setWorldBorder(crystalBlitz.getInstance().gamemanager.worldborder.border);
+            for (Player player1 : Bukkit.getOnlinePlayers()) {
+                for (Player player2 : Bukkit.getOnlinePlayers()) {
+                    player1.unlistPlayer(player2);
+                }
+            }
         }
     }
 
