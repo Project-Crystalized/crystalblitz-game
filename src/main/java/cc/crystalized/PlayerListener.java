@@ -288,7 +288,8 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
         } else {
             if (e.getRightClicked() instanceof Villager) {
-                new Shop(e.getPlayer());
+                crystalBlitz.getInstance().gamemanager.shopList.add(new Shop(e.getPlayer()));
+                //new Shop(e.getPlayer());
             }
         }
     }

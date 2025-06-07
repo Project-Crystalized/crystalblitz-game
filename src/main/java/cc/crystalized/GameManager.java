@@ -35,11 +35,23 @@ public class GameManager {
     public BossbarManager bossbar = new BossbarManager();
     public WorldBorderManager worldborder = new WorldBorderManager();
     public static List<PlayerData> playerDatas = new ArrayList<>();
+    public static List<Shop> shopList = new ArrayList<>();
 
     enum GameTypes {
         Custom,
         StandardSolos,
         StandardDuos,
+    }
+
+    public Shop getShop(Player owner) {
+        for (Shop s : shopList) {
+            if (s.owner == owner) {
+                return s;
+            }
+        }
+
+        //TODO log this
+        return null;
     }
 
     public GameManager(GameTypes type) {

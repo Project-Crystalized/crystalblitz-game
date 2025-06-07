@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.geysermc.floodgate.api.FloodgateApi;
@@ -23,10 +24,16 @@ import static net.kyori.adventure.text.Component.translatable;
 public class ShopListener implements Listener {
 
     @EventHandler
+    public void onShopClose(InventoryCloseEvent e) {
+        Player p = (Player) e.getPlayer();
+        crystalBlitz.getInstance().gamemanager.shopList.remove(crystalBlitz.getInstance().gamemanager.getShop(p));
+    }
+
+    @EventHandler
     public void onShopClick(InventoryClickEvent e) {
         Player p1 = (Player) e.getWhoClicked();
         HumanEntity p = e.getWhoClicked();
-        Shop s = Shop.getShop(p1);
+        Shop s = crystalBlitz.getInstance().gamemanager.getShop(p1);
 
         if (e.getCurrentItem() == null) {return;}
 

@@ -9,7 +9,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -35,8 +37,7 @@ public class Shop{
     public static ItemStack CategoryUtility = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
 
     public static Inventory view = Bukkit.getServer().createInventory(null, 54, text("null"));
-
-    public static HashMap<String, Shop> shopList = new HashMap<>();
+    public Player owner;
 
     public static void setupShop() {
         ItemMeta CategoryOffence_im = CategoryOffence.getItemMeta();
@@ -68,7 +69,7 @@ public class Shop{
      */
 
     public Shop(Player p) {
-        shopList.put(p.getName(), this);
+        owner = p;
 
         viewer = p;
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Select Category").color(NamedTextColor.WHITE));
@@ -152,9 +153,5 @@ public class Shop{
         view.setItem(29, CrystalBlitzItems.AntiAirTotem);
 
         p.openInventory(view);
-    }
-
-    public static Shop getShop(Player p) {
-        return shopList.get(p.getName());
     }
 }
