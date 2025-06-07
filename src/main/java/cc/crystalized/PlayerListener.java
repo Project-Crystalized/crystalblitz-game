@@ -75,8 +75,9 @@ public class PlayerListener implements Listener {
             );
             p.teleport(loc);
             p.setGameMode(GameMode.SPECTATOR);
-            if (!Teams.spectator.contains(p.getName())) {
-                Teams.spectator.add(p.getName());
+            Teams teams = crystalBlitz.getInstance().gamemanager.teams;
+            if (!teams.spectator.contains(p.getName())) {
+                teams.spectator.add(p.getName());
             }
             p.sendMessage(text("[!] You joined a game that was already in progress, You've been put in Spectator."));
             p.setWorldBorder(crystalBlitz.getInstance().gamemanager.worldborder.border);
