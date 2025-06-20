@@ -4,10 +4,12 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.checkerframework.checker.units.qual.N;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,9 +34,10 @@ public class Shop{
 
     private static Player viewer;
 
-    public static ItemStack CategoryOffence = new ItemStack(Material.RED_STAINED_GLASS_PANE);
-    public static ItemStack CategoryDefence = new ItemStack(Material.BLUE_STAINED_GLASS_PANE);
-    public static ItemStack CategoryUtility = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
+    public static ItemStack CategoryOffence = new ItemStack(Material.COAL);
+    public static ItemStack CategoryDefence = new ItemStack(Material.COAL);
+    public static ItemStack CategoryUtility = new ItemStack(Material.COAL);
+    public static ItemStack Back = new ItemStack(Material.COAL);
 
     public static Inventory view = Bukkit.getServer().createInventory(null, 54, text("null"));
     public Player owner;
@@ -42,15 +45,23 @@ public class Shop{
     public static void setupShop() {
         ItemMeta CategoryOffence_im = CategoryOffence.getItemMeta();
         CategoryOffence_im.customName(text("Offence").decoration(TextDecoration.ITALIC, false));
+        CategoryOffence_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryOffence.setItemMeta(CategoryOffence_im);
 
         ItemMeta CategoryDefence_im = CategoryDefence.getItemMeta();
         CategoryDefence_im.customName(text("Defence").decoration(TextDecoration.ITALIC, false));
+        CategoryDefence_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryDefence.setItemMeta(CategoryDefence_im);
 
         ItemMeta CategoryUtility_im = CategoryUtility.getItemMeta();
         CategoryUtility_im.customName(text("Utility").decoration(TextDecoration.ITALIC, false));
+        CategoryUtility_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryUtility.setItemMeta(CategoryUtility_im);
+
+        ItemMeta Back_im = Back.getItemMeta();
+        Back_im.customName(text("Back").decoration(TextDecoration.ITALIC, false));
+        Back_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
+        Back.setItemMeta(Back_im);
     }
 
     /*
@@ -72,7 +83,7 @@ public class Shop{
         owner = p;
 
         viewer = p;
-        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Select Category").color(NamedTextColor.WHITE));
+        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00B").color(NamedTextColor.WHITE));
         view.clear();
 
         view.setItem(0, CategoryOffence);
@@ -112,45 +123,48 @@ public class Shop{
 
     public static void openOffence(Player p) {
         viewer = p;
-        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Offence").color(NamedTextColor.WHITE));
+        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00D").color(NamedTextColor.WHITE));
         view.clear();
-        view.setItem(10, CrystalBlitzItems.StoneSword);
-        view.setItem(11, CrystalBlitzItems.StonePickaxe);
-        view.setItem(12, CrystalBlitzItems.BreezeDagger);
-        view.setItem(13, CrystalBlitzItems.IronSword);
-        view.setItem(14, CrystalBlitzItems.IronPickaxe);
-        view.setItem(15, CrystalBlitzItems.DiamondSword);
-        view.setItem(16, CrystalBlitzItems.DiamondPickaxe);
-        view.setItem(19, CrystalBlitzItems.Bow);
-        view.setItem(20, CrystalBlitzItems.ChargedCrossbow);
+        view.setItem(0, Back);
+        view.setItem(1, CrystalBlitzItems.StoneSword);
+        view.setItem(2, CrystalBlitzItems.StonePickaxe);
+        view.setItem(3, CrystalBlitzItems.BreezeDagger);
+        view.setItem(4, CrystalBlitzItems.IronSword);
+        view.setItem(5, CrystalBlitzItems.IronPickaxe);
+        view.setItem(6, CrystalBlitzItems.DiamondSword);
+        view.setItem(7, CrystalBlitzItems.DiamondPickaxe);
+        view.setItem(10, CrystalBlitzItems.Bow);
+        view.setItem(11, CrystalBlitzItems.ChargedCrossbow);
 
         p.openInventory(view);
     }
 
     public static void openDefence(Player p) {
         viewer = p;
-        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Defence").color(NamedTextColor.WHITE));
+        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00C").color(NamedTextColor.WHITE));
         view.clear();
-        view.setItem(10, CrystalBlitzItems.ConcreteBlocks);
-        view.setItem(11, CrystalBlitzItems.CopperBlocks);
-        view.setItem(12, CrystalBlitzItems.WoolBlocks);
-        view.setItem(13, CrystalBlitzItems.ChainmailChestplate);
-        view.setItem(14, CrystalBlitzItems.IronChestplate);
-        view.setItem(15, CrystalBlitzItems.DiamondChestplate);
+        view.setItem(0, Back);
+        view.setItem(1, CrystalBlitzItems.ConcreteBlocks);
+        view.setItem(2, CrystalBlitzItems.CopperBlocks);
+        view.setItem(3, CrystalBlitzItems.WoolBlocks);
+        view.setItem(4, CrystalBlitzItems.ChainmailChestplate);
+        view.setItem(5, CrystalBlitzItems.IronChestplate);
+        view.setItem(6, CrystalBlitzItems.DiamondChestplate);
 
         p.openInventory(view);
     }
 
     public static void openUtility(Player p) {
         viewer = p;
-        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA001 Shop: Utility").color(NamedTextColor.WHITE));
+        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00E").color(NamedTextColor.WHITE));
         view.clear();
-        view.setItem(10, CrystalBlitzItems.Gapples);
-        view.setItem(19, CrystalBlitzItems.BoostOrb);
-        view.setItem(20, CrystalBlitzItems.WingedOrb);
-        view.setItem(21, CrystalBlitzItems.GrapplingOrb);
-        view.setItem(28, CrystalBlitzItems.CloudTotem);
-        view.setItem(29, CrystalBlitzItems.AntiAirTotem);
+        view.setItem(0, Back);
+        view.setItem(1, CrystalBlitzItems.Gapples);
+        view.setItem(10, CrystalBlitzItems.BoostOrb);
+        view.setItem(11, CrystalBlitzItems.WingedOrb);
+        view.setItem(12, CrystalBlitzItems.GrapplingOrb);
+        view.setItem(19, CrystalBlitzItems.CloudTotem);
+        view.setItem(20, CrystalBlitzItems.AntiAirTotem);
 
         p.openInventory(view);
     }

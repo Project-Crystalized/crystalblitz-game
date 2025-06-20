@@ -38,7 +38,9 @@ public class ShopListener implements Listener {
         HumanEntity p = e.getWhoClicked();
 
         if (e.getCurrentItem() == null) {return;}
-        if (p1.getOpenInventory().getTopInventory() == p1.getInventory()) {
+        if (p1.getOpenInventory().getTopInventory().contains(Shop.Back) || p1.getOpenInventory().getTopInventory().contains(Shop.CategoryDefence)) { //This is dumb
+            e.setCancelled(true);
+        } else {
             return;
         }
 
@@ -57,6 +59,9 @@ public class ShopListener implements Listener {
             Shop.openDefence((Player) p);
         } else if (e.getCurrentItem().equals(Shop.CategoryUtility)) {
             Shop.openUtility((Player) p);
+        } else if (e.getCurrentItem().equals(Shop.Back)) {
+            p1.closeInventory();
+            new Shop(p1);
         }
 
         //Offence category of items
