@@ -43,17 +43,6 @@ public class GameManager {
         StandardDuos,
     }
 
-    public Shop getShop(Player owner) {
-        for (Shop s : shopList) {
-            if (s.owner == owner) {
-                return s;
-            }
-        }
-
-        //TODO log this
-        return null;
-    }
-
     public GameManager(GameTypes type) {
 
         teams = new Teams(type);

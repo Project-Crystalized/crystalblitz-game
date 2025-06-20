@@ -27,7 +27,7 @@ public class ShopListener implements Listener {
     public void onShopClose(InventoryCloseEvent e) {
         if (crystalBlitz.getInstance().gamemanager != null) {
             Player p = (Player) e.getPlayer();
-            crystalBlitz.getInstance().gamemanager.shopList.remove(crystalBlitz.getInstance().gamemanager.getShop(p));
+            //crystalBlitz.getInstance().gamemanager.shopList.remove(crystalBlitz.getInstance().gamemanager.getShop(p));
         }
     }
 
@@ -36,14 +36,10 @@ public class ShopListener implements Listener {
         if (crystalBlitz.getInstance().gamemanager == null) {return;}
         Player p1 = (Player) e.getWhoClicked();
         HumanEntity p = e.getWhoClicked();
-        Shop s = crystalBlitz.getInstance().gamemanager.getShop(p1);
 
         if (e.getCurrentItem() == null) {return;}
-
-        if (e.getInventory() != s.view) {
+        if (p1.getOpenInventory().getTopInventory() == p1.getInventory()) {
             return;
-        } else {
-            e.setCancelled(true);
         }
 
         if (crystalBlitz.getInstance().gamemanager == null) {
