@@ -160,6 +160,11 @@ public class GameManager {
                     Bukkit.getLogger().log(Level.INFO,
                             "Set Block " + block.getType().toString() + " at X:" + block.getX() + " Y:" + block.getY() + " Z:" + block.getZ() + " to air."
                     );
+                    if (Bukkit.getOnlinePlayers().size() != 0) {
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            p.kick(text("[!] We are still clearing blocks, please wait before rejoining..."));
+                        }
+                    }
                     i++;
                     block.setType(Material.AIR);
                     remove_set.add(block);
