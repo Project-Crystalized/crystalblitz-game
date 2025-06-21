@@ -165,6 +165,7 @@ public class Shop{
         view.setItem(12, CrystalBlitzItems.GrapplingOrb);
         view.setItem(19, CrystalBlitzItems.CloudTotem);
         view.setItem(20, CrystalBlitzItems.AntiAirTotem);
+        view.setItem(21, CrystalBlitzItems.LaunchTotem);
 
         p.openInventory(view);
     }

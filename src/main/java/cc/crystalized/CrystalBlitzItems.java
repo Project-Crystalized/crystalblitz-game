@@ -448,16 +448,19 @@ public class CrystalBlitzItems {
 
         ItemMeta LaunchTotem_im = LaunchTotem.getItemMeta();
         List<Component> LaunchTotemLore = new ArrayList<>();
-        LaunchTotemLore.add(translatable("crystalized.totem.launch.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        LaunchTotemLore.add(translatable("crystalized.totem.launch.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        LaunchTotemLore.add(translatable("crystalized.totem.launch.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         LaunchTotemLore.add(text(""));
-        LaunchTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        LaunchTotemLore.add(text("35 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         LaunchTotem_im.lore(LaunchTotemLore);
         LaunchTotem_im.customName(translatable("crystalized.totem.launch.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         LaunchTotem_im.setItemModel(new NamespacedKey("crystalized", "launch_totem"));
+        LaunchTotem_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         LaunchTotem.setItemMeta(LaunchTotem_im);
         ItemMeta LaunchTotemitem_im = LaunchTotem_item.getItemMeta();
         List<Component> LaunchTotemitemLore = new ArrayList<>();
-        LaunchTotemitemLore.add(translatable("crystalized.totem.launch.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        LaunchTotemitemLore.add(translatable("crystalized.totem.launch.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        LaunchTotemitemLore.add(translatable("crystalized.totem.launch.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         LaunchTotemitem_im.lore(LaunchTotemitemLore);
         LaunchTotemitem_im.customName(translatable("crystalized.totem.launch.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         LaunchTotemitem_im.setItemModel(new NamespacedKey("crystalized", "launch_totem"));
