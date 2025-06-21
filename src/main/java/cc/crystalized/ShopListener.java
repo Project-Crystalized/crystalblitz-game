@@ -203,7 +203,9 @@ public class ShopListener implements Listener {
             buyItem(p, Shop.ShardTypes.Weak, 8, null, item, null);
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.CopperBlocks)) {
-            buyItem(p, Shop.ShardTypes.Weak, 4, null, new ItemStack(Material.COPPER_BLOCK), null);
+            ItemStack item = new ItemStack(Material.COPPER_BLOCK);
+            item.setAmount(8);
+            buyItem(p, Shop.ShardTypes.Weak, 10, null, item, null);
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.WoolBlocks)) {
             ItemStack item = null;
