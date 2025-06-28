@@ -277,17 +277,18 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerDamage(EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof Player)) {
-            e.setCancelled(true);
-        }
-        Player entity = (Player) e.getEntity();
-        Player damager = (Player) e.getDamager();
         if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
-        } else {
-            if (Teams.getPlayerTeam(entity).equals(Teams.getPlayerTeam(damager))) {
-                e.setCancelled(true);
-            }
+            return;
+        }
+        Player entity = (Player) e.getEntity();
+        Entity damager = e.getDamager();
+
+        if (!(damager instanceof Player)) {
+            return;
+        }
+        if (Teams.getPlayerTeam(entity).equals(Teams.getPlayerTeam((Player) damager))) {
+            e.setCancelled(true);
         }
     }
 
