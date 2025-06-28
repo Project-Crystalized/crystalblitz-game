@@ -55,6 +55,8 @@ public class CrystalBlitzItems {
     public static ItemStack WingedOrb_item = new ItemStack(Material.COAL);
     public static ItemStack PoisonOrb = new ItemStack(Material.COAL);
     public static ItemStack PoisonOrb_item = new ItemStack(Material.COAL);
+    public static ItemStack Shears = new ItemStack(Material.SHEARS);
+    public static ItemStack Shears_item = new ItemStack(Material.SHEARS);
 
     //Defence
     public static ItemStack ConcreteBlocks = new ItemStack(Material.TERRACOTTA);

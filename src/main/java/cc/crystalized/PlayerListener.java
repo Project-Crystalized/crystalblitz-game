@@ -22,7 +22,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -48,6 +50,7 @@ public class PlayerListener implements Listener {
         p.setFoodLevel(20);
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 0, false, false, true));
+        p.removePotionEffect(PotionEffectType.ABSORPTION);
 
         if (crystalBlitz.getInstance().gamemanager == null) {
             p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(Bukkit.getWorld("world")));
@@ -140,6 +143,7 @@ public class PlayerListener implements Listener {
         pd.deaths++;
 
         PlayerInventory inv = p.getInventory();
+        inv.setItemInOffHand(new ItemStack(Material.AIR));
         //Might be a mess but welp, too bad, im lazy and I cant think of anything better
         //Could be optimised
         if (inv.getChestplate().getType().equals(Material.DIAMOND_CHESTPLATE)) {
@@ -183,6 +187,9 @@ public class PlayerListener implements Listener {
 
         DowngradeItem(inv, CrystalBlitzItems.ChargedCrossbow_item, CrystalBlitzItems.Bow_item); //perhaps make this a crossbow instead of a bow?
 
+        inv.remove(CrystalBlitzItems.WeakShard);
+        inv.remove(CrystalBlitzItems.StrongShard);
+        inv.remove(CrystalBlitzItems.NexusShard);
         inv.remove(Material.BLUE_CONCRETE);
         inv.remove(Material.BLUE_WOOL);
         inv.remove(Material.CYAN_CONCRETE);
@@ -271,6 +278,7 @@ public class PlayerListener implements Listener {
             }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
         } else {
             p.sendMessage(text("[!] You're eliminated from the game!"));
+            p.getInventory().clear();
             pd.isEliminated = true;
         }
     }
@@ -298,6 +306,9 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
         } else {
             if (e.getRightClicked() instanceof Villager) {
+                if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
+                    return;
+                }
                 new Shop(e.getPlayer());
             }
         }
@@ -461,6 +472,11 @@ public class PlayerListener implements Listener {
         if (item.getType().toString().toLowerCase().contains("helmet") || item.getType().toString().toLowerCase().contains("chestplate") || item.getType().toString().toLowerCase().contains("leggings") || item.getType().toString().toLowerCase().contains("boots")) {
             e.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onCraft(CraftItemEvent e) {
+        e.setCancelled(true);
     }
 
 }

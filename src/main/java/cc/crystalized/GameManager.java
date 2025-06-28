@@ -46,7 +46,7 @@ public class GameManager {
     public GameManager(GameTypes type) {
 
         teams = new Teams(type);
-        TeamStatus.Init();
+        Teams.TeamStatus.Init();
 
         Bukkit.getServer().sendMessage(text("Starting Game!"));
         for (Entity e : Bukkit.getWorld("world").getEntities()) {
@@ -54,6 +54,8 @@ public class GameManager {
                 e.remove();
             }
         }
+
+        playerDatas.clear();
         setupEntities();
         for (Player p : crystalBlitz.getInstance().getOnlinePlayers()) {
             givePlayerItems(p);
@@ -443,7 +445,7 @@ class TabMenu {
 
 
         addToStatsString(text("---------------------------------------------------\n").color(GRAY));
-        for (TeamData td : t.team_datas) {
+        for (Teams.TeamData td : t.team_datas) {
             List<String> team = t.get_team_from_string(td.name); //probably unsafe, im just shooting in the dark to see if this works
             if (team.size() == 0) {
                 //Do nothing

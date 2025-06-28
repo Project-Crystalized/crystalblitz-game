@@ -440,11 +440,10 @@ public class Teams {
             return null;
         }
     }
-}
 
 //I hate this class still.
 //I just copied everything from knockoff I dont wanna write this shit again
-class TeamStatus{
+class TeamStatus {
     enum Status {
         Alive,
         Dead
@@ -467,7 +466,9 @@ class TeamStatus{
 
         List<String> td = Teams.get_team_from_string(team);
 
-        if (td.size() == 0) {
+        //TODO THIS IS BROKEN AND I DONT KNOW WHY - Cal
+
+        if (td.isEmpty()) {
             team_statuses.put(team, Status.Dead);
         } else if (counter == td.size()) {
             team_statuses.put(team, Status.Alive);
@@ -533,7 +534,7 @@ class TeamStatus{
 
 }
 
-class TeamData{
+static class TeamData{
     public final String name;
     public final Color color;
     public final String symbol;
@@ -565,4 +566,5 @@ class TeamData{
         this.color = color;
         this.symbol = symbol;
     }
+}
 }
