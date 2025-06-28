@@ -316,7 +316,11 @@ public class PlayerListener implements Listener {
         if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
         } else {
-            crystalBlitz.getInstance().Blocks.add(e.getBlock());
+            if (e.getBlock().getY() == crystalBlitz.getInstance().mapdata.BuildLimit) {
+                e.setCancelled(true);
+            } else {
+                crystalBlitz.getInstance().Blocks.add(e.getBlock());
+            }
         }
     }
 
