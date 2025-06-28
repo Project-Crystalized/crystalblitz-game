@@ -135,6 +135,7 @@ public class Shop{
         view.setItem(7, CrystalBlitzItems.DiamondPickaxe);
         view.setItem(10, CrystalBlitzItems.Bow);
         view.setItem(11, CrystalBlitzItems.ChargedCrossbow);
+        view.setItem(19, CrystalBlitzItems.Shears);
 
         p.openInventory(view);
     }

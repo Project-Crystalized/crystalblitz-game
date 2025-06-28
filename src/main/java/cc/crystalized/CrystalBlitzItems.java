@@ -319,6 +319,17 @@ public class CrystalBlitzItems {
         GrapplingOrbitem_im.setItemModel(new NamespacedKey("crystalized", "grappling_orb"));
         GrapplingOrb_item.setItemMeta(GrapplingOrbitem_im);
 
+        ItemMeta Shears_im = Shears.getItemMeta();
+        List<Component> ShearsLore = new ArrayList<>();
+        ShearsLore.add(text(""));
+        ShearsLore.add(text("6 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        Shears_im.lore(ShearsLore);
+        Shears_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
+        Shears.setItemMeta(Shears_im);
+        ItemMeta Shearsitem_im = Shears_item.getItemMeta();
+        Shearsitem_im.setUnbreakable(true);
+        Shears_item.setItemMeta(Shearsitem_im);
+
 
         //Defence
         ItemMeta ConcreteBlocks_im = ConcreteBlocks.getItemMeta();

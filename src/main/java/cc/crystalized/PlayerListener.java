@@ -207,6 +207,7 @@ public class PlayerListener implements Listener {
         inv.remove(Material.YELLOW_CONCRETE);
         inv.remove(Material.YELLOW_WOOL);
         inv.remove(Material.COPPER_BLOCK);
+        inv.remove(CrystalBlitzItems.Shears_item);
 
         inv.remove(CrystalBlitzItems.BoostOrb_item);
 

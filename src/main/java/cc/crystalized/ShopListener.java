@@ -151,6 +151,9 @@ public class ShopListener implements Listener {
             remove.add(CrystalBlitzItems.IronPickaxe_item);
             buyItem(p, Shop.ShardTypes.Nexus, 2, remove, CrystalBlitzItems.DiamondPickaxe_item, null);
         }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.Shears)) {
+            buyItem(p, Shop.ShardTypes.Weak, 6, null, CrystalBlitzItems.Shears_item, null);
+        }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.Bow)) {
             buyItem(p, Shop.ShardTypes.Strong, 25, null, CrystalBlitzItems.Bow_item, null);
         }
