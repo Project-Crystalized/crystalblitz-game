@@ -284,7 +284,7 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDamage(EntityDamageByEntityEvent e) {
+    public void onPlayerDamagebyEntity(EntityDamageByEntityEvent e) {
         if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
             return;
@@ -296,6 +296,13 @@ public class PlayerListener implements Listener {
             return;
         }
         if (Teams.getPlayerTeam(entity).equals(Teams.getPlayerTeam((Player) damager))) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDamage (EntityDamageEvent e) {
+        if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
         }
     }
@@ -492,7 +499,7 @@ class CrystalShardBlock {
             case BossBarStates.GenUpgradeI -> {
                 timer = crystalBlitz.getInstance().getRandomNumber(2, 7);
             }
-            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing -> {
+            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing, BossBarStates.NexusDestroyed -> {
                 timer = crystalBlitz.getInstance().getRandomNumber(1, 5);
             }
         }

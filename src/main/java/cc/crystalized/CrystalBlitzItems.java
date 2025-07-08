@@ -538,7 +538,7 @@ public class CrystalBlitzItems {
         List<Component> PoisonOrbLore = new ArrayList<>();
         PoisonOrbLore.add(translatable("crystalized.orb.poison.desc", PoisonOrbLoreValues).decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         PoisonOrbLore.add(text(""));
-        PoisonOrbLore.add(text("price here"));
+        PoisonOrbLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         PoisonOrb_im.lore(PoisonOrbLore);
         PoisonOrb_im.customName(translatable("crystalized.orb.poison.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         PoisonOrb_im.setItemModel(new NamespacedKey("crystalized", "poison_orb"));
@@ -555,7 +555,7 @@ public class CrystalBlitzItems {
         List<Component> BridgeOrbLore = new ArrayList<>();
         BridgeOrbLore.add(translatable("crystalized.orb.bridge.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         BridgeOrbLore.add(text(""));
-        BridgeOrbLore.add(text("40 weak shards"));
+        BridgeOrbLore.add(text("40 weak shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BridgeOrb_im.lore(BridgeOrbLore);
         BridgeOrb_im.customName(translatable("crystalized.orb.bridge.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BridgeOrb_im.setItemModel(new NamespacedKey("crystalized", "bridge_orb"));
