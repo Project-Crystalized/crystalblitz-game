@@ -289,6 +289,9 @@ public class ShopListener implements Listener {
         else if (e.getCurrentItem().equals(CrystalBlitzItems.BridgeOrb)) {
             buyItem(p, Shop.ShardTypes.Weak, 40, null, CrystalBlitzItems.BridgeOrb_item, null);
         }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.PoisonOrb)) {
+            buyItem(p, Shop.ShardTypes.Weak, 30, null, CrystalBlitzItems.PoisonOrb_item, null);
+        }
 
         //No Category
         else if (e.getCurrentItem().equals(CrystalBlitzItems.Arrows)) {
