@@ -538,7 +538,7 @@ public class CrystalBlitzItems {
         List<Component> PoisonOrbLore = new ArrayList<>();
         PoisonOrbLore.add(translatable("crystalized.orb.poison.desc", PoisonOrbLoreValues).decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         PoisonOrbLore.add(text(""));
-        PoisonOrbLore.add(text("30 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        PoisonOrbLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         PoisonOrb_im.lore(PoisonOrbLore);
         PoisonOrb_im.customName(translatable("crystalized.orb.poison.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         PoisonOrb_im.setItemModel(new NamespacedKey("crystalized", "poison_orb"));
