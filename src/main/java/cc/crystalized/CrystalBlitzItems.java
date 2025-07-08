@@ -322,7 +322,7 @@ public class CrystalBlitzItems {
         ItemMeta Shears_im = Shears.getItemMeta();
         List<Component> ShearsLore = new ArrayList<>();
         ShearsLore.add(text(""));
-        ShearsLore.add(text("6 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ShearsLore.add(text("40 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         Shears_im.lore(ShearsLore);
         Shears_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         Shears.setItemMeta(Shears_im);
