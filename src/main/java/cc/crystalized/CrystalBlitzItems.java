@@ -555,10 +555,11 @@ public class CrystalBlitzItems {
         List<Component> BridgeOrbLore = new ArrayList<>();
         BridgeOrbLore.add(translatable("crystalized.orb.bridge.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         BridgeOrbLore.add(text(""));
-        BridgeOrbLore.add(text("price here"));
+        BridgeOrbLore.add(text("40 weak shards"));
         BridgeOrb_im.lore(BridgeOrbLore);
         BridgeOrb_im.customName(translatable("crystalized.orb.bridge.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         BridgeOrb_im.setItemModel(new NamespacedKey("crystalized", "bridge_orb"));
+        BridgeOrb_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         BridgeOrb.setItemMeta(BridgeOrb_im);
         ItemMeta BridgeOrbitem_im = BridgeOrb_item.getItemMeta();
         List<Component> BridgeOrbitemLore = new ArrayList<>();
