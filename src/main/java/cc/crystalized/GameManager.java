@@ -75,6 +75,7 @@ public class GameManager {
             );
             p.teleport(ploc);
             playerDatas.add(new PlayerData(p));
+            new CustomPlayerNametags(p);
         }
         for (String s : teams.spectator) {
             Player p = Bukkit.getPlayer(s);
@@ -447,9 +448,7 @@ class TabMenu {
         addToStatsString(text("---------------------------------------------------\n").color(GRAY));
         for (Teams.TeamData td : t.team_datas) {
             List<String> team = t.get_team_from_string(td.name); //probably unsafe, im just shooting in the dark to see if this works
-            if (team.size() == 0) {
-                //Do nothing
-            } else {
+            if (!team.isEmpty()) {
                 addToStatsString(text("\n").append(text(td.symbol)).append(translatable("crystalized.game.generic.team." + td.name).color(TextColor.color(td.color.asRGB()))).append(text("\n")));
                 for (String s : team) {
                     Player player = Bukkit.getPlayer(s);
@@ -461,7 +460,7 @@ class TabMenu {
                     } else {
                         addToStatsString(alive);
                     }
-                    addToStatsString(text("").append(player.displayName()).append(text(" \uE101: " + pd.kills)).append(text(" \uE101(N): " + pd.nexus_kills)).append(text(" \uE103: " + pd.deaths)).append(text("\n")));
+                    addToStatsString(text("").append(pd.cachedRankIcon_large).append(text(" ")).append(player.displayName()).append(text(" \uE101: " + pd.kills)).append(text(" \uE101(N): " + pd.nexus_kills)).append(text(" \uE103: " + pd.deaths)).append(text("\n")));
                 }
             }
         }

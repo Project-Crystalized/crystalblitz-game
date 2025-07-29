@@ -61,48 +61,56 @@ public class ScoreboardManager {
 
         Team blue = scoreboard.registerNewTeam("blue");
         blue.setAllowFriendlyFire(false);
+        blue.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         blue.addEntry("9");
         blue.suffix(text(""));
         obj.getScore("9").setScore(9);
 
         Team cyan = scoreboard.registerNewTeam("cyan");
         cyan.setAllowFriendlyFire(false);
+        cyan.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         cyan.addEntry("8");
         cyan.suffix(text(""));
         obj.getScore("8").setScore(8);
 
         Team green = scoreboard.registerNewTeam("green");
         green.setAllowFriendlyFire(false);
+        green.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         green.addEntry("7");
         green.suffix(text(""));
         obj.getScore("7").setScore(7);
 
         Team lime = scoreboard.registerNewTeam("lime");
         lime.setAllowFriendlyFire(false);
+        lime.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         lime.addEntry("6");
         lime.suffix(text(""));
         obj.getScore("6").setScore(6);
 
         Team magenta = scoreboard.registerNewTeam("magenta");
         magenta.setAllowFriendlyFire(false);
+        magenta.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         magenta.addEntry("5");
         magenta.suffix(text(""));
         obj.getScore("5").setScore(5);
 
         Team red = scoreboard.registerNewTeam("red");
         red.setAllowFriendlyFire(false);
+        red.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         red.addEntry("4");
         red.suffix(text(""));
         obj.getScore("4").setScore(4);
 
         Team white = scoreboard.registerNewTeam("white");
         white.setAllowFriendlyFire(false);
+        white.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         white.addEntry("3");
         white.suffix(text(""));
         obj.getScore("3").setScore(3);
 
         Team yellow = scoreboard.registerNewTeam("yellow");
         yellow.setAllowFriendlyFire(false);
+        yellow.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         yellow.addEntry("2");
         yellow.suffix(text(""));
         obj.getScore("2").setScore(2);

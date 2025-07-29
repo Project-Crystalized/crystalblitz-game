@@ -4,8 +4,11 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.GameMode;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -566,4 +569,30 @@ static class TeamData{
         this.symbol = symbol;
     }
 }
+}
+
+class CustomPlayerNametags {
+    public CustomPlayerNametags(Player p) {
+        TextDisplay displayFront = p.getWorld().spawn(p.getLocation(), TextDisplay.class, entity -> {
+            entity.setBillboard(Display.Billboard.CENTER);
+        });
+        p.addPassenger(displayFront);
+        //p.hideEntity(crystalBlitz.getInstance(), displayFront);
+
+        new BukkitRunnable() {
+            public void run() {
+                if (crystalBlitz.getInstance().gamemanager == null || !p.isOnline() || p.getGameMode().equals(GameMode.SPECTATOR)) {
+                    displayFront.remove();
+                    cancel();
+                } else {
+                    PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+                    displayFront.text(
+                            pd.cachedRankIcon_large
+                                    .append(text("\n"))
+                                    .append(p.displayName())
+                    );
+                }
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 20, 2);
+    }
 }

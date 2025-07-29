@@ -1,14 +1,13 @@
 package cc.crystalized;
 
 import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent;
+import gg.crystalized.lobby.Ranks;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
@@ -24,7 +23,6 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -117,14 +115,7 @@ public class PlayerListener implements Listener {
         } else {
             k = null;
         }
-
         Component killer;
-        if (k == null) {
-            killer = text("");
-        } else {
-            killer = k.displayName();
-        }
-
 
         Location loc = new Location(
                 Bukkit.getWorld("world"),
@@ -138,6 +129,10 @@ public class PlayerListener implements Listener {
         if (k != null) {
             PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(k);
             kpd.kills++;
+            //killer = k.displayName();
+            killer = kpd.cachedRankIcon_small.append(text(" ")).append(k.displayName());
+        } else {
+            killer = text("");
         }
         PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
         pd.deaths++;
@@ -254,7 +249,7 @@ public class PlayerListener implements Listener {
             deathcauseicon  = text(" [Unknown Death Reason] ");
         }
 
-        Bukkit.getServer().sendMessage(deathprefix.append(killer).append(deathcauseicon).append(p.displayName()));
+        Bukkit.getServer().sendMessage(deathprefix.append(killer).append(deathcauseicon).append(pd.cachedRankIcon_small.append(text(" ").append(p.displayName()))));
 
         if (crystalBlitz.getInstance().gamemanager.getNexus(Teams.getPlayerTeam(p)).health != 0) {
             new BukkitRunnable() {
@@ -271,6 +266,7 @@ public class PlayerListener implements Listener {
                         );
                         p.setGameMode(GameMode.SURVIVAL);
                         p.teleport(spawnloc);
+                        new CustomPlayerNametags(p);
                         cancel();
                     }
                     timer--;
@@ -453,12 +449,21 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncChatEvent event) {
-        Player player = event.getPlayer();
+        Player p = event.getPlayer();
         event.setCancelled(true);
-        Bukkit.getServer().sendMessage(Component.text("")
-                .append(player.displayName())
-                .append(Component.text(": "))
-                .append(event.message()));
+        //this is dumb
+        if (crystalBlitz.getInstance().gamemanager == null) {
+            Bukkit.getServer().sendMessage(Ranks.getName(Bukkit.getOfflinePlayer(p.getName()))
+                    .append(Component.text(": "))
+                    .append(event.message()));
+        } else {
+            PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+            Bukkit.getServer().sendMessage(pd.cachedRankIcon_small
+                    .append(text(" "))
+                    .append(p.displayName())
+                    .append(Component.text(": "))
+                    .append(event.message()));
+        }
     }
 
     @EventHandler
