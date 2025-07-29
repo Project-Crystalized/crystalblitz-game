@@ -1,6 +1,10 @@
 package cc.crystalized;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import gg.crystalized.lobby.Lobby_plugin;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
@@ -29,7 +33,10 @@ public final class crystalBlitz extends JavaPlugin {
     public final MapData mapdata = new MapData();
     public GameManager gamemanager;
     public boolean is_force_starting = false;
+    private boolean isCountingDown = false;
     private int configVersion = 0;
+    private boolean GameCountdownStarted = false;
+    private int PlayerStartLimit = 3;
 
     @Override
     public void onEnable() {
@@ -69,12 +76,36 @@ public final class crystalBlitz extends JavaPlugin {
                     return;
                 }
                 if (is_force_starting) {
+                    is_force_starting = false;
                     if (Bukkit.getOnlinePlayers().size() > 16) {
                         Bukkit.getServer().sendMessage(text("[!] Too many players are online, aborting game as theres no compatible mode to support " + Bukkit.getOnlinePlayers().size() + " players. Make sure the player size in server.properties is capped to 16 maximum."));
                         return;
                     }
-                    is_force_starting = false;
+                    if (Bukkit.getOnlinePlayers().isEmpty()) {
+                        return;
+                    } else {
+                        if (Bukkit.getOnlinePlayers().size() > 8) {
+                            forceStartGame(GameManager.GameTypes.StandardDuos);
+                        } else {
+                            forceStartGame(GameManager.GameTypes.StandardSolos);
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
 
+        new BukkitRunnable() {
+            public void run() {
+                if (gamemanager != null) {
+                    GameCountdownStarted = false;
+                } else {
+                    if (!GameCountdownStarted && !isCountingDown) {
+                        if (Bukkit.getOnlinePlayers().size() > PlayerStartLimit || Bukkit.getOnlinePlayers().size() == PlayerStartLimit) {
+                            GameCountdown();
+                        }
+                    } else if (Bukkit.getOnlinePlayers().size() < PlayerStartLimit) {
+                        GameCountdownStarted = false;
+                    }
                 }
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
@@ -86,6 +117,7 @@ public final class crystalBlitz extends JavaPlugin {
     }
 
     public void forceStartGame(GameManager.GameTypes type) {
+        isCountingDown = true;
         new BukkitRunnable() {
             int timer = 0;
             public void run() {
@@ -123,8 +155,48 @@ public final class crystalBlitz extends JavaPlugin {
                             player.playSound(player, "crystalized:effect.countdown_end", 50, 1);
                         }
                         gamemanager = new GameManager(type);
+
+                        //Commented out until Crystal Blitz queue system is made
+                        /*
+                        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                        out.writeUTF("start_game");
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            out.writeUTF(p.getName());
+                        }
+                        Player p = (Player) Bukkit.getOnlinePlayers().toArray()[0];
+                        p.sendPluginMessage(crystalBlitz.getInstance(), "crystalized:crystalblitz", out.toByteArray());*/
+
+                        isCountingDown = false;
                         cancel();
                     }
+                }
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
+    }
+
+    private void GameCountdown() {
+        GameCountdownStarted = true;
+        new BukkitRunnable() {
+            int timer = 15;
+            public void run() {
+                if (gamemanager != null || is_force_starting || isCountingDown) {
+                    cancel();
+                }
+                Bukkit.getServer().sendActionBar(translatable("crystalized.game.generic.startingin").color(NamedTextColor.GREEN)
+                        .append(text(" " + (timer + 1) ).color(NamedTextColor.DARK_GRAY))
+                        .append(text(" " + timer).color(RED))
+                        .append(text(" " + (timer - 1) ).color(NamedTextColor.DARK_GRAY))
+                );
+                timer--;
+                if (!GameCountdownStarted && getInstance().is_force_starting) {
+                    Bukkit.getServer().sendMessage(text("Game cancelled, too few players!").color(RED));
+                    GameCountdownStarted = false;
+                    cancel();
+                }
+                if (timer == 0) {
+                    crystalBlitz.getInstance().is_force_starting = true;
+                    GameCountdownStarted = false;
+                    cancel();
                 }
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
