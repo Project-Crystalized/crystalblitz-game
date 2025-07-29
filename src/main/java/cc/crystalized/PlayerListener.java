@@ -19,7 +19,9 @@ import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.FluidLevelChangeEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -533,5 +535,15 @@ class CrystalShardBlock {
                 timer2--;
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
+    }
+
+    @EventHandler
+    public void onWaterFlow(FluidLevelChangeEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockUpdate(BlockFromToEvent e) {
+        e.setCancelled(true);
     }
 }
