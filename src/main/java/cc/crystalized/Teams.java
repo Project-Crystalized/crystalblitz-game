@@ -577,7 +577,7 @@ class CustomPlayerNametags {
             entity.setBillboard(Display.Billboard.CENTER);
         });
         p.addPassenger(displayFront);
-        //p.hideEntity(crystalBlitz.getInstance(), displayFront);
+        p.hideEntity(crystalBlitz.getInstance(), displayFront);
 
         new BukkitRunnable() {
             public void run() {
