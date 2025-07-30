@@ -148,6 +148,7 @@ public class Shop{
         view.setItem(11, CrystalBlitzItems.ChargedCrossbow);
         view.setItem(12, CrystalBlitzItems.Shears);
         view.setItem(19, CrystalBlitzItems.PoisonOrb);
+        view.setItem(20, CrystalBlitzItems.ExplosiveOrb);
 
         p.openInventory(view);
     }

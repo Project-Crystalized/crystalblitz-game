@@ -288,10 +288,11 @@ public class CrystalBlitzItems {
         List<Component> ExplosiveOrbLore = new ArrayList<>();
         ExplosiveOrbLore.add(translatable("crystalized.orb.explosive.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         ExplosiveOrbLore.add(text(""));
-        ExplosiveOrbLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ExplosiveOrbLore.add(text("40 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ExplosiveOrb_im.lore(ExplosiveOrbLore);
         ExplosiveOrb_im.customName(translatable("crystalized.orb.explosive.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ExplosiveOrb_im.setItemModel(new NamespacedKey("crystalized", "explosive_orb"));
+        ExplosiveOrb_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         ExplosiveOrb.setItemMeta(ExplosiveOrb_im);
         ItemMeta ExplosiveOrbitem_im = ExplosiveOrb_item.getItemMeta();
         List<Component> ExplosiveOrbitemLore = new ArrayList<>();

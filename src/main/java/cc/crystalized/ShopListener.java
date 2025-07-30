@@ -75,7 +75,6 @@ public class ShopListener implements Listener {
             Shop.openEnderChest(p1);
         }
 
-        //Offence category of items
         else if (e.getCurrentItem().equals(CrystalBlitzItems.StoneSword)) {
             List<ItemStack> remove = new ArrayList<>();
             remove.add(CrystalBlitzItems.WoodenSword);
@@ -177,7 +176,6 @@ public class ShopListener implements Listener {
             buyItem(p, Shop.ShardTypes.Strong, 35, null, CrystalBlitzItems.WingedOrb_item, null);
         }
 
-        //Defence category
         else if (e.getCurrentItem().equals(CrystalBlitzItems.ConcreteBlocks)) {
             ItemStack item = null;
             switch (Teams.getPlayerTeam(p1)) {
@@ -278,7 +276,6 @@ public class ShopListener implements Listener {
             buyItem(p, Shop.ShardTypes.Nexus, 4, Shop.ArmourType.Diamond, a);
         }
 
-        //Utility
         else if (e.getCurrentItem().equals(CrystalBlitzItems.BoostOrb)) {
             buyItem(p, Shop.ShardTypes.Strong, 20, null, CrystalBlitzItems.BoostOrb_item, null);
         }
@@ -302,6 +299,9 @@ public class ShopListener implements Listener {
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.PoisonOrb)) {
             buyItem(p, Shop.ShardTypes.Strong, 10, null, CrystalBlitzItems.PoisonOrb_item, null);
+        }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.ExplosiveOrb)) {
+            buyItem(p, Shop.ShardTypes.Weak, 40, null, CrystalBlitzItems.ExplosiveOrb_item, null);
         }
 
         //No Category

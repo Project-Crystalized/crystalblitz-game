@@ -293,6 +293,7 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
             return;
         }
+        if (!(e instanceof Player)) {return;}
         Player entity = (Player) e.getEntity();
         Entity damager = e.getDamager();
 
@@ -496,6 +497,11 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onCraft(CraftItemEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onExplosion(EntityExplodeEvent e) {
         e.setCancelled(true);
     }
 
