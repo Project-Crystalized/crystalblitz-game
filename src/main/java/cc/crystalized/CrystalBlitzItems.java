@@ -542,6 +542,7 @@ public class CrystalBlitzItems {
         PoisonOrb_im.lore(PoisonOrbLore);
         PoisonOrb_im.customName(translatable("crystalized.orb.poison.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         PoisonOrb_im.setItemModel(new NamespacedKey("crystalized", "poison_orb"));
+        PoisonOrb_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         PoisonOrb.setItemMeta(PoisonOrb_im);
         ItemMeta PoisonOrbitem_im = PoisonOrb_item.getItemMeta();
         List<Component> PoisonOrbitemLore = new ArrayList<>();

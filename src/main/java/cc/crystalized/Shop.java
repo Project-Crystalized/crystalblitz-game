@@ -146,7 +146,8 @@ public class Shop{
         view.setItem(7, CrystalBlitzItems.DiamondPickaxe);
         view.setItem(10, CrystalBlitzItems.Bow);
         view.setItem(11, CrystalBlitzItems.ChargedCrossbow);
-        view.setItem(19, CrystalBlitzItems.Shears);
+        view.setItem(12, CrystalBlitzItems.Shears);
+        view.setItem(19, CrystalBlitzItems.PoisonOrb);
 
         p.openInventory(view);
     }
@@ -176,7 +177,6 @@ public class Shop{
         view.setItem(11, CrystalBlitzItems.WingedOrb);
         view.setItem(12, CrystalBlitzItems.GrapplingOrb);
         view.setItem(13, CrystalBlitzItems.BridgeOrb);
-        view.setItem(14, CrystalBlitzItems.PoisonOrb);
         view.setItem(19, CrystalBlitzItems.CloudTotem);
         view.setItem(20, CrystalBlitzItems.AntiAirTotem);
         view.setItem(21, CrystalBlitzItems.LaunchTotem);
