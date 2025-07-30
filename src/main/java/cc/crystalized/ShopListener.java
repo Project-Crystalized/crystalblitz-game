@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.geysermc.floodgate.api.FloodgateApi;
@@ -36,6 +37,9 @@ public class ShopListener implements Listener {
         if (crystalBlitz.getInstance().gamemanager == null) {return;}
         Player p1 = (Player) e.getWhoClicked();
         HumanEntity p = e.getWhoClicked();
+        if (e.getInventory().equals(p1.getEnderChest())) {
+            return;
+        }
 
         if (e.getCurrentItem() == null) {return;}
         if (p1.getOpenInventory().getTopInventory().contains(Shop.Back) || p1.getOpenInventory().getTopInventory().contains(Shop.CategoryDefence)) { //This is dumb
@@ -62,6 +66,8 @@ public class ShopListener implements Listener {
         } else if (e.getCurrentItem().equals(Shop.Back)) {
             p1.closeInventory();
             new Shop(p1);
+        } else if (e.getCurrentItem().equals(Shop.EnderChest)) {
+            Shop.openEnderChest(p1);
         }
 
         //Offence category of items

@@ -1,5 +1,6 @@
 package cc.crystalized;
 
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
@@ -37,6 +38,7 @@ public class Shop{
     public static ItemStack CategoryOffence = new ItemStack(Material.COAL);
     public static ItemStack CategoryDefence = new ItemStack(Material.COAL);
     public static ItemStack CategoryUtility = new ItemStack(Material.COAL);
+    public static ItemStack EnderChest = new ItemStack(Material.ENDER_CHEST);
     public static ItemStack Back = new ItemStack(Material.COAL);
 
     public static Inventory view = Bukkit.getServer().createInventory(null, 54, text("null"));
@@ -57,6 +59,13 @@ public class Shop{
         CategoryUtility_im.customName(text("Utility").decoration(TextDecoration.ITALIC, false));
         CategoryUtility_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryUtility.setItemMeta(CategoryUtility_im);
+
+        ItemMeta EChest_im = EnderChest.getItemMeta();
+        List<Component> EChest_lore = new ArrayList<>();
+        EChest_lore.add(text("Your Private Storage! Access from any Shop including this one.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        EChest_lore.add(text("Notice: When eliminated, all items will drop at your Base's spawn.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        EChest_im.lore(EChest_lore);
+        EnderChest.setItemMeta(EChest_im);
 
         ItemMeta Back_im = Back.getItemMeta();
         Back_im.customName(text("Back").decoration(TextDecoration.ITALIC, false));
@@ -116,6 +125,8 @@ public class Shop{
         view.setItem(25, CategoryUtility);
         view.setItem(26, CategoryUtility);
 
+        view.setItem(31, EnderChest);
+
         view.setItem(36, CrystalBlitzItems.Arrows);
 
         p.openInventory(view);
@@ -171,5 +182,9 @@ public class Shop{
         view.setItem(21, CrystalBlitzItems.LaunchTotem);
 
         p.openInventory(view);
+    }
+
+    public static void openEnderChest(Player p) {
+        p.openInventory(p.getEnderChest());
     }
 }
