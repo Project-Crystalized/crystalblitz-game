@@ -58,6 +58,8 @@ public class GameManager {
         playerDatas.clear();
         setupEntities();
         for (Player p : Bukkit.getOnlinePlayers()) {
+            p.getEnderChest().setMaxStackSize(54);
+            p.getEnderChest();
             p.getEnderChest().clear();
         }
         for (Player p : crystalBlitz.getInstance().getOnlinePlayers()) {

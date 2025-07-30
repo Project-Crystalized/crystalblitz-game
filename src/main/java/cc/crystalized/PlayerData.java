@@ -2,8 +2,13 @@ package cc.crystalized;
 
 import gg.crystalized.lobby.Ranks;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Comparator;
 
@@ -13,6 +18,7 @@ public class PlayerData {
 
     Player p;
     boolean isEliminated = false;
+    Inventory enderChest;
     public Component cachedRankIcon_small = text("?");
     public Component cachedRankIcon_large = text("rank");
     int kills = 0;
@@ -23,6 +29,17 @@ public class PlayerData {
         p = player;
         cachedRankIcon_small = Ranks.getIcon(Bukkit.getOfflinePlayer(p.getName()));
         cachedRankIcon_large = Ranks.getRankWithName(p);
+        enderChest = Bukkit.getServer().createInventory(null, 54, text("\uA000\uA001 echest").color(NamedTextColor.WHITE));
+    }
+
+    public void dropEnderChestContents(Location loc) {
+        ItemStack[] itemList = enderChest.getContents();
+        for (ItemStack i : itemList) {
+            loc.getWorld().spawn(loc, Item.class, entity -> {
+                entity.setItemStack(i);
+            });
+        }
+        enderChest.clear();
     }
 
     public int score() {

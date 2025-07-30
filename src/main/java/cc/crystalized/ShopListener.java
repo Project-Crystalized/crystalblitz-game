@@ -1,5 +1,6 @@
 package cc.crystalized;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -8,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,9 +28,13 @@ public class ShopListener implements Listener {
 
     @EventHandler
     public void onShopClose(InventoryCloseEvent e) {
-        if (crystalBlitz.getInstance().gamemanager != null) {
-            Player p = (Player) e.getPlayer();
-            //crystalBlitz.getInstance().gamemanager.shopList.remove(crystalBlitz.getInstance().gamemanager.getShop(p));
+        if (crystalBlitz.getInstance().gamemanager == null) {return;}
+        Player p = (Player) e.getPlayer();
+        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+
+        if (pd == null) {return;}
+        if (e.getInventory().equals(pd.enderChest)) {
+            p.playSound(p, "minecraft:block.ender_chest.close", 1, 1);
         }
     }
 
@@ -37,21 +43,20 @@ public class ShopListener implements Listener {
         if (crystalBlitz.getInstance().gamemanager == null) {return;}
         Player p1 = (Player) e.getWhoClicked();
         HumanEntity p = e.getWhoClicked();
-        if (e.getInventory().equals(p1.getEnderChest())) {
+        if (e.getCurrentItem() == null) {return;}
+        if (crystalBlitz.getInstance().gamemanager == null) {
             return;
         }
 
-        if (e.getCurrentItem() == null) {return;}
+        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p1);
+        if (e.getInventory().equals(pd.enderChest)) {
+            return;
+        }
         if (p1.getOpenInventory().getTopInventory().contains(Shop.Back) || p1.getOpenInventory().getTopInventory().contains(Shop.CategoryDefence)) { //This is dumb
             e.setCancelled(true);
         } else {
             return;
         }
-
-        if (crystalBlitz.getInstance().gamemanager == null) {
-            return;
-        }
-
         if (e.getCurrentItem() == null) {return;} //to prevent NullPointerExceptions
 
         //Couldn't make a switch statement so a constant if else will be used instead. ugly but it works

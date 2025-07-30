@@ -62,8 +62,8 @@ public class Shop{
 
         ItemMeta EChest_im = EnderChest.getItemMeta();
         List<Component> EChest_lore = new ArrayList<>();
-        EChest_lore.add(text("Your Private Storage! Access from any Shop including this one.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
-        EChest_lore.add(text("Notice: When eliminated, all items will drop at your Base's spawn.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        EChest_lore.add(text("Your private storage! Access from any Shop including this one.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        EChest_lore.add(text("Notice: When eliminated, all items will drop at your base's spawn.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         EChest_im.lore(EChest_lore);
         EnderChest.setItemMeta(EChest_im);
 
@@ -185,6 +185,12 @@ public class Shop{
     }
 
     public static void openEnderChest(Player p) {
-        p.openInventory(p.getEnderChest());
+        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+        if (pd == null) {
+            p.sendMessage(text("[!] Failed to open Ender Chest, your PlayerData is null"));
+            return;
+        }
+        p.playSound(p, "minecraft:block.ender_chest.open", 1, 1);
+        p.openInventory(pd.enderChest);
     }
 }

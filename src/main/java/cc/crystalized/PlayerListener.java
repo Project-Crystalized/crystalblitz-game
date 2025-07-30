@@ -278,6 +278,12 @@ public class PlayerListener implements Listener {
             p.sendMessage(text("[!] You're eliminated from the game!"));
             p.getInventory().clear();
             pd.isEliminated = true;
+            Location spawnloc = new Location(Bukkit.getWorld("world"),
+                    crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
+                    crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
+                    crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[2]
+            );
+            pd.dropEnderChestContents(spawnloc.add(0, 1, 0));
         }
     }
 
