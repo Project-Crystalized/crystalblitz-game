@@ -394,11 +394,11 @@ public class CrystalBlitzItems {
         List<Component> AntiAirTotemLore = new ArrayList<>();
         AntiAirTotemLore.add(translatable("crystalized.totem.antiair.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         AntiAirTotemLore.add(text(""));
-        AntiAirTotemLore.add(text("30 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        AntiAirTotemLore.add(text("40 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         AntiAirTotem_im.lore(AntiAirTotemLore);
         AntiAirTotem_im.customName(translatable("crystalized.totem.antiair.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         AntiAirTotem_im.setItemModel(new NamespacedKey("crystalized", "antiair_totem"));
-        AntiAirTotem_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
+        AntiAirTotem_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         AntiAirTotem.setItemMeta(AntiAirTotem_im);
         ItemMeta AntiAirTotemitem_im = AntiAirTotem_item.getItemMeta();
         List<Component> AntiAirTotemitemLore = new ArrayList<>();
@@ -430,17 +430,18 @@ public class CrystalBlitzItems {
         List<Component> DefenceTotemLore = new ArrayList<>();
         DefenceTotemLore.add(translatable("crystalized.totem.defence.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         DefenceTotemLore.add(text(""));
-        DefenceTotemLore.add(text("price here").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        DefenceTotemLore.add(text("30 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         DefenceTotem_im.lore(DefenceTotemLore);
         DefenceTotem_im.customName(translatable("crystalized.totem.defence.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
-        DefenceTotem_im.setItemModel(new NamespacedKey("crystalized", "defence_totem"));
+        DefenceTotem_im.setItemModel(new NamespacedKey("crystalized", "defense_totem"));
+        DefenceTotem_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
         DefenceTotem.setItemMeta(DefenceTotem_im);
         ItemMeta DefenceTotemitem_im = DefenceTotem_item.getItemMeta();
         List<Component> DefenceTotemitemLore = new ArrayList<>();
         DefenceTotemitemLore.add(translatable("crystalized.totem.defence.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         DefenceTotemitem_im.lore(DefenceTotemitemLore);
         DefenceTotemitem_im.customName(translatable("crystalized.totem.defence.name").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
-        DefenceTotemitem_im.setItemModel(new NamespacedKey("crystalized", "defence_totem"));
+        DefenceTotemitem_im.setItemModel(new NamespacedKey("crystalized", "defense_totem"));
         DefenceTotem_item.setItemMeta(DefenceTotemitem_im);
 
         ItemMeta HealingTotem_im = HealingTotem.getItemMeta();
