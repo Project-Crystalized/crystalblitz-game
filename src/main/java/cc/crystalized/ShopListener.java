@@ -308,10 +308,6 @@ public class ShopListener implements Listener {
         else if (e.getCurrentItem().equals(CrystalBlitzItems.Arrows)) {
             buyItem(p, Shop.ShardTypes.Strong, 2, null, CrystalBlitzItems.Arrows_item, null);
         }
-
-        else {
-            //do nothing
-        }
     }
 
     //I hate this but this should make the InventoryClickEvent more clean

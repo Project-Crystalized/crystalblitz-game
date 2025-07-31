@@ -505,6 +505,15 @@ public class PlayerListener implements Listener {
         e.setCancelled(true);
     }
 
+    @EventHandler
+    public void onWaterFlow(FluidLevelChangeEvent e) {
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockUpdate(BlockFromToEvent e) {
+        e.setCancelled(true);
+    }
 }
 
 class CrystalShardBlock {
@@ -547,15 +556,5 @@ class CrystalShardBlock {
                 timer2--;
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
-    }
-
-    @EventHandler
-    public void onWaterFlow(FluidLevelChangeEvent e) {
-        e.setCancelled(true);
-    }
-
-    @EventHandler
-    public void onBlockUpdate(BlockFromToEvent e) {
-        e.setCancelled(true);
     }
 }
