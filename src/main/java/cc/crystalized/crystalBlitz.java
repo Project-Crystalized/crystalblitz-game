@@ -47,6 +47,9 @@ public final class crystalBlitz extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.getServer().getPluginManager().registerEvents(new ShopListener(), this);
 
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "crystalized:crystalblitz");
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "crystalized:main");
+
         World w  = Bukkit.getWorld("world");
 
         w.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
@@ -156,15 +159,13 @@ public final class crystalBlitz extends JavaPlugin {
                         }
                         gamemanager = new GameManager(type);
 
-                        //Commented out until Crystal Blitz queue system is made
-                        /*
                         ByteArrayDataOutput out = ByteStreams.newDataOutput();
                         out.writeUTF("start_game");
                         for (Player p : Bukkit.getOnlinePlayers()) {
                             out.writeUTF(p.getName());
                         }
                         Player p = (Player) Bukkit.getOnlinePlayers().toArray()[0];
-                        p.sendPluginMessage(crystalBlitz.getInstance(), "crystalized:crystalblitz", out.toByteArray());*/
+                        p.sendPluginMessage(crystalBlitz.getInstance(), "crystalized:crystalblitz", out.toByteArray());
 
                         isCountingDown = false;
                         cancel();
