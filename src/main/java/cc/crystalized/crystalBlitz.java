@@ -2,7 +2,12 @@ package cc.crystalized;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import gg.crystalized.lobby.Lobby_plugin;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -41,8 +46,86 @@ public final class crystalBlitz extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        Commands dc = new Commands();
-        this.getCommand("crystalblitz").setExecutor(dc);
+        //Commands dc = new Commands();
+        //this.getCommand("crystalblitz").setExecutor(dc);
+
+        this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("crystalblitz");
+            command.then(Commands.literal("start").requires(sender -> sender.getSender().hasPermission("minecraft.command.op"))
+                    .executes(ctx -> {
+                        if (crystalBlitz.getInstance().gamemanager != null || crystalBlitz.getInstance().isCountingDown) {
+                            ctx.getSource().getSender().sendMessage(text("[!] A game is already in progress or is about to start.").color(RED));
+                        } else {
+                            if (getConfig().getBoolean("teams.enable")) {
+                                forceStartGame(GameManager.GameTypes.Custom);
+                            } else {
+                                ctx.getSource().getSender().sendMessage(text("[!] Missing arguments"));
+                            }
+                        }
+                        return Command.SINGLE_SUCCESS;
+                    })
+                    .then(Commands.literal("force_StandardSolos").executes(ctx -> {
+                        if (crystalBlitz.getInstance().gamemanager != null || crystalBlitz.getInstance().isCountingDown) {
+                            ctx.getSource().getSender().sendMessage(text("[!] A game is already in progress or is about to start.").color(RED));
+                        } else {
+                            if (getConfig().getBoolean("teams.enable")) {
+                                forceStartGame(GameManager.GameTypes.Custom);
+                            } else {
+                                forceStartGame(GameManager.GameTypes.StandardSolos);
+                            }
+                        }
+                        return Command.SINGLE_SUCCESS;
+                    }))
+                    .then(Commands.literal("force_StandardDuos").executes(ctx -> {
+                        if (crystalBlitz.getInstance().gamemanager != null || crystalBlitz.getInstance().isCountingDown) {
+                            ctx.getSource().getSender().sendMessage(text("[!] A game is already in progress or is about to start.").color(RED));
+                        } else {
+                            if (getConfig().getBoolean("teams.enable")) {
+                                forceStartGame(GameManager.GameTypes.Custom);
+                            } else {
+                                forceStartGame(GameManager.GameTypes.StandardDuos);
+                            }
+                        }
+                        return Command.SINGLE_SUCCESS;
+                    }))
+                    .then(Commands.literal("force_StandardTrios").executes(ctx -> {
+                        if (crystalBlitz.getInstance().gamemanager != null || crystalBlitz.getInstance().isCountingDown) {
+                            ctx.getSource().getSender().sendMessage(text("[!] A game is already in progress or is about to start.").color(RED));
+                        } else {
+                            if (getConfig().getBoolean("teams.enable")) {
+                                forceStartGame(GameManager.GameTypes.Custom);
+                            } else {
+                                forceStartGame(GameManager.GameTypes.StandardTrios);
+                            }
+                        }
+                        return Command.SINGLE_SUCCESS;
+                    }))
+                    .then(Commands.literal("force_StandardSquads").executes(ctx -> {
+                        if (crystalBlitz.getInstance().gamemanager != null || crystalBlitz.getInstance().isCountingDown) {
+                            ctx.getSource().getSender().sendMessage(text("[!] A game is already in progress or is about to start.").color(RED));
+                        } else {
+                            if (getConfig().getBoolean("teams.enable")) {
+                                forceStartGame(GameManager.GameTypes.Custom);
+                            } else {
+                                forceStartGame(GameManager.GameTypes.StandardSquads);
+                            }
+                        }
+                        return Command.SINGLE_SUCCESS;
+                    }))
+            );
+            command.then(Commands.literal("end").requires(sender -> sender.getSender().hasPermission("minecraft.command.op")).executes(ctx -> {
+                if (getInstance().gamemanager == null) {
+                    ctx.getSource().getSender().sendMessage(text("[!] This cannot be used in the waiting lobby."));
+                } else {
+                    gamemanager.ForceEndGame();
+                }
+                return Command.SINGLE_SUCCESS;
+            }));
+
+            LiteralCommandNode<CommandSourceStack> buildCommand = command.build();
+            commands.registrar().register(buildCommand);
+        });
+
 
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.getServer().getPluginManager().registerEvents(new ShopListener(), this);

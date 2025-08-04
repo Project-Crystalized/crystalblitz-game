@@ -38,6 +38,8 @@ public class GameManager {
         Custom,
         StandardSolos,
         StandardDuos,
+        StandardTrios,
+        StandardSquads,
     }
 
     public GameManager(GameTypes type) {
