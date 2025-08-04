@@ -8,10 +8,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TextDisplay;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -50,7 +47,7 @@ public class GameManager {
 
         Bukkit.getServer().sendMessage(text("Starting Game!"));
         for (Entity e : Bukkit.getWorld("world").getEntities()) {
-            if (e instanceof Villager || e instanceof TextDisplay) {
+            if (e instanceof Villager || e instanceof TextDisplay || e instanceof Arrow || e instanceof Item) {
                 e.remove();
             }
         }
@@ -138,7 +135,7 @@ public class GameManager {
         }
 
         for (Entity e : Bukkit.getWorld("world").getEntities()) {
-            if (e instanceof Villager || e instanceof TextDisplay) {
+            if (e instanceof Villager || e instanceof TextDisplay || e instanceof Arrow || e instanceof Item) {
                 e.remove();
             }
         }
@@ -174,8 +171,7 @@ public class GameManager {
                     Bukkit.getLogger().log(Level.INFO, "Removed all player-made blocks! You may rejoin to start another game");
                     crystalBlitz.getInstance().gamemanager = null;
                     for (Nexus n : nexuses) {
-                        n.
-                                resetNexuses();
+                        n.resetNexuses();
                     }
                     cancel();
                 }
