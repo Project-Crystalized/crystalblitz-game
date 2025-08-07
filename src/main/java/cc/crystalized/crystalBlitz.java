@@ -46,9 +46,6 @@ public final class crystalBlitz extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        //Commands dc = new Commands();
-        //this.getCommand("crystalblitz").setExecutor(dc);
-
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("crystalblitz");
             command.then(Commands.literal("start").requires(sender -> sender.getSender().hasPermission("minecraft.command.op"))
