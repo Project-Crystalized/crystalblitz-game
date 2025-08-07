@@ -4,6 +4,8 @@ import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent;
 import gg.crystalized.lobby.Ranks;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -34,6 +36,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.util.logging.Level;
 
@@ -45,6 +48,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        FloodgateApi floodgateapi = FloodgateApi.getInstance();
         e.joinMessage(text(""));
         p.setHealth(20);
         p.setFoodLevel(20);
@@ -67,6 +71,23 @@ public class PlayerListener implements Listener {
                             .append(text("\n"))
             );
             new QueueScoreboard(p);
+
+            if (floodgateapi.isFloodgatePlayer(p.getUniqueId())) {
+                p.sendMessage(text("-".repeat(40)));
+            } else {
+                p.sendMessage(text(" ".repeat(55)).decoration(TextDecoration.STRIKETHROUGH,  true));
+            }
+            p.sendMessage(
+                    text("\n")
+                            .append(translatable("crystalized.game.crystalblitz.name").color(NamedTextColor.LIGHT_PURPLE).append(text("").color(NamedTextColor.WHITE)))
+                            .append(text("\n").append(translatable("crystalized.game.crystalblitz.chat.tutorial").color(NamedTextColor.GRAY)))
+                            .append(text("\n"))
+            );
+            if (floodgateapi.isFloodgatePlayer(p.getUniqueId())) {
+                p.sendMessage(text("-".repeat(40)));
+            } else {
+                p.sendMessage(text(" ".repeat(55)).decoration(TextDecoration.STRIKETHROUGH,  true));
+            }
 
         } else {
             //p.kick(text("A game is currently is progress, try joining again later.").color(NamedTextColor.RED));

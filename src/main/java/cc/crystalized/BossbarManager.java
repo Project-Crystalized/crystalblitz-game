@@ -5,8 +5,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.logging.Level;
+import org.geysermc.floodgate.api.FloodgateApi;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
@@ -15,15 +14,25 @@ public class BossbarManager {
 
     BossBar bar;
     BossBar texture;
+    BossBar texture_br; //Bedrock bossbar texture, because Bedrock is inconsistent compared to java - Callum
     BossBarStates currentstate =  BossBarStates.starting; //Reset state
     int timerdefaultvalue = 300; //300 =5 Minutes, 30 is testing
     int timer = timerdefaultvalue;
 
     public BossbarManager() {
+        texture = BossBar.bossBar(text("\uE402"), 0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
+        texture_br = BossBar.bossBar(text("\uE403"), 0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (FloodgateApi.getInstance().isFloodgatePlayer(p.getUniqueId())) {
+                p.showBossBar(texture_br);
+                p.hideBossBar(texture);
+            } else {
+                p.showBossBar(texture);
+                p.hideBossBar(texture_br);
+            }
+        }
         bar = BossBar.bossBar(text("loading"), 0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
         Bukkit.getServer().showBossBar(bar);
-        texture = BossBar.bossBar(text("texture here"), 0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
-        Bukkit.getServer().showBossBar(texture);
 
         new BukkitRunnable() {
             public void run() {
@@ -86,16 +95,16 @@ public class BossbarManager {
     private void ChangeBossbarText() {
         switch (currentstate) {
             case starting -> {
-                bar.name(text("Next Gen. Upgrade (I): ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
+                bar.name(translatable("crystalized.game.crystalblitz.bossbar.upgrade").append(text("(I)")).color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case GenUpgradeI -> {
-                bar.name(text("Next Gen. Upgrade (II): ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
+                bar.name(translatable("crystalized.game.crystalblitz.bossbar.upgrade").append(text("(II)")).color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case GenUpgradeII -> {
                 bar.name(text("All Nexuses will be destroyed in: ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case NexusDestroyed -> {
-                bar.name(text("World Border Closing in: ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
+                bar.name(translatable("crystalized.game.crystalblitz.bossbar.worldborder").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case WorldBorderClosing -> {
                 bar.name(text("World Border Closing!"));
