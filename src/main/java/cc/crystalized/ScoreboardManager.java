@@ -16,7 +16,7 @@ public class ScoreboardManager {
     public ScoreboardManager(Player player) {
         FloodgateApi floodgateapi = FloodgateApi.getInstance();
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Component title = text("Crystal Blitz").color(NamedTextColor.LIGHT_PURPLE);
+        Component title = text("Crystal Blitz").color(NamedTextColor.LIGHT_PURPLE).append(text(" \uE12F").color(NamedTextColor.WHITE));
         Objective obj = scoreboard.registerNewObjective("main", Criteria.DUMMY, title);
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 
@@ -185,7 +185,7 @@ class QueueScoreboard {
 
         FloodgateApi floodgateapi = FloodgateApi.getInstance();
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        Component title = text("Crystal Blitz").color(NamedTextColor.LIGHT_PURPLE);
+        Component title = text("Crystal Blitz").color(NamedTextColor.LIGHT_PURPLE).append(text(" \uE12F").color(NamedTextColor.WHITE));
         Objective obj = scoreboard.registerNewObjective("main", Criteria.DUMMY, title);
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 

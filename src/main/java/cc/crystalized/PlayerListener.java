@@ -79,7 +79,7 @@ public class PlayerListener implements Listener {
             }
             p.sendMessage(
                     text("\n")
-                            .append(translatable("crystalized.game.crystalblitz.name").color(NamedTextColor.LIGHT_PURPLE).append(text("").color(NamedTextColor.WHITE)))
+                            .append(translatable("crystalized.game.crystalblitz.name").color(NamedTextColor.LIGHT_PURPLE).append(text(" \uE12F").color(NamedTextColor.WHITE)))
                             .append(text("\n").append(translatable("crystalized.game.crystalblitz.chat.tutorial").color(NamedTextColor.GRAY)))
                             .append(text("\n"))
             );
