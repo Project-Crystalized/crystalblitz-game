@@ -122,7 +122,7 @@ public class CrystalBlitzItems {
         List<Component> StoneSwordLore = new ArrayList<>();
         StoneSwordLore.add(translatable("crystalized.sword.stone.desc").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StoneSwordLore.add(text(" "));
-        StoneSwordLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        StoneSwordLore.add(text("10 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StoneSword_im.lore(StoneSwordLore);
         StoneSword_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         StoneSword.setItemMeta(StoneSword_im);
@@ -140,7 +140,7 @@ public class CrystalBlitzItems {
         StonePickaxeLore.add(translatable("crystalized.item.pickaxe.stone.desc1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StonePickaxeLore.add(translatable("crystalized.item.pickaxe.stone.desc2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         StonePickaxeLore.add(text(" "));
-        StonePickaxeLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        StonePickaxeLore.add(text("10 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         StonePickaxe_im.lore(StonePickaxeLore);
         StonePickaxe_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         StonePickaxe.setItemMeta(StonePickaxe_im);

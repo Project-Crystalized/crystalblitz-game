@@ -82,7 +82,7 @@ public class ShopListener implements Listener {
             nothave.add(CrystalBlitzItems.StoneSword_item);
             nothave.add(CrystalBlitzItems.IronSword_item);
             nothave.add(CrystalBlitzItems.DiamondSword_item);
-            buyItem(p, Shop.ShardTypes.Weak, 20, remove, CrystalBlitzItems.StoneSword_item, nothave);
+            buyItem(p, Shop.ShardTypes.Weak, 10, remove, CrystalBlitzItems.StoneSword_item, nothave);
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.StonePickaxe)) {
             List<ItemStack> remove = new ArrayList<>();
@@ -91,7 +91,7 @@ public class ShopListener implements Listener {
             nothave.add(CrystalBlitzItems.StonePickaxe_item);
             nothave.add(CrystalBlitzItems.IronPickaxe_item);
             nothave.add(CrystalBlitzItems.DiamondPickaxe_item);
-            buyItem(p, Shop.ShardTypes.Weak, 20, remove, CrystalBlitzItems.StonePickaxe_item, nothave);
+            buyItem(p, Shop.ShardTypes.Weak, 10, remove, CrystalBlitzItems.StonePickaxe_item, nothave);
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.IronSword)) {
             List<ItemStack> remove = new ArrayList<>();
