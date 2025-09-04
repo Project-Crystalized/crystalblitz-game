@@ -33,6 +33,7 @@ public class GameManager {
     public WorldBorderManager worldborder = new WorldBorderManager();
     public static List<PlayerData> playerDatas = new ArrayList<>();
     public static List<Shop> shopList = new ArrayList<>();
+    public static GameTypes GameType;
 
     enum GameTypes {
         Custom,
@@ -43,7 +44,7 @@ public class GameManager {
     }
 
     public GameManager(GameTypes type) {
-
+        GameType = type;
         teams = new Teams(type);
         Teams.TeamStatus.Init();
 
@@ -348,6 +349,7 @@ public class GameManager {
                 }
             }
         }
+        CrystalBlitzDatabase.save_game(winning_team);
 
         new BukkitRunnable() {
             int timer = 0;

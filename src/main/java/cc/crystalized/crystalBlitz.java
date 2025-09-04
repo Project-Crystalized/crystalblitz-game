@@ -20,11 +20,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.nio.ByteBuffer;
+import java.sql.*;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
@@ -123,7 +122,6 @@ public final class crystalBlitz extends JavaPlugin {
             commands.registrar().register(buildCommand);
         });
 
-
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.getServer().getPluginManager().registerEvents(new ShopListener(), this);
 
@@ -142,6 +140,7 @@ public final class crystalBlitz extends JavaPlugin {
         w.setGameRule(GameRule.NATURAL_REGENERATION, true);
         w.setDifficulty(Difficulty.HARD);
 
+        CrystalBlitzDatabase.setup_databases();
         Shop.setupShop();
         CrystalBlitzItems.SetupItems();
 
@@ -153,7 +152,6 @@ public final class crystalBlitz extends JavaPlugin {
         }
 
         new BukkitRunnable() {
-            @Override
             public void run() {
                 if (gamemanager != null) {
                     return;
@@ -196,7 +194,6 @@ public final class crystalBlitz extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
     }
 
     public void forceStartGame(GameManager.GameTypes type) {
@@ -300,5 +297,81 @@ public final class crystalBlitz extends JavaPlugin {
         }
 
         return players;
+    }
+}
+
+//cba making another .java file - Callum
+class CrystalBlitzDatabase{
+    public static final String URL = "jdbc:sqlite"+ System.getProperty("user.home")+"/databases/crystalblitz_db.sql";
+
+    public static void setup_databases() {
+        String create_cb_games = "CREATE TABLE IF NOT EXISTS CrystalBlitzGames ("
+                + "map STRING,"
+                + "winner_team STRING,"
+                + "gametype STRING,"
+                + "timestamp INTEGER"
+                + ");";
+        String create_cb_players = "CREATE TABLE IF NOT EXISTS CbGamesPlayers ("
+                + "player_uuid BYTES,"
+                + "team STRING,"
+                + "kills INTEGER,"
+                + "deaths INTEGER,"
+                + "nexus_kills INTEGER" //nexuses broken
+                + "games_won INTEGER"
+                + ");";
+
+        try (Connection conn = DriverManager.getConnection(URL)) {
+            Statement stmt = conn.createStatement();
+            stmt.execute(create_cb_games);
+            stmt.execute(create_cb_players);
+        } catch (SQLException e) {
+            Bukkit.getLogger().severe(e.getMessage());
+            for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+                crystalBlitz.getInstance().getLogger().severe(ste.toString());
+            }
+        }
+    }
+
+    public static void save_game(String WinningTeam) {
+        String save_game = "INSERT INTO CrystalBlitzGames(map, winner_team, gametype, timestamp) VALUES(?, ?, ?, unixepoch())";
+        GameManager gm = crystalBlitz.getInstance().gamemanager;
+
+        try (Connection conn = DriverManager.getConnection(URL)) {
+            PreparedStatement game_stmt = conn.prepareStatement(save_game);
+            game_stmt.setString(1, crystalBlitz.getInstance().mapdata.map_name);
+            game_stmt.setString(2, WinningTeam);
+            game_stmt.setString(3, gm.GameType.toString());
+            game_stmt.executeUpdate();
+
+            String save_player = "INSERT INTO CbGamesPlayers(player_uuid, team, kills, deaths, nexus_kills, games_won)"
+                    + " VALUES(?, ?, ?, ?, ?, ?)";
+            PreparedStatement player_stmt = conn.prepareStatement(save_player);
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                PlayerData pd = gm.getPlayerData(p);
+
+                player_stmt.setBytes(1, uuid_to_bytes(p));
+                player_stmt.setString(2, Teams.getPlayerTeam(p));
+                player_stmt.setInt(3, pd.kills);
+                player_stmt.setInt(4, pd.deaths);
+                player_stmt.setInt(5, pd.nexus_kills);
+                if (WinningTeam.equals(Teams.getPlayerTeam(p))) {
+                    player_stmt.setInt(6, 1);
+                } else {
+                    player_stmt.setInt(6, 0);
+                }
+                player_stmt.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            Bukkit.getLogger().severe(e.getMessage());
+        }
+    }
+
+    private static byte[] uuid_to_bytes(Player p) {
+        ByteBuffer bb = ByteBuffer.allocate(16);
+        UUID uuid = p.getUniqueId();
+        bb.putLong(uuid.getMostSignificantBits());
+        bb.putLong(uuid.getLeastSignificantBits());
+        return bb.array();
     }
 }
