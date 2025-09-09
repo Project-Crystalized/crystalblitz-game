@@ -292,61 +292,32 @@ public class GameManager {
         return i;
     }
 
-    public static void StartEndGame(String winning_team) {
+    public static void StartEndGame(String winning_team, Teams.TeamData td) {
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.playSound(p, "crystalized:effect.ls_game_won", 50, 1);
-            switch (winning_team.toLowerCase()) {
-                case "blue" -> {
-                    p.showTitle(Title.title(
-                            text("\uE120 ").append(translatable("crystalized.game.generic.team.blue").color(Teams.TEAM_BLUE)).append(text(" \uE120")),
-                            translatable("crystalized.game.knockoff.win").color(YELLOW),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
-                case "cyan" -> {
-                    p.showTitle(Title.title(
-                            text("\uE121 ").append(translatable("crystalized.game.generic.team.cyan").color(Teams.TEAM_CYAN)).append(text(" \uE121")),
-                            translatable("crystalized.game.knockoff.win").color(YELLOW),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
-                case "green" -> {
-                    p.showTitle(Title.title(
-                            text("\uE122 ").append(translatable("crystalized.game.generic.team.green").color(Teams.TEAM_GREEN)).append(text(" \uE122")),
-                            translatable("crystalized.game.knockoff.win").color(YELLOW),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
-                case "lime" -> {
-                    p.showTitle(Title.title(
-                            text("\uE123 ").append(translatable("crystalized.game.generic.team.lime").color(Teams.TEAM_LIME)).append(text(" \uE123")),
-                            translatable("crystalized.game.knockoff.win").color(YELLOW),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
-                case "magenta" -> {
-                    p.showTitle(Title.title(
-                            text("\uE124 ").append(translatable("crystalized.game.generic.team.magenta").color(Teams.TEAM_MAGENTA)).append(text(" \uE124")),
-                            translatable("crystalized.game.knockoff.win").color(YELLOW),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
-                case "red" -> {
-                    p.showTitle(Title.title(
-                            text("\uE125 ").append(translatable("crystalized.game.generic.team.red").color(Teams.TEAM_RED)).append(text(" \uE125")),
-                            translatable("crystalized.game.knockoff.win").color(YELLOW),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
-                case "white" -> {
-                    p.showTitle(Title.title(
-                            text("\uE126 ").append(translatable("crystalized.game.generic.team.white").color(Teams.TEAM_WHITE)).append(text(" \uE126")),
-                            translatable("crystalized.game.knockoff.win").color(YELLOW),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
-                case "yellow" -> {
-                    p.showTitle(Title.title(
-                            text("\uE127 ").append(translatable("crystalized.game.generic.team.yellow").color(Teams.TEAM_YELLOW)).append(text(" \uE127")),
-                            translatable("crystalized.game.knockoff.win").color(YELLOW),
-                            Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
-                default -> {
-                    p.showTitle(Title.title(text(winning_team), translatable("crystalized.game.knockoff.win").color(YELLOW), Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000))));
-                }
+            if (GameManager.GameType.equals(GameTypes.StandardSolos)) {
+                Player lastPlayer = Bukkit.getPlayer(Teams.get_team_from_string(winning_team).getFirst());
+                p.showTitle(Title.title(
+                        lastPlayer.displayName(),
+                        translatable("crystalized.game.knockoff.win").color(YELLOW),
+                        Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000)))
+                );
+                p.sendMessage(lastPlayer.displayName().append(text("")).append(translatable("crystalized.game.knockoff.win").color(YELLOW)));
+            } else {
+                p.showTitle(Title.title(
+                        text(td.symbol).append(translatable("crystalized.game.generic.team." + td.name).color(TextColor.color(td.color.asRGB()))).append(text(td.symbol)),
+                        translatable("crystalized.game.knockoff.win").color(YELLOW),
+                        Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000)))
+                );
+                p.sendMessage(
+                        text(td.symbol).append(translatable("crystalized.game.generic.team." + td.name).color(TextColor.color(td.color.asRGB()))).append(text(td.symbol))
+                                .append(text(" ")).append(translatable("crystalized.game.knockoff.win").color(YELLOW))
+                );
+            }
+            if (Teams.getPlayerTeam(p).equals(td.name)) {
+                p.playSound(p, "crystalized:effect.ls_game_won", 50, 1);
+            } else {
+                p.playSound(p, "crystalized:effect.ls_game_lost", 50, 1);
             }
         }
         CrystalBlitzDatabase.save_game(winning_team);

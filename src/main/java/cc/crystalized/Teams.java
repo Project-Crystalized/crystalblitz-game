@@ -416,7 +416,7 @@ class TeamStatus {
 
                 for (TeamData td : Teams.team_datas) {
                     if (is_only_team_alive(td.name)) {
-                        GameManager.StartEndGame(td.name);
+                        GameManager.StartEndGame(td.name, td);
                         cancel();
                         return;
                     }
