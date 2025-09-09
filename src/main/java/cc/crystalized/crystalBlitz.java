@@ -305,6 +305,15 @@ class CrystalBlitzDatabase{
     public static final String URL = "jdbc:sqlite"+ System.getProperty("user.home")+"/databases/crystalblitz_db.sql";
 
     public static void setup_databases() {
+        try {
+            String sDriverName = "org.sqlite.JDBC";
+            Class.forName(sDriverName);
+            new org.sqlite.JDBC();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         String create_cb_games = "CREATE TABLE IF NOT EXISTS CrystalBlitzGames ("
                 + "map STRING,"
                 + "winner_team STRING,"
@@ -316,7 +325,7 @@ class CrystalBlitzDatabase{
                 + "team STRING,"
                 + "kills INTEGER,"
                 + "deaths INTEGER,"
-                + "nexus_kills INTEGER" //nexuses broken
+                + "nexus_kills INTEGER," //nexuses broken
                 + "games_won INTEGER"
                 + ");";
 
@@ -324,7 +333,7 @@ class CrystalBlitzDatabase{
             Statement stmt = conn.createStatement();
             stmt.execute(create_cb_games);
             stmt.execute(create_cb_players);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             Bukkit.getLogger().severe(e.getMessage());
             for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
                 crystalBlitz.getInstance().getLogger().severe(ste.toString());
