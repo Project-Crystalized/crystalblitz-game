@@ -302,7 +302,7 @@ public final class crystalBlitz extends JavaPlugin {
 
 //cba making another .java file - Callum
 class CrystalBlitzDatabase{
-    public static final String URL = "jdbc:sqlite"+ System.getProperty("user.home")+"/databases/crystalblitz_db.sql";
+    public static final String URL = "jdbc:sqlite:"+ System.getProperty("user.home")+"/databases/crystalblitz_db.sql";
 
     public static void setup_databases() {
         try {
