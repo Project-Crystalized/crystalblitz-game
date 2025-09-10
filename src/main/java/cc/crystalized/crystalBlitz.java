@@ -321,7 +321,7 @@ class CrystalBlitzDatabase{
                 + "timestamp INTEGER"
                 + ");";
         String create_cb_players = "CREATE TABLE IF NOT EXISTS CbGamesPlayers ("
-                + "player_uuid BYTES,"
+                + "player_uuid BLOB,"
                 + "team STRING,"
                 + "kills INTEGER,"
                 + "deaths INTEGER,"

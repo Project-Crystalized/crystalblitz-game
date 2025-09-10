@@ -161,9 +161,10 @@ public class Shop{
         view.setItem(1, CrystalBlitzItems.ConcreteBlocks);
         view.setItem(2, CrystalBlitzItems.CopperBlocks);
         view.setItem(3, CrystalBlitzItems.WoolBlocks);
-        view.setItem(4, CrystalBlitzItems.ChainmailChestplate);
-        view.setItem(5, CrystalBlitzItems.IronChestplate);
-        view.setItem(6, CrystalBlitzItems.DiamondChestplate);
+        view.setItem(4, CrystalBlitzItems.ObsidianBlocks);
+        view.setItem(10, CrystalBlitzItems.ChainmailChestplate);
+        view.setItem(11, CrystalBlitzItems.IronChestplate);
+        view.setItem(12, CrystalBlitzItems.DiamondChestplate);
 
         p.openInventory(view);
     }

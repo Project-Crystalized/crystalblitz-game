@@ -257,6 +257,12 @@ public class ShopListener implements Listener {
             }
             buyItem(p, Shop.ShardTypes.Weak, 8, null, item, null);
         }
+        else if (e.getCurrentItem().equals(CrystalBlitzItems.ObsidianBlocks)) {
+            ItemStack item = new ItemStack(Material.OBSIDIAN);
+            item.setAmount(10);
+            buyItem(p, Shop.ShardTypes.Nexus, 4, null, item, null);
+        }
+
         else if (e.getCurrentItem().equals(CrystalBlitzItems.ChainmailChestplate)) {
             List<Shop.ArmourType> a = new ArrayList<>();
             a.add(Shop.ArmourType.Chainmail);

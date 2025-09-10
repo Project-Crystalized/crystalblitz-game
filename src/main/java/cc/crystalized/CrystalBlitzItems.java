@@ -47,7 +47,7 @@ public class CrystalBlitzItems {
     public static ItemStack MarksmanBow_item = new ItemStack(Material.BOW);
     public static ItemStack ChargedCrossbow = new ItemStack(Material.CROSSBOW);
     public static ItemStack ChargedCrossbow_item = new ItemStack(Material.CROSSBOW);
-    public static ItemStack ExplosiveOrb = new ItemStack(Material.COAL); //TODO, remove explosion destroying blocks before releasing this item
+    public static ItemStack ExplosiveOrb = new ItemStack(Material.COAL);
     public static ItemStack ExplosiveOrb_item = new ItemStack(Material.COAL);
     public static ItemStack GrapplingOrb = new ItemStack(Material.COAL);
     public static ItemStack GrapplingOrb_item = new ItemStack(Material.COAL);
@@ -62,6 +62,7 @@ public class CrystalBlitzItems {
     public static ItemStack ConcreteBlocks = new ItemStack(Material.TERRACOTTA);
     public static ItemStack CopperBlocks = new ItemStack(Material.COPPER_BLOCK);
     public static ItemStack WoolBlocks = new ItemStack(Material.WHITE_WOOL);
+    public static ItemStack ObsidianBlocks = new ItemStack(Material.OBSIDIAN);
     public static ItemStack ChainmailChestplate = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
     public static ItemStack IronChestplate = new ItemStack(Material.IRON_CHESTPLATE);
     public static ItemStack DiamondChestplate = new ItemStack(Material.DIAMOND_CHESTPLATE);
@@ -363,9 +364,18 @@ public class CrystalBlitzItems {
         WoolBlocks.setAmount(8);
         WoolBlocks.setItemMeta(WoolBlocks_im);
 
+        ItemMeta ObsidianBlocks_im = ObsidianBlocks.getItemMeta();
+        List<Component> ObsidianBlocksLore = new ArrayList<>();
+        ObsidianBlocksLore.add(text("10 Building Blocks").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
+        ObsidianBlocksLore.add(text(""));
+        ObsidianBlocksLore.add(text("4 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        ObsidianBlocks_im.lore(ObsidianBlocksLore);
+        ObsidianBlocks_im.setTooltipStyle(new NamespacedKey("crystalized", "nexus_shard"));
+        ObsidianBlocks.setAmount(10);
+        ObsidianBlocks.setItemMeta(ObsidianBlocks_im);
+
         ItemMeta ChainmailChestplate_im = ChainmailChestplate.getItemMeta();
         List<Component> ChainmailChestplateLore = new ArrayList<>();
-        ChainmailChestplateLore.add(text("description").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         ChainmailChestplateLore.add(text(""));
         ChainmailChestplateLore.add(text("40 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         ChainmailChestplate_im.lore(ChainmailChestplateLore);
@@ -374,7 +384,6 @@ public class CrystalBlitzItems {
 
         ItemMeta IronChestplate_im = IronChestplate.getItemMeta();
         List<Component> IronChestplateLore = new ArrayList<>();
-        IronChestplateLore.add(text("description").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         IronChestplateLore.add(text(""));
         IronChestplateLore.add(text("10 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         IronChestplate_im.lore(IronChestplateLore);
@@ -383,7 +392,6 @@ public class CrystalBlitzItems {
 
         ItemMeta DiamondChestplate_im = DiamondChestplate.getItemMeta();
         List<Component> DiamondChestplateLore = new ArrayList<>();
-        DiamondChestplateLore.add(text("description").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         DiamondChestplateLore.add(text(""));
         DiamondChestplateLore.add(text("4 Nexus Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         DiamondChestplate_im.lore(DiamondChestplateLore);
