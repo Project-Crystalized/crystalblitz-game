@@ -302,7 +302,7 @@ public class GameManager {
                         translatable("crystalized.game.knockoff.win").color(YELLOW),
                         Title.Times.times(Duration.ofMillis(250), Duration.ofSeconds(5), Duration.ofMillis(1000)))
                 );
-                p.sendMessage(lastPlayer.displayName().append(text("")).append(translatable("crystalized.game.knockoff.win").color(YELLOW)));
+                p.sendMessage(lastPlayer.displayName().append(text(" ")).append(translatable("crystalized.game.knockoff.win").color(YELLOW)));
             } else {
                 p.showTitle(Title.title(
                         text(td.symbol).append(translatable("crystalized.game.generic.team." + td.name).color(TextColor.color(td.color.asRGB()))).append(text(td.symbol)),
