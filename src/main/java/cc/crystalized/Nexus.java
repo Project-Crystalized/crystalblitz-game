@@ -33,6 +33,10 @@ public class Nexus {
     public Nexus(String t) {
         team = t;
         HealthBar(t);
+
+        if (Teams.get_team_from_string(team).isEmpty()) {
+            destroyNexus(team);
+        }
     }
 
     public Component getColoredHealth() {

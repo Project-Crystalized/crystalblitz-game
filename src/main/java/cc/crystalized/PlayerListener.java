@@ -377,7 +377,8 @@ public class PlayerListener implements Listener {
             if (crystalBlitz.getInstance().Blocks.contains(e.getBlock())) {
                 crystalBlitz.getInstance().Blocks.remove(e.getBlock());
             } else {
-                //this and the hit nexus method is a big messy
+                //this and the hit nexus method is a bit messy
+                ItemStack holding = p.getInventory().getItemInMainHand();
                 if (e.getBlock().getType().equals(Material.WHITE_GLAZED_TERRACOTTA) || e.getBlock().getType().equals(Material.GRAY_GLAZED_TERRACOTTA)
                         || e.getBlock().getType().equals(Material.LIGHT_GRAY_GLAZED_TERRACOTTA)) {
                     if (!p.getInventory().getItemInMainHand().toString().toLowerCase().contains("pickaxe")) {
@@ -432,21 +433,30 @@ public class PlayerListener implements Listener {
                     switch (dir.getFacing()) {
                         case BlockFace.EAST:
                             ItemStack weak = CrystalBlitzItems.WeakShard.clone();
-                            weak.setAmount(1);
+                            switch (holding.getType()) {
+                                case Material.DIAMOND_PICKAXE -> {weak.setAmount(4);}
+                                case Material.IRON_PICKAXE -> {weak.setAmount(3);}
+                                case Material.STONE_PICKAXE -> {weak.setAmount(2);}
+                                default -> {weak.setAmount(1);}
+                            }
                             p.getInventory().addItem(weak);
-                            p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                             break;
                         case BlockFace.NORTH:
                             ItemStack strong = CrystalBlitzItems.StrongShard.clone();
-                            strong.setAmount(1);
+                            switch (holding.getType()) {
+                                case Material.DIAMOND_PICKAXE -> {strong.setAmount(4);}
+                                case Material.IRON_PICKAXE -> {strong.setAmount(3);}
+                                case Material.STONE_PICKAXE -> {strong.setAmount(2);}
+                                default -> {strong.setAmount(1);}
+                            }
                             p.getInventory().addItem(strong);
-                            p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                             break;
                         default:
                             p.sendMessage(text("Broken black terracotta but this isn't weak or strong shards, please report this."));
                             break;
 
                     }
+                    p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                 }
 
                 //Weak and Strong Shards (not blocks)
@@ -457,13 +467,12 @@ public class PlayerListener implements Listener {
                         ItemStack weak = CrystalBlitzItems.WeakShard.clone();
                         weak.setAmount(2);
                         p.getInventory().addItem(weak);
-                        p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                     } else if (e.getBlock().getType().equals(Material.AMETHYST_CLUSTER)) {
                         ItemStack strong = CrystalBlitzItems.StrongShard.clone();
                         strong.setAmount(2);
                         p.getInventory().addItem(strong);
-                        p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                     }
+                    p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                     e.setCancelled(true);
                     new CrystalShardBlock(e.getBlock().getType(), e.getBlock().getLocation(), e.getBlock().getBlockData());
                     e.getBlock().setType(Material.AIR);

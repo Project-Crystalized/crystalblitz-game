@@ -585,9 +585,9 @@ public class CrystalBlitzItems {
         List<Component> GapplesLore = new ArrayList<>();
         GapplesLore.add(text("1 Gapple").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.GRAY));
         GapplesLore.add(text(""));
-        GapplesLore.add(text("4 Strong Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        GapplesLore.add(text("20 Weak Shards").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         Gapples_im.lore(GapplesLore);
-        Gapples_im.setTooltipStyle(new NamespacedKey("crystalized", "strong_shard"));
+        Gapples_im.setTooltipStyle(new NamespacedKey("crystalized", "weak_shard"));
         Gapples.setItemMeta(Gapples_im);
 
 

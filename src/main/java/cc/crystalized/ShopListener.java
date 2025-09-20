@@ -286,7 +286,7 @@ public class ShopListener implements Listener {
             buyItem(p, Shop.ShardTypes.Strong, 20, null, CrystalBlitzItems.BoostOrb_item, null);
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.Gapples)) {
-            buyItem(p, Shop.ShardTypes.Strong, 4, null, new ItemStack(Material.GOLDEN_APPLE), null);
+            buyItem(p, Shop.ShardTypes.Weak, 20, null, new ItemStack(Material.GOLDEN_APPLE), null);
         }
         else if (e.getCurrentItem().equals(CrystalBlitzItems.GrapplingOrb)) {
             buyItem(p, Shop.ShardTypes.Strong, 20, null, CrystalBlitzItems.GrapplingOrb_item, null);
