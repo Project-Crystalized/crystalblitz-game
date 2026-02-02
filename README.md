@@ -2,7 +2,7 @@
 Recreation of TubNet Crystal Rush
 
 # How to use
-Crystal Blitz is currently built for 1.21.6 Paper, This plugin may or may not work on newer or older versions, use incompatible versions at your own risk.
+Crystal Blitz is currently built for 1.21.11 Paper, This plugin may or may not work on newer or older versions, use incompatible versions at your own risk.
 
 Dependencies: <br>
 [Crystalized Essentials](https://github.com/Project-Crystalized/crystalized-essentials) <br>

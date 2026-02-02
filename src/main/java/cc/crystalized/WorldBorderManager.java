@@ -30,6 +30,6 @@ public class WorldBorderManager {
             p.showTitle(Title.title(text("World Border Shrinking").color(NamedTextColor.RED), text("")));
             p.playSound(p, "minecraft:block.note_block.harp",  50, 1); //TODO Placeholder sound
         }
-        border.setSize(10, TimeUnit.MINUTES, 2L); //Should be 2 minutes
+        border.changeSize(10, 2 * 60);
     }
 }

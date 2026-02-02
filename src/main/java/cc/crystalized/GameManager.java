@@ -71,8 +71,8 @@ public class GameManager {
                 p.unlistPlayer(player);
             }
 
-            p.getInventory().setItem(0, CrystalBlitzItems.WoodenSword);
-            p.getInventory().setItem(1, CrystalBlitzItems.WoodenPickaxe);
+            p.getInventory().setItem(0, CrystalBlitzItems.getCBItem("wooden_sword").item);
+            p.getInventory().setItem(1, CrystalBlitzItems.getCBItem("wooden_pickaxe").item);
             Location ploc = new Location(Bukkit.getWorld("world"),
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
@@ -117,12 +117,6 @@ public class GameManager {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (!p.getWorldBorder().isInside(p.getLocation()) && p.getGameMode().equals(GameMode.SURVIVAL)) {
                         p.damage(1, DamageSource.builder(DamageType.OUTSIDE_BORDER).build());
-                        /*if (p.getHealth() < 1) {
-                            p.setHealth(0);
-                        } else {
-                            p.setHealth(p.getHealth() - 1);
-                        }
-                        p.playSound(p, "minecraft:entity.generic.hurt", 50, 1);*/
                     }
                 }
                 if (crystalBlitz.getInstance().gamemanager == null) {
@@ -146,16 +140,13 @@ public class GameManager {
         Bukkit.getLogger().log(Level.INFO, "Removing player-made blocks, please wait before rejoining...");
 
         new BukkitRunnable() {
-            int count = crystalBlitz.getInstance().Blocks.size();
-            List<Block> BlockList = crystalBlitz.getInstance().Blocks.stream().toList();
             int i = 0;
 
-            @Override
             public void run() {
                 Set<Block> remove_set = new HashSet<>();
                 for (Block block : crystalBlitz.getInstance().Blocks) {
                     Bukkit.getLogger().log(Level.INFO,
-                            "Set Block " + block.getType().toString() + " at X:" + block.getX() + " Y:" + block.getY() + " Z:" + block.getZ() + " to air."
+                            "Set Block " + block.getType() + " at X:" + block.getX() + " Y:" + block.getY() + " Z:" + block.getZ() + " to air."
                     );
                     if (Bukkit.getOnlinePlayers().size() != 0) {
                         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -235,61 +226,7 @@ public class GameManager {
 
     //Gives players leather armor of their team's colour, do anything else seperately
     public static void givePlayerItems(Player p) {
-        PlayerInventory inv = p.getInventory();
-
-        switch (Teams.getPlayerTeam(p)) {
-            case "blue":
-                inv.setChestplate(colorArmor(Color.fromRGB(0x0A42BB), new ItemStack(Material.LEATHER_CHESTPLATE)));
-                inv.setLeggings(colorArmor(Color.fromRGB(0x0A42BB), new ItemStack(Material.LEATHER_LEGGINGS)));
-                inv.setBoots(colorArmor(Color.fromRGB(0x0A42BB), new ItemStack(Material.LEATHER_BOOTS)));
-                break;
-            case "cyan":
-                inv.setChestplate(colorArmor(Color.fromRGB(0x157D91), new ItemStack(Material.LEATHER_CHESTPLATE)));
-                inv.setLeggings(colorArmor(Color.fromRGB(0x157D91), new ItemStack(Material.LEATHER_LEGGINGS)));
-                inv.setBoots(colorArmor(Color.fromRGB(0x157D91), new ItemStack(Material.LEATHER_BOOTS)));
-                break;
-            case "green":
-                inv.setChestplate(colorArmor(Color.fromRGB(0x0A971E), new ItemStack(Material.LEATHER_CHESTPLATE)));
-                inv.setLeggings(colorArmor(Color.fromRGB(0x0A971E), new ItemStack(Material.LEATHER_LEGGINGS)));
-                inv.setBoots(colorArmor(Color.fromRGB(0x0A971E), new ItemStack(Material.LEATHER_BOOTS)));
-                break;
-            case "lime":
-                inv.setChestplate(colorArmor(Color.fromRGB(0x67E555), new ItemStack(Material.LEATHER_CHESTPLATE)));
-                inv.setLeggings(colorArmor(Color.fromRGB(0x67E555), new ItemStack(Material.LEATHER_LEGGINGS)));
-                inv.setBoots(colorArmor(Color.fromRGB(0x67E555), new ItemStack(Material.LEATHER_BOOTS)));
-                break;
-            case "magenta":
-                inv.setChestplate(colorArmor(Color.fromRGB(0xDA50E0), new ItemStack(Material.LEATHER_CHESTPLATE)));
-                inv.setLeggings(colorArmor(Color.fromRGB(0xDA50E0), new ItemStack(Material.LEATHER_LEGGINGS)));
-                inv.setBoots(colorArmor(Color.fromRGB(0xDA50E0), new ItemStack(Material.LEATHER_BOOTS)));
-                break;
-            case "red":
-                inv.setChestplate(colorArmor(Color.fromRGB(0xF74036), new ItemStack(Material.LEATHER_CHESTPLATE)));
-                inv.setLeggings(colorArmor(Color.fromRGB(0xF74036), new ItemStack(Material.LEATHER_LEGGINGS)));
-                inv.setBoots(colorArmor(Color.fromRGB(0xF74036), new ItemStack(Material.LEATHER_BOOTS)));
-                break;
-            case "white":
-                inv.setChestplate(colorArmor(Color.fromRGB(0xFFFFFF), new ItemStack(Material.LEATHER_CHESTPLATE)));
-                inv.setLeggings(colorArmor(Color.fromRGB(0xFFFFFF), new ItemStack(Material.LEATHER_LEGGINGS)));
-                inv.setBoots(colorArmor(Color.fromRGB(0xFFFFFF), new ItemStack(Material.LEATHER_BOOTS)));
-                break;
-            case "yellow":
-                inv.setChestplate(colorArmor(Color.fromRGB(0xFBE059), new ItemStack(Material.LEATHER_CHESTPLATE)));
-                inv.setLeggings(colorArmor(Color.fromRGB(0xFBE059), new ItemStack(Material.LEATHER_LEGGINGS)));
-                inv.setBoots(colorArmor(Color.fromRGB(0xFBE059), new ItemStack(Material.LEATHER_BOOTS)));
-                break;
-            default:
-                //Do nothing, would throw a runtime exception but I implemented the spectator team which doesn't play the game normally
-                break;
-        }
-    }
-
-    private static ItemStack colorArmor(Color c, ItemStack i) {
-        LeatherArmorMeta lam = (LeatherArmorMeta) i.getItemMeta();
-        lam.setColor(c);
-        lam.setUnbreakable(true);
-        i.setItemMeta(lam);
-        return i;
+        ShopListener.buyItem(p, CrystalBlitzItems.getCBItem("leather_armor"));
     }
 
     public static void StartEndGame(String winning_team, Teams.TeamData td) {

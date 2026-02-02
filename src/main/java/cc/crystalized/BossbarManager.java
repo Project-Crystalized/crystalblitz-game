@@ -53,14 +53,14 @@ public class BossbarManager {
                         case starting -> {
                             currentstate = BossBarStates.GenUpgradeI;
                             for (Player p : Bukkit.getOnlinePlayers()) {
-                                p.sendMessage(text("Weak and Strong node generators have been Upgraded!"));
+                                p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
                             }
                             timer = timerdefaultvalue;
                         }
                         case GenUpgradeI -> {
                             currentstate = BossBarStates.GenUpgradeII;
                             for (Player p : Bukkit.getOnlinePlayers()) {
-                                p.sendMessage(text("Weak and Strong node generators have been Upgraded!"));
+                                p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
                             }
                             timer = 30;
                         }

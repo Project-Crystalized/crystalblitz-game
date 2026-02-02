@@ -10,10 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.checkerframework.checker.units.qual.N;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static net.kyori.adventure.text.Component.text;
@@ -21,9 +19,35 @@ import static net.kyori.adventure.text.Component.text;
 public class Shop{
 
     public enum ShardTypes {
-        Weak,
-        Strong,
-        Nexus
+        Weak(" Stale Shards", new NamespacedKey("crystalized", "weak_shard"),
+                setup("Stale Shard", "weak_shard", "weak_shard")
+        ),
+        Strong(" Pure Shards", new NamespacedKey("crystalized", "strong_shard"),
+                setup("Pure Shard", "strong_shard", "strong_shard")
+        ),
+        Nexus(" Nexus Shards", new NamespacedKey("crystalized", "nexus_shard"),
+                setup("Nexus Shard", "nexus_shard", "nexus_shard")
+        )
+        ;
+
+        final String priceAfterText;
+        final NamespacedKey tooltipStyle;
+        final ItemStack item;
+        ShardTypes(String priceAfterText, NamespacedKey tooltipStyle, ItemStack item) {
+            this.priceAfterText = priceAfterText;
+            this.tooltipStyle = tooltipStyle;
+            this.item = item;
+        }
+
+        private static ItemStack setup(String name, String itemModel, String tooltipstyle) {
+            ItemStack item = new ItemStack(Material.COAL);
+            ItemMeta meta = item.getItemMeta();
+            meta.displayName(text(name).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+            meta.setItemModel(new NamespacedKey("crystalized", itemModel));
+            meta.setTooltipStyle(new NamespacedKey("crystalized", tooltipstyle));
+            item.setItemMeta(meta);
+            return item;
+        }
     }
 
     public enum ArmourType {
@@ -127,7 +151,7 @@ public class Shop{
 
         view.setItem(31, EnderChest);
 
-        view.setItem(36, CrystalBlitzItems.Arrows);
+        view.setItem(36, CrystalBlitzItems.getShopItem("arrow", p));
 
         p.openInventory(view);
     }
@@ -137,18 +161,18 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00D").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
-        view.setItem(1, CrystalBlitzItems.StoneSword);
-        view.setItem(2, CrystalBlitzItems.StonePickaxe);
-        view.setItem(3, CrystalBlitzItems.BreezeDagger);
-        view.setItem(4, CrystalBlitzItems.IronSword);
-        view.setItem(5, CrystalBlitzItems.IronPickaxe);
-        view.setItem(6, CrystalBlitzItems.DiamondSword);
-        view.setItem(7, CrystalBlitzItems.DiamondPickaxe);
-        view.setItem(10, CrystalBlitzItems.Bow);
-        view.setItem(11, CrystalBlitzItems.ChargedCrossbow);
-        view.setItem(12, CrystalBlitzItems.Shears);
-        view.setItem(19, CrystalBlitzItems.PoisonOrb);
-        view.setItem(20, CrystalBlitzItems.ExplosiveOrb);
+        view.setItem(1, CrystalBlitzItems.getShopItem("stone_sword", p));
+        view.setItem(2, CrystalBlitzItems.getShopItem("stone_pickaxe", p));
+        view.setItem(3, CrystalBlitzItems.getShopItem("breeze_dagger", p));
+        view.setItem(4, CrystalBlitzItems.getShopItem("iron_sword", p));
+        view.setItem(5, CrystalBlitzItems.getShopItem("iron_pickaxe", p));
+        view.setItem(6, CrystalBlitzItems.getShopItem("diamond_sword", p));
+        view.setItem(7, CrystalBlitzItems.getShopItem("diamond_pickaxe", p));
+        view.setItem(10, CrystalBlitzItems.getShopItem("bow", p));
+        view.setItem(11, CrystalBlitzItems.getShopItem("charged_crossbow", p));
+        view.setItem(12, CrystalBlitzItems.getShopItem("shears", p));
+        view.setItem(19, CrystalBlitzItems.getShopItem("poison_orb", p));
+        view.setItem(20, CrystalBlitzItems.getShopItem("explosive_orb", p));
 
         p.openInventory(view);
     }
@@ -158,13 +182,13 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00C").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
-        view.setItem(1, CrystalBlitzItems.ConcreteBlocks);
-        view.setItem(2, CrystalBlitzItems.CopperBlocks);
-        view.setItem(3, CrystalBlitzItems.WoolBlocks);
-        view.setItem(4, CrystalBlitzItems.ObsidianBlocks);
-        view.setItem(10, CrystalBlitzItems.ChainmailChestplate);
-        view.setItem(11, CrystalBlitzItems.IronChestplate);
-        view.setItem(12, CrystalBlitzItems.DiamondChestplate);
+        view.setItem(1, CrystalBlitzItems.getShopItem("concrete", p));
+        view.setItem(2, CrystalBlitzItems.getShopItem("copper", p));
+        view.setItem(3, CrystalBlitzItems.getShopItem("wool", p));
+        view.setItem(4, CrystalBlitzItems.getShopItem("obsidian", p));
+        view.setItem(10, CrystalBlitzItems.getShopItem("chainmail_armor", p));
+        view.setItem(11, CrystalBlitzItems.getShopItem("iron_armor", p));
+        view.setItem(12, CrystalBlitzItems.getShopItem("diamond_armor", p));
 
         p.openInventory(view);
     }
@@ -174,15 +198,15 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00E").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
-        view.setItem(1, CrystalBlitzItems.Gapples);
-        view.setItem(10, CrystalBlitzItems.BoostOrb);
-        view.setItem(11, CrystalBlitzItems.WingedOrb);
-        view.setItem(12, CrystalBlitzItems.GrapplingOrb);
-        view.setItem(13, CrystalBlitzItems.BridgeOrb);
-        view.setItem(19, CrystalBlitzItems.CloudTotem);
-        view.setItem(20, CrystalBlitzItems.AntiAirTotem);
-        view.setItem(21, CrystalBlitzItems.LaunchTotem);
-        view.setItem(22, CrystalBlitzItems.DefenceTotem);
+        view.setItem(1, CrystalBlitzItems.getShopItem("gapple", p));
+        view.setItem(10, CrystalBlitzItems.getShopItem("boost_orb", p));
+        view.setItem(11, CrystalBlitzItems.getShopItem("winged_orb", p));
+        view.setItem(12, CrystalBlitzItems.getShopItem("grappling_orb", p));
+        view.setItem(13, CrystalBlitzItems.getShopItem("bridge_orb", p));
+        view.setItem(19, CrystalBlitzItems.getShopItem("cloud_totem", p));
+        view.setItem(20, CrystalBlitzItems.getShopItem("antiair_totem", p));
+        view.setItem(21, CrystalBlitzItems.getShopItem("launch_totem", p));
+        view.setItem(22, CrystalBlitzItems.getShopItem("defence_totem", p));
 
         p.openInventory(view);
     }

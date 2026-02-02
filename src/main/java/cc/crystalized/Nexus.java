@@ -166,7 +166,7 @@ public class Nexus {
         blockloc1.getBlock().setType(Material.DIORITE);
         blockloc2.getBlock().setType(Material.DIORITE);
 
-        ItemStack nexusshards = CrystalBlitzItems.NexusShard.clone();
+        ItemStack nexusshards = Shop.ShardTypes.Nexus.item.clone();
         nexusshards.setAmount(4);
         p.getInventory().addItem(nexusshards);
 

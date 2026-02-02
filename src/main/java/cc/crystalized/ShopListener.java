@@ -1,8 +1,10 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +15,8 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.geysermc.floodgate.api.FloodgateApi;
 import org.geysermc.floodgate.util.DeviceOs;
 import org.jspecify.annotations.NonNull;
@@ -20,6 +24,7 @@ import org.jspecify.annotations.NonNull;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
@@ -64,17 +69,44 @@ public class ShopListener implements Listener {
 
         if (e.getCurrentItem().equals(Shop.CategoryOffence)) {
             Shop.openOffence((Player) p);
+            return;
         } else if (e.getCurrentItem().equals(Shop.CategoryDefence)) {
             Shop.openDefence((Player) p);
+            return;
         } else if (e.getCurrentItem().equals(Shop.CategoryUtility)) {
             Shop.openUtility((Player) p);
+            return;
         } else if (e.getCurrentItem().equals(Shop.Back)) {
             p1.closeInventory();
             new Shop(p1);
+            return;
         } else if (e.getCurrentItem().equals(Shop.EnderChest)) {
             Shop.openEnderChest(p1);
+            return;
         }
 
+        ItemStack item = e.getCurrentItem();
+        PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+        if (pdc.has(new NamespacedKey("crystalized", "canbuy"))) {
+            boolean canbuy = pdc.get(new NamespacedKey("crystalized", "canbuy"), PersistentDataType.BOOLEAN);
+            if (canbuy) {
+                String title = PlainTextComponentSerializer.plainText().serialize(e.getView().title());
+                CBItem cbItem = CrystalBlitzItems.getCBShopItem(item);
+                if (cbItem == null) {
+                    return;
+                }
+
+                //This is dumb but we have to refresh the shop twice;
+                refreshShop(p, title); //removing this one doesn't update the tooltip display (the item's background when hovering over it)
+                buyItem(p, cbItem);
+                refreshShop(p, title); //but removing this one doesn't takeaway crystals when buying something
+
+            } else {
+                p.sendMessage(text("[!] Insufficient funds")); //TODO make this translatable
+            }
+        }
+
+        /*
         else if (e.getCurrentItem().equals(CrystalBlitzItems.StoneSword)) {
             List<ItemStack> remove = new ArrayList<>();
             remove.add(CrystalBlitzItems.WoodenSword);
@@ -316,189 +348,80 @@ public class ShopListener implements Listener {
         //No Category
         else if (e.getCurrentItem().equals(CrystalBlitzItems.Arrows)) {
             buyItem(p, Shop.ShardTypes.Strong, 2, null, CrystalBlitzItems.Arrows_item, null);
+        }*/
+    }
+
+    private static void refreshShop(HumanEntity p , String title) {
+        if (title.contains("\uA00D")) {
+            Shop.openOffence((Player) p);
+        } else if (title.contains("\uA00C")) {
+            Shop.openDefence((Player) p);
+        } else if (title.contains("\uA00E")) {
+            Shop.openUtility((Player) p);
+        } else if (title.contains("\uA00B")) {
+            new Shop((Player) p);
         }
     }
 
-    //I hate this but this should make the InventoryClickEvent more clean
-    private void buyItem(HumanEntity p, Shop.ShardTypes shard, int price, List<ItemStack> WhatToRemove, @NonNull ItemStack WhatToGive, List<ItemStack> MustNotHave
-    ) {
-        ItemStack shardtype = null;
-        Player player = (Player) p;
-        boolean canPlayerBuyThis = true;
-        if (MustNotHave != null) {
-            for (ItemStack item : MustNotHave) {
-                if (p.getInventory().contains(item)) {
-                    canPlayerBuyThis = false;
+    public static void buyItem(HumanEntity p, CBItem cbItem) {
+
+        //check if inventory contains something we shouldn't have (eg, an iron sword when buying a stone sword)
+        for (ItemStack i : p.getInventory()) {
+            if (i != null) {
+                CBItem temp = CrystalBlitzItems.getCBItem(i);
+                if (temp != null && cbItem.mustNotHave.contains(temp.internalName)) {
+                    p.sendMessage(text("[!] You already have this item or something better!")); //TODO make this translatable
+                    return;
                 }
             }
         }
-        switch (shard) {
-            case Shop.ShardTypes.Weak -> {
-                shardtype = CrystalBlitzItems.WeakShard;
-            }
-            case Shop.ShardTypes.Strong -> {
-                shardtype = CrystalBlitzItems.StrongShard;
-            }
-            case Shop.ShardTypes.Nexus -> {
-                shardtype = CrystalBlitzItems.NexusShard;
-            }
+
+        ItemStack removingShards = cbItem.priceType.item.clone();
+        removingShards.setAmount(cbItem.price);
+        p.getInventory().removeItem(removingShards);
+        if (cbItem.price != 0) {
+            ((Player) p).playSound(p, "minecraft:block.note_block.pling", 50, 2); //TODO placeholder sound, maybe reuse LS's shop sounds if they exist
         }
-        shardtype.setAmount(price);
-        if (p.getInventory().containsAtLeast(shardtype, price)) {
-            if (!canPlayerBuyThis) {
-                p.sendMessage(text("[!] You already have this item or something better!")); //TODO make this translatable
-            } else {
-                player.playSound(p, "minecraft:block.note_block.pling", 50, 2); //TODO placeholder sound, maybe reuse LS's shop sounds if they exist
-                if (WhatToRemove == null) {
-                    //do nothing, to prevent a NullPointerException
+
+        switch (cbItem.type) {
+            case Melee, Pickaxe, Ranged, Shears -> {
+                removeItemType(p, cbItem.type);
+                p.getInventory().addItem(cbItem.item);
+            }
+            case Armor -> {
+                if (cbItem instanceof CBItem_Armor cbArmor) {
+                    cbArmor.add((Player) p);
                 } else {
-                    for (ItemStack item : WhatToRemove) {
-                        p.getInventory().removeItem(item);
-                    }
-                }
-                p.getInventory().removeItem(shardtype);
-                p.getInventory().addItem(WhatToGive);
-            }
-        } else {
-            p.sendMessage(text("[!] Insufficient funds")); //TODO make this translatable
-        }
-    }
-
-    //For Armour
-    private void buyItem(HumanEntity p, Shop.ShardTypes shard, int price, Shop.ArmourType WhatToGive, List<Shop.ArmourType> MustNotHave) {
-        ItemStack shardtype = null;
-        Player player = (Player) p;
-        boolean canPlayerBuyThis = true;
-        if (MustNotHave != null) {
-            for (Shop.ArmourType armor : MustNotHave) {
-                if (armor == Shop.ArmourType.Leather) {
-                    if (p.getInventory().getLeggings().getType().equals(Material.LEATHER_LEGGINGS)) {
-                        canPlayerBuyThis = false;
-                    }
-                } else if (armor == Shop.ArmourType.Chainmail) {
-                    if (p.getInventory().getLeggings().getType().equals(Material.CHAINMAIL_LEGGINGS)) {
-                        canPlayerBuyThis = false;
-                    }
-                } else if (armor == Shop.ArmourType.Iron) {
-                    if (p.getInventory().getLeggings().getType().equals(Material.IRON_LEGGINGS)) {
-                        canPlayerBuyThis = false;
-                    }
-                } else if (armor == Shop.ArmourType.Diamond) {
-                    if (p.getInventory().getLeggings().getType().equals(Material.DIAMOND_LEGGINGS)) {
-                        canPlayerBuyThis = false;
-                    }
+                    crystalBlitz.getInstance().getLogger().log(Level.WARNING, "[!] Item \"" + cbItem.internalName + "\" marked as ItemType.Armor but was setup incorrectly in code (cbItem is not an instance of CBItem_Armor)");
+                    p.sendRichMessage("<red>Internal Error when buying item, check server console.");
                 }
             }
-        }
-        switch (shard) {
-            case Shop.ShardTypes.Weak -> {
-                shardtype = CrystalBlitzItems.WeakShard;
-            }
-            case Shop.ShardTypes.Strong -> {
-                shardtype = CrystalBlitzItems.StrongShard;
-            }
-            case Shop.ShardTypes.Nexus -> {
-                shardtype = CrystalBlitzItems.NexusShard;
-            }
-        }
-        shardtype.setAmount(price);
-        if (p.getInventory().containsAtLeast(shardtype, price)) {
-            if (!canPlayerBuyThis) {
-                p.sendMessage(text("[!] You already have this item or something better!")); //TODO make this translatable
-            } else {
-                player.playSound(p, "minecraft:block.note_block.pling", 50, 2); //TODO placeholder sound, maybe reuse LS's shop sounds if they exist
-
-                ItemStack item = new ItemStack(Material.DIAMOND_CHESTPLATE);
-                ItemStack item2 = new ItemStack(Material.DIAMOND_LEGGINGS);
-                switch (WhatToGive) {
-                    case Shop.ArmourType.Leather -> {
-                        crystalBlitz.getInstance().gamemanager.givePlayerItems((Player) p);
-                        return;
-                    }
-                    case Shop.ArmourType.Chainmail -> {
-                        item.setType(Material.CHAINMAIL_CHESTPLATE); //TODO this method is depricated but theres no replacement as far as I know
-                        item2.setType(Material.CHAINMAIL_LEGGINGS);
-                    }
-                    case Shop.ArmourType.Iron -> {
-                        item.setType(Material.IRON_CHESTPLATE);
-                        item2.setType(Material.IRON_LEGGINGS);
-                    }
-                    case Shop.ArmourType.Diamond -> {
-                        //Do nothing, its already diamond armour lol
-                    }
-                }
-                ItemMeta meta = item.getItemMeta();
-                meta.setUnbreakable(true);
-                item.setItemMeta(meta);
-
-                ItemMeta meta2 = item.getItemMeta();
-                meta2.setUnbreakable(true);
-                item2.setItemMeta(meta2);
-
-                p.getInventory().setItem(38, item);
-                p.getInventory().setItem(37, item2);
-                p.getInventory().removeItem(shardtype);
-            }
-        } else {
-            p.sendMessage(text("[!] Insufficient funds")); //TODO make this translatable
-        }
-    }
-
-    //For things that require multiple shard types (eg, charged crossbow)
-    private void buyItem(HumanEntity p, Shop.ShardTypes shard, int price, List<ItemStack> WhatToRemove, @NonNull ItemStack WhatToGive, List<ItemStack> MustNotHave, Shop.ShardTypes shard2, int price2) {
-        ItemStack shardtype = null;
-        ItemStack shardtype2 = null;
-        Player player = (Player) p;
-        boolean canPlayerBuyThis = true;
-        if (MustNotHave != null) {
-            for (ItemStack item : MustNotHave) {
-                if (p.getInventory().contains(item)) {
-                    canPlayerBuyThis = false;
-                }
-            }
-        }
-        switch (shard) {
-            case Shop.ShardTypes.Weak -> {
-                shardtype = CrystalBlitzItems.WeakShard;
-            }
-            case Shop.ShardTypes.Strong -> {
-                shardtype = CrystalBlitzItems.StrongShard;
-            }
-            case Shop.ShardTypes.Nexus -> {
-                shardtype = CrystalBlitzItems.NexusShard;
-            }
-        }
-        shardtype.setAmount(price);
-        switch (shard2) {
-            case Shop.ShardTypes.Weak -> {
-                shardtype2 = CrystalBlitzItems.WeakShard;
-            }
-            case Shop.ShardTypes.Strong -> {
-                shardtype2 = CrystalBlitzItems.StrongShard;
-            }
-            case Shop.ShardTypes.Nexus -> {
-                shardtype2 = CrystalBlitzItems.NexusShard;
-            }
-        }
-        shardtype2.setAmount(price2);
-        if (p.getInventory().containsAtLeast(shardtype, price) && p.getInventory().containsAtLeast(shardtype2, price2)) {
-            if (!canPlayerBuyThis) {
-                p.sendMessage(text("[!] You already have this item or something better!")); //TODO make this translatable
-            } else {
-                player.playSound(p, "minecraft:block.note_block.pling", 50, 2); //TODO placeholder sound, maybe reuse LS's shop sounds if they exist
-                if (WhatToRemove == null) {
-                    //do nothing, to prevent a NullPointerException
+            case Blocks -> {
+                if (cbItem instanceof CBItem_Block cbBlock) {
+                    p.getInventory().addItem(cbBlock.item((Player) p));
                 } else {
-                    for (ItemStack item : WhatToRemove) {
-                        p.getInventory().removeItem(item);
-                    }
+                    crystalBlitz.getInstance().getLogger().log(Level.WARNING, "[!] Item \"" + cbItem.internalName + "\" marked as ItemType.Blocks but was setup incorrectly in code (cbItem is not an instance of CBItem_Block)");
+                    p.sendRichMessage("<red>Internal Error when buying item, check server console.");
                 }
-                p.getInventory().addItem(WhatToGive);
-                p.getInventory().removeItem(shardtype);
-                p.getInventory().removeItem(shardtype2);
             }
-        } else {
-            p.sendMessage(text("[!] Insufficient funds")); //TODO make this translatable
+            case other -> {
+                p.getInventory().addItem(cbItem.item);
+            }
+        }
+    }
+
+    private static void removeItemType(HumanEntity p, CrystalBlitzItems.ItemType type) {
+        for (ItemStack i : p.getInventory()) {
+            if (i != null) {
+                CBItem cbItem = CrystalBlitzItems.getCBItem(i);
+                if (cbItem != null && cbItem.type.equals(type)) {
+                    p.getInventory().remove(i);
+                }
+            }
+        }
+        CBItem cbItem = CrystalBlitzItems.getCBItem(p.getInventory().getItemInOffHand());
+        if (cbItem != null && cbItem.type.equals(type)) {
+            p.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
         }
     }
 }

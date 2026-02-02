@@ -162,75 +162,24 @@ public class PlayerListener implements Listener {
 
         PlayerInventory inv = p.getInventory();
         inv.setItemInOffHand(new ItemStack(Material.AIR));
-        //Might be a mess but welp, too bad, im lazy and I cant think of anything better
-        //Could be optimised
-        if (inv.getChestplate().getType().equals(Material.DIAMOND_CHESTPLATE)) {
-            ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
-            ItemMeta meta = item.getItemMeta();
-            meta.setUnbreakable(true);
-            item.setItemMeta(meta);
-            inv.setChestplate(item);
 
-            ItemStack item2 = new ItemStack(Material.IRON_LEGGINGS);
-            ItemMeta meta2 = item.getItemMeta();
-            meta2.setUnbreakable(true);
-            item2.setItemMeta(meta2);
-            inv.setLeggings(item2);
+        //downgrade player's items
+        for (ItemStack i : inv) {
+            if (i != null) {
+                CBItem cbItem = CrystalBlitzItems.getCBItem(i);
+                if (cbItem != null) {
+                    inv.removeItem(i);
+                    if (!cbItem.downgradeTo.equals("")) {
+                        CBItem newItem = CrystalBlitzItems.getCBItem(cbItem.downgradeTo);
+                        if (newItem instanceof CBItem_Armor armor) {
+                            armor.add(p);
+                        } else if (newItem != null) {
+                            inv.addItem(newItem.item);
+                        }
+                    }
+                }
+            }
         }
-        else if (inv.getChestplate().getType().equals(Material.IRON_CHESTPLATE)) {
-            ItemStack item = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
-            ItemMeta meta = item.getItemMeta();
-            meta.setUnbreakable(true);
-            item.setItemMeta(meta);
-            inv.setChestplate(item);
-
-            ItemStack item2 = new ItemStack(Material.CHAINMAIL_LEGGINGS);
-            ItemMeta meta2 = item.getItemMeta();
-            meta2.setUnbreakable(true);
-            item2.setItemMeta(meta2);
-            inv.setLeggings(item2);
-        }
-        else if (inv.getChestplate().getType().equals(Material.CHAINMAIL_CHESTPLATE)) {
-            crystalBlitz.getInstance().gamemanager.givePlayerItems(p); //Gives players leather armor
-        }
-
-        DowngradeItem(inv, CrystalBlitzItems.StoneSword_item, CrystalBlitzItems.WoodenSword);
-        DowngradeItem(inv, CrystalBlitzItems.IronSword_item, CrystalBlitzItems.StoneSword_item);
-        DowngradeItem(inv, CrystalBlitzItems.BreezeDagger_item, CrystalBlitzItems.StoneSword_item);
-        DowngradeItem(inv, CrystalBlitzItems.DiamondSword_item, CrystalBlitzItems.IronSword_item);
-
-        DowngradeItem(inv, CrystalBlitzItems.StonePickaxe_item, CrystalBlitzItems.WoodenPickaxe);
-        DowngradeItem(inv, CrystalBlitzItems.IronPickaxe_item, CrystalBlitzItems.StonePickaxe_item);
-        DowngradeItem(inv, CrystalBlitzItems.DiamondPickaxe_item, CrystalBlitzItems.IronPickaxe_item);
-
-        DowngradeItem(inv, CrystalBlitzItems.ChargedCrossbow_item, CrystalBlitzItems.Bow_item); //perhaps make this a crossbow instead of a bow?
-
-        inv.remove(CrystalBlitzItems.WeakShard);
-        inv.remove(CrystalBlitzItems.StrongShard);
-        inv.remove(CrystalBlitzItems.NexusShard);
-        inv.remove(Material.BLUE_CONCRETE);
-        inv.remove(Material.BLUE_WOOL);
-        inv.remove(Material.CYAN_CONCRETE);
-        inv.remove(Material.CYAN_WOOL);
-        inv.remove(Material.GREEN_CONCRETE);
-        inv.remove(Material.GREEN_WOOL);
-        inv.remove(Material.LIME_CONCRETE);
-        inv.remove(Material.LIME_WOOL);
-        inv.remove(Material.MAGENTA_CONCRETE);
-        inv.remove(Material.MAGENTA_WOOL);
-        inv.remove(Material.RED_CONCRETE);
-        inv.remove(Material.RED_WOOL);
-        inv.remove(Material.WHITE_CONCRETE);
-        inv.remove(Material.WHITE_WOOL);
-        inv.remove(Material.YELLOW_CONCRETE);
-        inv.remove(Material.YELLOW_WOOL);
-        inv.remove(Material.COPPER_BLOCK);
-
-        inv.remove(CrystalBlitzItems.BoostOrb_item);
-
-        inv.remove(Material.GOLDEN_APPLE);
-        inv.remove(Material.ARROW);
-        inv.remove(Material.SPECTRAL_ARROW);
 
         //Death Message to server
         Component deathprefix = text("[\uE103] ");
@@ -432,7 +381,7 @@ public class PlayerListener implements Listener {
                     Directional dir = (Directional) e.getBlock().getBlockData();
                     switch (dir.getFacing()) {
                         case BlockFace.EAST:
-                            ItemStack weak = CrystalBlitzItems.WeakShard.clone();
+                            ItemStack weak = Shop.ShardTypes.Weak.item.clone();
                             switch (holding.getType()) {
                                 case Material.DIAMOND_PICKAXE -> {weak.setAmount(4);}
                                 case Material.IRON_PICKAXE -> {weak.setAmount(3);}
@@ -442,7 +391,7 @@ public class PlayerListener implements Listener {
                             p.getInventory().addItem(weak);
                             break;
                         case BlockFace.NORTH:
-                            ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+                            ItemStack strong = Shop.ShardTypes.Strong.item.clone();
                             switch (holding.getType()) {
                                 case Material.DIAMOND_PICKAXE -> {strong.setAmount(4);}
                                 case Material.IRON_PICKAXE -> {strong.setAmount(3);}
@@ -464,11 +413,11 @@ public class PlayerListener implements Listener {
                     || e.getBlock().getType().equals(Material.AMETHYST_CLUSTER)
                 ) {
                     if (e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_FAN) || e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_WALL_FAN)) {
-                        ItemStack weak = CrystalBlitzItems.WeakShard.clone();
+                        ItemStack weak = Shop.ShardTypes.Weak.item.clone();
                         weak.setAmount(2);
                         p.getInventory().addItem(weak);
                     } else if (e.getBlock().getType().equals(Material.AMETHYST_CLUSTER)) {
-                        ItemStack strong = CrystalBlitzItems.StrongShard.clone();
+                        ItemStack strong = Shop.ShardTypes.Strong.item.clone();
                         strong.setAmount(2);
                         p.getInventory().addItem(strong);
                     }
@@ -566,7 +515,6 @@ class CrystalShardBlock {
         new BukkitRunnable() {
             int timer2 = finalTimer;
 
-            @Override
             public void run () {
 
                 if (timer2 == 0 || crystalBlitz.getInstance().gamemanager == null) {

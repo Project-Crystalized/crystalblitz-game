@@ -445,7 +445,7 @@ static class TeamData{
         return list;
     }
 
-    public static TeamData get_team_data(String s, String s2) {
+    public static TeamData get_team_data(String s) {
         for (TeamData td : Teams.team_datas) {
             if (td.name.equals(s)) {
                 return td;
