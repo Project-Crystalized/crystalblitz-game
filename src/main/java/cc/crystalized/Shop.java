@@ -50,15 +50,6 @@ public class Shop{
         }
     }
 
-    public enum ArmourType {
-        Leather,
-        Chainmail,
-        Iron,
-        Diamond
-    }
-
-    private static Player viewer;
-
     public static ItemStack CategoryOffence = new ItemStack(Material.COAL);
     public static ItemStack CategoryDefence = new ItemStack(Material.COAL);
     public static ItemStack CategoryUtility = new ItemStack(Material.COAL);
@@ -115,7 +106,6 @@ public class Shop{
     public Shop(Player p) {
         owner = p;
 
-        viewer = p;
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00B").color(NamedTextColor.WHITE));
         view.clear();
 
@@ -157,7 +147,6 @@ public class Shop{
     }
 
     public static void openOffence(Player p) {
-        viewer = p;
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00D").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
@@ -178,7 +167,6 @@ public class Shop{
     }
 
     public static void openDefence(Player p) {
-        viewer = p;
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00C").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
@@ -194,7 +182,6 @@ public class Shop{
     }
 
     public static void openUtility(Player p) {
-        viewer = p;
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00E").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);

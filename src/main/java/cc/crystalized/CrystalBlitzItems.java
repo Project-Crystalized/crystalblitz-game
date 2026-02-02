@@ -1,12 +1,10 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -43,130 +41,130 @@ public class CrystalBlitzItems {
         items.add(setup("wooden_sword", Material.WOODEN_SWORD, null,
                 List.of(translatable("crystalized.sword.wood.desc")),
                 0, Shop.ShardTypes.Weak, ItemType.Melee,
-                "wooden_sword", null)
+                "wooden_sword", null, 1)
         );
         items.add(setup("wooden_pickaxe", Material.WOODEN_PICKAXE, null,
                 List.of(translatable("crystalized.item.pickaxe.wooden.desc1"), translatable("crystalized.item.pickaxe.wooden.desc2")),
                 0, Shop.ShardTypes.Weak, ItemType.Pickaxe,
-                "wooden_pickaxe", null)
+                "wooden_pickaxe", null, 1)
         );
         items.add(setup("stone_sword", Material.STONE_SWORD, null,
                 List.of(translatable("crystalized.sword.stone.desc")),
                 20, Shop.ShardTypes.Weak, ItemType.Melee,
-                "wooden_sword", List.of("stone_sword", "iron_sword", "diamond_sword", "breeze_dagger"))
+                "wooden_sword", List.of("stone_sword", "iron_sword", "diamond_sword", "breeze_dagger"), 1)
         );
         items.add(setup("stone_pickaxe", Material.STONE_PICKAXE, null,
                 List.of(translatable("crystalized.item.pickaxe.stone.desc1"), translatable("crystalized.item.pickaxe.stone.desc2")),
                 20, Shop.ShardTypes.Weak, ItemType.Pickaxe,
-                "wooden_pickaxe", List.of("stone_pickaxe"))
+                "wooden_pickaxe", List.of("stone_pickaxe"), 1)
         );
         items.add(setup("iron_sword", Material.IRON_SWORD, null,
                 List.of(translatable("crystalized.sword.iron.desc")),
                 10, Shop.ShardTypes.Strong, ItemType.Melee,
-                "stone_sword", List.of("iron_sword", "diamond_sword"))
+                "stone_sword", List.of("iron_sword", "diamond_sword"), 1)
         );
         items.add(setup("iron_pickaxe", Material.IRON_PICKAXE, null,
                 List.of(translatable("crystalized.item.pickaxe.iron.desc1"), translatable("crystalized.item.pickaxe.iron.desc2")),
                 10, Shop.ShardTypes.Strong, ItemType.Pickaxe,
-                "stone_pickaxe", List.of("iron_pickaxe", "diamond_pickaxe"))
+                "stone_pickaxe", List.of("iron_pickaxe", "diamond_pickaxe"), 1)
         );
         items.add(setup("diamond_sword", Material.DIAMOND_SWORD, null,
                 List.of(translatable("crystalized.sword.diamond.desc")),
                 8, Shop.ShardTypes.Nexus, ItemType.Melee,
-                "iron_sword", List.of("diamond_sword"))
+                "iron_sword", List.of("diamond_sword"), 1)
         );
         items.add(setup("diamond_pickaxe", Material.DIAMOND_PICKAXE, null,
                 List.of(translatable("crystalized.item.pickaxe.diamond.desc1"), translatable("crystalized.item.pickaxe.diamond.desc2")),
                 4, Shop.ShardTypes.Nexus, ItemType.Pickaxe,
-                "iron_pickaxe", List.of("diamond_pickaxe"))
+                "iron_pickaxe", List.of("diamond_pickaxe"), 1)
         );
         items.add(setup("breeze_dagger", Material.STONE_SWORD, translatable("crystalized.sword.wind.name"),
                 List.of(translatable("crystalized.sword.wind.desc")),
                 30, Shop.ShardTypes.Strong, ItemType.Melee,
-                "stone_sword", List.of("breeze_dagger", "diamond_sword"), new NamespacedKey("crystalized", "breeze_dagger"))
+                "stone_sword", List.of("breeze_dagger", "diamond_sword"), new NamespacedKey("crystalized", "breeze_dagger"), 1)
         );
         items.add(setup("bow", Material.BOW, null,
                 List.of(translatable("crystalized.bow.desc")),
                 25, Shop.ShardTypes.Strong, ItemType.Ranged,
-                "", null)
+                "", null, 1)
         );
         items.add(setup("marksman_bow", Material.BOW, translatable("crystalized.bow.marksman.name"),
                 List.of(translatable("crystalized.bow.marksman.desc")),
                 40, Shop.ShardTypes.Strong, ItemType.Ranged,
-                "bow", List.of("marksman_bow"), new NamespacedKey("crystalized", "marksman_bow"))
+                "bow", List.of("marksman_bow"), new NamespacedKey("crystalized", "marksman_bow"), 1)
         );
         items.add(setup("explosive_bow", Material.BOW, translatable("crystalized.bow.explosive.name"),
                 List.of(translatable("crystalized.bow.explosive.desc1"), translatable("crystalized.bow.explosive.desc2")),
                 40, Shop.ShardTypes.Strong, ItemType.Ranged,
-                "bow", List.of("explosive_bow"), new NamespacedKey("crystalized", "explosive_bow"))
+                "bow", List.of("explosive_bow"), new NamespacedKey("crystalized", "explosive_bow"), 1)
         );
-        items.add(setup("shears", Material.SHEARS, null, null, 40, Shop.ShardTypes.Weak, ItemType.Shears, "shears", List.of("shears")));
+        items.add(setup("shears", Material.SHEARS, null, null, 40, Shop.ShardTypes.Weak, ItemType.Shears, "shears", List.of("shears"), 1));
         items.add(setup("crossbow", Material.BOW, null,
                 List.of(translatable("crystalized.crossbow.desc")),
                 35, Shop.ShardTypes.Strong, ItemType.Ranged,
-                "", null)
+                "", null, 1)
         );
         items.add(setup("charged_crossbow", Material.CROSSBOW, translatable("crystalized.crossbow.charged.name"),
                 List.of(translatable("crystalized.crossbow.charged.desc")),
                 4, Shop.ShardTypes.Nexus, ItemType.Ranged,
-                "crossbow", null, new NamespacedKey("crystalized", "charged_crossbow"))
+                "crossbow", null, new NamespacedKey("crystalized", "charged_crossbow"), 1)
         );
 
         items.add(setup("boost_orb", Material.COAL, translatable("crystalized.orb.boost.name"),
                 List.of(translatable("crystalized.orb.boost.desc")),
                 3, Shop.ShardTypes.Nexus, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "boost_orb"))
+                "", null, new NamespacedKey("crystalized", "boost_orb"), 1)
         );
         items.add(setup("bridge_orb", Material.COAL, translatable("crystalized.orb.bridge.name"),
                 List.of(translatable("crystalized.orb.bridge.desc")),
                 12, Shop.ShardTypes.Weak, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "bridge_orb"))
+                "", null, new NamespacedKey("crystalized", "bridge_orb"), 1)
         );
         items.add(setup("explosive_orb", Material.COAL, translatable("crystalized.orb.explosive.name"),
                 List.of(translatable("crystalized.orb.explosive.desc")),
                 40, Shop.ShardTypes.Weak, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "explosive_orb"))
+                "", null, new NamespacedKey("crystalized", "explosive_orb"), 1)
         );
         items.add(setup("grappling_orb", Material.COAL, translatable("crystalized.orb.grappling.name"),
                 List.of(translatable("crystalized.orb.grappling.desc")),
                 20, Shop.ShardTypes.Strong, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "grappling_orb"))
+                "", null, new NamespacedKey("crystalized", "grappling_orb"), 1)
         );
         items.add(setup("poison_orb", Material.COAL, translatable("crystalized.orb.poison.name"),
                 List.of(translatable("crystalized.orb.poison.desc", List.of(text("5"), text("4")))),
                 10, Shop.ShardTypes.Strong, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "poison_orb"))
+                "", null, new NamespacedKey("crystalized", "poison_orb"), 1)
         );
         items.add(setup("winged_orb", Material.COAL, translatable("crystalized.orb.winged.name"),
                 List.of(translatable("crystalized.orb.winged.desc")),
                 35, Shop.ShardTypes.Strong, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "winged_orb"))
+                "", null, new NamespacedKey("crystalized", "winged_orb"), 1)
         );
 
         items.add(setup("antiair_totem", Material.COAL, translatable("crystalized.totem.antiair.name"),
                 List.of(translatable("crystalized.totem.antiair.desc")),
                 40, Shop.ShardTypes.Weak, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "antiair_totem"))
+                "", null, new NamespacedKey("crystalized", "antiair_totem"), 1)
         );
         items.add(setup("cloud_totem", Material.COAL, translatable("crystalized.totem.cloud.name"),
                 List.of(translatable("crystalized.totem.cloud.desc")),
                 30, Shop.ShardTypes.Strong, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "cloud_totem"))
+                "", null, new NamespacedKey("crystalized", "cloud_totem"), 1)
         );
         items.add(setup("defence_totem", Material.COAL, translatable("crystalized.totem.defence.name"),
                 List.of(translatable("crystalized.totem.defence.desc")),
                 30, Shop.ShardTypes.Strong, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "defense_totem"))
+                "", null, new NamespacedKey("crystalized", "defense_totem"), 1)
         );
         items.add(setup("healing_totem", Material.COAL, translatable("crystalized.totem.healing.name"),
                 List.of(translatable("crystalized.totem.healing.desc")),
                 26, Shop.ShardTypes.Strong, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "healing_totem"))
+                "", null, new NamespacedKey("crystalized", "healing_totem"), 1)
         );
         items.add(setup("launch_totem", Material.COAL, translatable("crystalized.totem.launch.name"),
                 List.of(translatable("crystalized.totem.launch.desc1"), translatable("crystalized.totem.launch.desc2")),
                 35, Shop.ShardTypes.Strong, ItemType.other,
-                "", null, new NamespacedKey("crystalized", "launch_totem"))
+                "", null, new NamespacedKey("crystalized", "launch_totem"), 1)
         );
 
         items.add(setupBlock("concrete", Material.WHITE_CONCRETE, 8, Shop.ShardTypes.Weak,
@@ -186,7 +184,7 @@ public class CrystalBlitzItems {
         items.add(setupArmor("diamond_armor", Material.DIAMOND_CHESTPLATE, 8, Shop.ShardTypes.Nexus, "iron_armor", List.of("diamond_armor")));
 
         items.add(setup("arrow", Material.ARROW, null, null, 4, Shop.ShardTypes.Strong, ItemType.other, "", null, 4));
-        items.add(setup("gapple", Material.GOLDEN_APPLE, null, null, 20, Shop.ShardTypes.Weak, ItemType.other, "", null));
+        items.add(setup("gapple", Material.GOLDEN_APPLE, null, null, 20, Shop.ShardTypes.Weak, ItemType.other, "", null, 1));
 
         crystalBlitz.getInstance().getLogger().log(Level.INFO, items.size() + " items registered");
     }
@@ -236,14 +234,6 @@ public class CrystalBlitzItems {
 
 
     /// Mess of setup methods, better than what I had before tho - Callum
-
-    public static CBItem setup(String internalName, Material mat, Component name, List<Component> desc, int price, Shop.ShardTypes priceType, ItemType type, String downgradeTo, List<String> mustNotHave) {
-        return setup(internalName, mat, name, desc, price, priceType, type, downgradeTo, mustNotHave, 1);
-    }
-
-    public static CBItem setup(String internalName, Material mat, Component name, List<Component> desc, int price, Shop.ShardTypes priceType, ItemType type, String downgradeTo, List<String> mustNotHave, NamespacedKey itemModel) {
-        return setup(internalName, mat, name, desc, price, priceType, type, downgradeTo, mustNotHave, itemModel, 1);
-    }
 
     public static CBItem setup(String internalName, Material mat, Component name, List<Component> desc, int price, Shop.ShardTypes priceType, ItemType type, String downgradeTo, List<String> mustNotHave, int itemAmount) {
         ItemStack item = new ItemStack(mat);

@@ -338,10 +338,6 @@ public class Teams {
 //I hate this class still.
 //I just copied everything from knockoff I dont wanna write this shit again
 class TeamStatus {
-    enum Status {
-        Alive,
-        Dead
-    }
 
     public static HashMap<String, Integer> team_statuses = new HashMap<>();
 
@@ -360,14 +356,6 @@ class TeamStatus {
 
         List<String> td = Teams.get_team_from_string(team);
         team_statuses.put(team, counter);
-
-        /*if (td.isEmpty()) {
-            team_statuses.put(team, Status.Dead);
-        } else if (counter == td.size()) {
-            team_statuses.put(team, Status.Alive);
-        } else {
-            team_statuses.put(team, Status.Dead);
-        }*/
     }
 
     private static boolean is_only_team_alive(String team) {
