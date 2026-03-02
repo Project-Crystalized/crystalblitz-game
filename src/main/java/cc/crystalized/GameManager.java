@@ -196,7 +196,7 @@ public class GameManager {
     private static void setupEntities() {
         Component name = text("Shop");
 
-        nexuses = new ArrayList<Nexus>();
+        nexuses = new ArrayList<>();
         for (String team: Teams.teams) {
             if (!team.equals("spectator")) {
                 Nexus n = new Nexus(team);

@@ -55,7 +55,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("stone_pickaxe", Material.STONE_PICKAXE, null,
                 List.of(translatable("crystalized.item.pickaxe.stone.desc1"), translatable("crystalized.item.pickaxe.stone.desc2")),
-                20, Shop.ShardTypes.Weak, ItemType.Pickaxe,
+                16, Shop.ShardTypes.Weak, ItemType.Pickaxe,
                 "wooden_pickaxe", List.of("stone_pickaxe"), 1)
         );
         items.add(setup("iron_sword", Material.IRON_SWORD, null,
@@ -75,7 +75,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("diamond_pickaxe", Material.DIAMOND_PICKAXE, null,
                 List.of(translatable("crystalized.item.pickaxe.diamond.desc1"), translatable("crystalized.item.pickaxe.diamond.desc2")),
-                4, Shop.ShardTypes.Nexus, ItemType.Pickaxe,
+                6, Shop.ShardTypes.Nexus, ItemType.Pickaxe,
                 "iron_pickaxe", List.of("diamond_pickaxe"), 1)
         );
         items.add(setup("breeze_dagger", Material.STONE_SWORD, translatable("crystalized.sword.wind.name"),
@@ -85,7 +85,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("bow", Material.BOW, null,
                 List.of(translatable("crystalized.bow.desc")),
-                25, Shop.ShardTypes.Strong, ItemType.Ranged,
+                35, Shop.ShardTypes.Strong, ItemType.Ranged,
                 "", null, 1)
         );
         items.add(setup("marksman_bow", Material.BOW, translatable("crystalized.bow.marksman.name"),
@@ -103,6 +103,11 @@ public class CrystalBlitzItems {
                 List.of(translatable("crystalized.crossbow.desc")),
                 35, Shop.ShardTypes.Strong, ItemType.Ranged,
                 "", null, 1)
+        );
+        items.add(setup("precise_crossbow", Material.CROSSBOW, translatable("crystalized.crossbow.precise.name"),
+                List.of(translatable("crystalized.crossbow.precise.desc")),
+                5, Shop.ShardTypes.Nexus, 60, Shop.ShardTypes.Strong, ItemType.Ranged,
+                "crossbow", null, new NamespacedKey("crystalized", "precise_crossbow"), 1)
         );
         items.add(setup("charged_crossbow", Material.CROSSBOW, translatable("crystalized.crossbow.charged.name"),
                 List.of(translatable("crystalized.crossbow.charged.desc")),
@@ -140,6 +145,11 @@ public class CrystalBlitzItems {
                 35, Shop.ShardTypes.Strong, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "winged_orb"), 1)
         );
+        items.add(setup("feather_orb", Material.COAL, translatable("crystalized.orb.feather.name"),
+                List.of(translatable("crystalized.orb.feather.desc")),
+                60, Shop.ShardTypes.Weak, ItemType.other,
+                "", null, new NamespacedKey("crystalized", "feather_orb"), 1)
+        );
 
         items.add(setup("antiair_totem", Material.COAL, translatable("crystalized.totem.antiair.name"),
                 List.of(translatable("crystalized.totem.antiair.desc")),
@@ -171,20 +181,28 @@ public class CrystalBlitzItems {
                 Material.BLUE_CONCRETE, Material.CYAN_CONCRETE, Material.GREEN_CONCRETE, Material.LIME_CONCRETE,
                 Material.MAGENTA_CONCRETE, Material.RED_CONCRETE, Material.YELLOW_CONCRETE, Material.WHITE_CONCRETE, 16
         ));
-        items.add(setupBlock("copper", Material.WAXED_COPPER_BLOCK, 10, Shop.ShardTypes.Weak, Material.WAXED_COPPER_BLOCK, 8));
+        items.add(setupBlock("copper", Material.WAXED_CHISELED_COPPER, 10, Shop.ShardTypes.Weak, Material.WAXED_CHISELED_COPPER, 8));
         items.add(setupBlock("wool", Material.WHITE_WOOL, 8, Shop.ShardTypes.Weak,
                 Material.BLUE_CONCRETE, Material.CYAN_CONCRETE, Material.GREEN_CONCRETE, Material.LIME_CONCRETE,
                 Material.MAGENTA_CONCRETE, Material.RED_CONCRETE, Material.YELLOW_CONCRETE, Material.WHITE_CONCRETE, 8
         ));
-        items.add(setupBlock("obsidian", Material.OBSIDIAN, 8, Shop.ShardTypes.Nexus, Material.OBSIDIAN, 10));
+        items.add(setupBlock("glass", Material.WHITE_STAINED_GLASS, 40, Shop.ShardTypes.Strong,
+                Material.BLUE_STAINED_GLASS, Material.CYAN_STAINED_GLASS, Material.GREEN_STAINED_GLASS, Material.LIME_STAINED_GLASS,
+                Material.MAGENTA_STAINED_GLASS, Material.RED_STAINED_GLASS, Material.YELLOW_STAINED_GLASS, Material.WHITE_STAINED_GLASS, 24
+        ));
 
         items.add(setupArmor("leather_armor", Material.LEATHER_CHESTPLATE, 0, Shop.ShardTypes.Weak, "leather_armor", List.of("leather_armor", "chainmail_armor", "iron_armor", "diamond_armor")));
-        items.add(setupArmor("chainmail_armor", Material.CHAINMAIL_CHESTPLATE, 20, Shop.ShardTypes.Weak, "leather_armor", List.of("chainmail_armor", "iron_armor", "diamond_armor")));
-        items.add(setupArmor("iron_armor", Material.IRON_CHESTPLATE, 36, Shop.ShardTypes.Strong, "chainmail_armor", List.of("iron_armor", "diamond_armor")));
-        items.add(setupArmor("diamond_armor", Material.DIAMOND_CHESTPLATE, 8, Shop.ShardTypes.Nexus, "iron_armor", List.of("diamond_armor")));
+        items.add(setupArmor("chainmail_armor", Material.CHAINMAIL_CHESTPLATE, 30, Shop.ShardTypes.Weak, "leather_armor", List.of("chainmail_armor", "iron_armor", "diamond_armor")));
+        items.add(setupArmor("iron_armor", Material.IRON_CHESTPLATE, 42, Shop.ShardTypes.Strong, "chainmail_armor", List.of("iron_armor", "diamond_armor")));
+        items.add(setupArmor("diamond_armor", Material.DIAMOND_CHESTPLATE, 12, Shop.ShardTypes.Nexus, "iron_armor", List.of("diamond_armor")));
 
-        items.add(setup("arrow", Material.ARROW, null, null, 4, Shop.ShardTypes.Strong, ItemType.other, "", null, 4));
-        items.add(setup("gapple", Material.GOLDEN_APPLE, null, null, 20, Shop.ShardTypes.Weak, ItemType.other, "", null, 1));
+        items.add(setup("arrow", Material.ARROW, null, null, 20, Shop.ShardTypes.Strong, ItemType.other, "", null, 4));
+        items.add(setup("wind_arrow", Material.ARROW, translatable("crystalized.arrow.wind.name"),
+                List.of(translatable("crystalized.arrow.wind.desc")),
+                16, Shop.ShardTypes.Strong, ItemType.other,
+                "", null, new NamespacedKey("crystalized", "wind_arrow"), 1)
+        );
+        items.add(setup("gapple", Material.GOLDEN_APPLE, null, null, 36, Shop.ShardTypes.Weak, ItemType.other, "", null, 1));
 
         crystalBlitz.getInstance().getLogger().log(Level.INFO, items.size() + " items registered");
     }
@@ -274,6 +292,29 @@ public class CrystalBlitzItems {
         item.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         item.setAmount(itemAmount);
         return new CBItem(item, internalName, price, priceType, type, downgradeTo, mustNotHave);
+    }
+
+    public static CBItem setup(String internalName, Material mat, Component name, List<Component> desc,
+                               int price, Shop.ShardTypes priceType, int price2, Shop.ShardTypes priceType2,
+                               ItemType type, String downgradeTo, List<String> mustNotHave, NamespacedKey itemModel, int itemAmount) {
+        ItemStack item = new ItemStack(mat);
+        ItemMeta meta = item.getItemMeta();
+        if (name != null) {
+            meta.displayName(name.color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        }
+        if (desc != null) {
+            List<Component> lore = new ArrayList<>();
+            for (Component c : desc) {
+                lore.add(c.color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+            }
+            meta.lore(lore);
+        }
+        meta.setUnbreakable(true);
+        meta.setItemModel(itemModel);
+        item.setItemMeta(meta);
+        item.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        item.setAmount(itemAmount);
+        return new CBItem_MultiPrice(item, internalName, price, priceType, price2, priceType2, type, downgradeTo, mustNotHave);
     }
 
     // Yes its messy, its better than what I had before this - Callum
@@ -467,5 +508,17 @@ class CBItem_Armor extends CBItem{
         leatherBoots.setItemMeta(leatherBoots_meta);
         whoFor.getInventory().setBoots(leatherBoots);
 
+    }
+}
+
+class CBItem_MultiPrice extends CBItem{
+
+    int price2;
+    Shop.ShardTypes priceType2;
+
+    public CBItem_MultiPrice(ItemStack item, String internalName, int price, Shop.ShardTypes priceType, int price2, Shop.ShardTypes priceType2, CrystalBlitzItems.ItemType type, String downgradeTo, List<String> mustNotHave) {
+        super(item, internalName, price, priceType, type, downgradeTo, mustNotHave);
+        this.price2 = price2;
+        this.priceType2 = priceType2;
     }
 }

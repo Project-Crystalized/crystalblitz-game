@@ -53,6 +53,7 @@ public class Shop{
     public static ItemStack CategoryOffence = new ItemStack(Material.COAL);
     public static ItemStack CategoryDefence = new ItemStack(Material.COAL);
     public static ItemStack CategoryUtility = new ItemStack(Material.COAL);
+    public static ItemStack CategoryUpgrades = new ItemStack(Material.COAL);
     public static ItemStack EnderChest = new ItemStack(Material.ENDER_CHEST);
     public static ItemStack Back = new ItemStack(Material.COAL);
 
@@ -141,8 +142,6 @@ public class Shop{
 
         view.setItem(31, EnderChest);
 
-        view.setItem(36, CrystalBlitzItems.getShopItem("arrow", p));
-
         p.openInventory(view);
     }
 
@@ -150,18 +149,17 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00D").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
-        view.setItem(1, CrystalBlitzItems.getShopItem("stone_sword", p));
-        view.setItem(2, CrystalBlitzItems.getShopItem("stone_pickaxe", p));
-        view.setItem(3, CrystalBlitzItems.getShopItem("breeze_dagger", p));
-        view.setItem(4, CrystalBlitzItems.getShopItem("iron_sword", p));
-        view.setItem(5, CrystalBlitzItems.getShopItem("iron_pickaxe", p));
+        view.setItem(1, CrystalBlitzItems.getShopItem("chainmail_armor", p));
+        view.setItem(2, CrystalBlitzItems.getShopItem("iron_armor", p));
+        view.setItem(3, CrystalBlitzItems.getShopItem("diamond_armor", p));
+        view.setItem(4, CrystalBlitzItems.getShopItem("stone_sword", p));
+        view.setItem(5, CrystalBlitzItems.getShopItem("iron_sword", p));
         view.setItem(6, CrystalBlitzItems.getShopItem("diamond_sword", p));
-        view.setItem(7, CrystalBlitzItems.getShopItem("diamond_pickaxe", p));
-        view.setItem(10, CrystalBlitzItems.getShopItem("bow", p));
-        view.setItem(11, CrystalBlitzItems.getShopItem("charged_crossbow", p));
-        view.setItem(12, CrystalBlitzItems.getShopItem("shears", p));
-        view.setItem(19, CrystalBlitzItems.getShopItem("poison_orb", p));
-        view.setItem(20, CrystalBlitzItems.getShopItem("explosive_orb", p));
+        //TODO wiffle bat
+        view.setItem(10, CrystalBlitzItems.getShopItem("precise_crossbow", p));
+        view.setItem(11, CrystalBlitzItems.getShopItem("crossbow", p));
+        view.setItem(12, CrystalBlitzItems.getShopItem("bow", p));
+        view.setItem(13, CrystalBlitzItems.getShopItem("arrow", p));
 
         p.openInventory(view);
     }
@@ -170,13 +168,14 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00C").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
-        view.setItem(1, CrystalBlitzItems.getShopItem("concrete", p));
-        view.setItem(2, CrystalBlitzItems.getShopItem("copper", p));
-        view.setItem(3, CrystalBlitzItems.getShopItem("wool", p));
-        view.setItem(4, CrystalBlitzItems.getShopItem("obsidian", p));
-        view.setItem(10, CrystalBlitzItems.getShopItem("chainmail_armor", p));
-        view.setItem(11, CrystalBlitzItems.getShopItem("iron_armor", p));
-        view.setItem(12, CrystalBlitzItems.getShopItem("diamond_armor", p));
+        view.setItem(1, CrystalBlitzItems.getShopItem("stone_pickaxe", p));
+        view.setItem(2, CrystalBlitzItems.getShopItem("iron_pickaxe", p));
+        view.setItem(3, CrystalBlitzItems.getShopItem("diamond_pickaxe", p));
+        view.setItem(4, CrystalBlitzItems.getShopItem("concrete", p));
+        view.setItem(5, CrystalBlitzItems.getShopItem("wool", p));
+        view.setItem(6, CrystalBlitzItems.getShopItem("copper", p));
+        view.setItem(7, CrystalBlitzItems.getShopItem("glass", p));
+        view.setItem(10, CrystalBlitzItems.getShopItem("bridge_orb", p));
 
         p.openInventory(view);
     }
@@ -185,15 +184,12 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00E").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
-        view.setItem(1, CrystalBlitzItems.getShopItem("gapple", p));
-        view.setItem(10, CrystalBlitzItems.getShopItem("boost_orb", p));
-        view.setItem(11, CrystalBlitzItems.getShopItem("winged_orb", p));
-        view.setItem(12, CrystalBlitzItems.getShopItem("grappling_orb", p));
-        view.setItem(13, CrystalBlitzItems.getShopItem("bridge_orb", p));
-        view.setItem(19, CrystalBlitzItems.getShopItem("cloud_totem", p));
-        view.setItem(20, CrystalBlitzItems.getShopItem("antiair_totem", p));
-        view.setItem(21, CrystalBlitzItems.getShopItem("launch_totem", p));
-        view.setItem(22, CrystalBlitzItems.getShopItem("defence_totem", p));
+        view.setItem(1, CrystalBlitzItems.getShopItem("feather_orb", p));
+        view.setItem(2, CrystalBlitzItems.getShopItem("boost_orb", p));
+        view.setItem(3, CrystalBlitzItems.getShopItem("gapple", p));
+        view.setItem(4, CrystalBlitzItems.getShopItem("wind_arrow", p));
+        //TODO defence totem
+        //TODO healing totem
 
         p.openInventory(view);
     }
