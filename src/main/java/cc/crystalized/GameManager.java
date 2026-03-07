@@ -46,7 +46,7 @@ public class GameManager {
     public GameManager(GameTypes type) {
         GameType = type;
         teams = new Teams(type);
-        Teams.TeamStatus.Init();
+        TeamStatus.Init();
 
         Bukkit.getServer().sendMessage(text("Starting Game!"));
         for (Entity e : Bukkit.getWorld("world").getEntities()) {
@@ -229,7 +229,7 @@ public class GameManager {
         ShopListener.buyItem(p, CrystalBlitzItems.getCBItem("leather_armor"));
     }
 
-    public static void StartEndGame(String winning_team, Teams.TeamData td) {
+    public static void StartEndGame(String winning_team, TeamData td) {
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.playSound(p, "crystalized:effect.ls_game_won", 50, 1);
             if (GameManager.GameType.equals(GameTypes.StandardSolos)) {
@@ -359,7 +359,7 @@ class TabMenu {
 
 
         addToStatsString(text("---------------------------------------------------\n").color(GRAY));
-        for (Teams.TeamData td : t.team_datas) {
+        for (TeamData td : t.team_datas) {
             List<String> team = t.get_team_from_string(td.name); //probably unsafe, im just shooting in the dark to see if this works
             if (!team.isEmpty()) {
                 addToStatsString(text("\n").append(text(td.symbol)).append(translatable("crystalized.game.generic.team." + td.name).color(TextColor.color(td.color.asRGB()))).append(text("\n")));

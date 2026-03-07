@@ -1,6 +1,5 @@
 package cc.crystalized;
 
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -21,7 +20,6 @@ import java.util.logging.Logger;
 import static net.kyori.adventure.text.Component.text;
 
 public class Teams {
-
     public static List<String> teams = new ArrayList<>();
 
     public static List<String> spectator = new ArrayList<>();
@@ -44,10 +42,11 @@ public class Teams {
     public static final TextColor TEAM_WHITE = TextColor.color(0xFFFFFF);
     public static final TextColor TEAM_YELLOW = TextColor.color(0xFBE059);
 
-    public static final List<TeamData> team_datas = TeamData.create_teams();
+    public static List<TeamData> team_datas; // = TeamData.create_teams();
     public static List<TeamData> team_datas_without_spectator = null; //exists so I can copy paste code from Knockoff
 
     public Teams(GameManager.GameTypes type) {
+        team_datas = TeamData.create_teams();
         team_datas_without_spectator = team_datas;
 
         List<String> playerlist = new ArrayList<>();
@@ -335,6 +334,16 @@ public class Teams {
         }
     }
 
+    public static TeamData getTeamData(String team) {
+        for (TeamData td : team_datas) {
+            if (td.name.equals(team)) {
+                return td;
+            }
+        }
+        return null;
+    }
+}
+
 //I hate this class still.
 //I just copied everything from knockoff I dont wanna write this shit again
 class TeamStatus {
@@ -415,10 +424,12 @@ class TeamStatus {
 
 }
 
-static class TeamData{
+class TeamData{
     public final String name;
     public final Color color;
     public final String symbol;
+
+    public TeamUpgrades teamUpgrades;
 
     public static List<TeamData> create_teams() {
         List<TeamData> list = new ArrayList<>();
@@ -446,8 +457,8 @@ static class TeamData{
         this.name = name;
         this.color = color;
         this.symbol = symbol;
+        this.teamUpgrades = new TeamUpgrades(name);
     }
-}
 }
 
 class CustomPlayerNametags {

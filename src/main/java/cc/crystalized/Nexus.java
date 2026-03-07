@@ -7,6 +7,7 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Display;
@@ -34,9 +35,14 @@ public class Nexus {
         team = t;
         HealthBar(t);
 
-        if (Teams.get_team_from_string(team).isEmpty()) {
-            destroyNexus(team);
-        }
+        new BukkitRunnable() {
+            public void run() {
+                if (Teams.get_team_from_string(team).isEmpty()) {
+                    destroyNexus(team);
+                }
+                cancel();
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
     }
 
     public Component getColoredHealth() {
@@ -194,112 +200,67 @@ public class Nexus {
                 crystalBlitz.getInstance().mapdata.getNexus(team)[1] + 1,
                 crystalBlitz.getInstance().mapdata.getNexus(team)[2]
         );
+        Block block1 = blockloc1.getBlock();
+        Block block2 = blockloc2.getBlock();
+
         switch (team) {
-            case "blue" -> {
-                blockloc1.getBlock().setType(Material.WHITE_GLAZED_TERRACOTTA);
-                Directional dir1 = (Directional) blockloc1.getBlock().getBlockData();
-                dir1.setFacing(BlockFace.EAST);
-                blockloc1.getBlock().setBlockData(dir1);
-                blockloc1.getBlock().getState().update();
-
-                blockloc2.getBlock().setType(Material.WHITE_GLAZED_TERRACOTTA);
-                Directional dir2 = (Directional) blockloc2.getBlock().getBlockData();
-                dir2.setFacing(BlockFace.EAST);
-                blockloc2.getBlock().setBlockData(dir2);
-                blockloc2.getBlock().getState().update();
+            case "blue", "cyan", "green" -> {
+                block1.setType(Material.WHITE_GLAZED_TERRACOTTA);
+                block2.setType(Material.WHITE_GLAZED_TERRACOTTA);
             }
-            case "cyan" -> {
-                blockloc1.getBlock().setType(Material.WHITE_GLAZED_TERRACOTTA);
-                Directional dir1 = (Directional) blockloc1.getBlock().getBlockData();
-                dir1.setFacing(BlockFace.NORTH);
-                blockloc1.getBlock().setBlockData(dir1);
-                blockloc1.getBlock().getState().update();
-
-                blockloc2.getBlock().setType(Material.WHITE_GLAZED_TERRACOTTA);
-                Directional dir2 = (Directional) blockloc2.getBlock().getBlockData();
-                dir2.setFacing(BlockFace.NORTH);
-                blockloc2.getBlock().setBlockData(dir2);
-                blockloc2.getBlock().getState().update();
+            case "magenta", "lime" -> {
+                block1.setType(Material.LIGHT_GRAY_GLAZED_TERRACOTTA);
+                block2.setType(Material.LIGHT_GRAY_GLAZED_TERRACOTTA);
             }
-            case "green" -> {
-                blockloc1.getBlock().setType(Material.WHITE_GLAZED_TERRACOTTA);
-                Directional dir1 = (Directional) blockloc1.getBlock().getBlockData();
-                dir1.setFacing(BlockFace.SOUTH);
-                blockloc1.getBlock().setBlockData(dir1);
-                blockloc1.getBlock().getState().update();
-
-                blockloc2.getBlock().setType(Material.WHITE_GLAZED_TERRACOTTA);
-                Directional dir2 = (Directional) blockloc2.getBlock().getBlockData();
-                dir2.setFacing(BlockFace.SOUTH);
-                blockloc2.getBlock().setBlockData(dir2);
-                blockloc2.getBlock().getState().update();
-            }
-            case "lime" -> {
-                blockloc1.getBlock().setType(Material.LIGHT_GRAY_GLAZED_TERRACOTTA);
-                Directional dir1 = (Directional) blockloc1.getBlock().getBlockData();
-                dir1.setFacing(BlockFace.EAST);
-                blockloc1.getBlock().setBlockData(dir1);
-                blockloc1.getBlock().getState().update();
-
-                blockloc2.getBlock().setType(Material.LIGHT_GRAY_GLAZED_TERRACOTTA);
-                Directional dir2 = (Directional) blockloc2.getBlock().getBlockData();
-                dir2.setFacing(BlockFace.EAST);
-                blockloc2.getBlock().setBlockData(dir2);
-                blockloc2.getBlock().getState().update();
-            }
-            case "magenta" -> {
-                blockloc1.getBlock().setType(Material.LIGHT_GRAY_GLAZED_TERRACOTTA);
-                Directional dir1 = (Directional) blockloc1.getBlock().getBlockData();
-                dir1.setFacing(BlockFace.NORTH);
-                blockloc1.getBlock().setBlockData(dir1);
-                blockloc1.getBlock().getState().update();
-
-                blockloc2.getBlock().setType(Material.LIGHT_GRAY_GLAZED_TERRACOTTA);
-                Directional dir2 = (Directional) blockloc2.getBlock().getBlockData();
-                dir2.setFacing(BlockFace.NORTH);
-                blockloc2.getBlock().setBlockData(dir2);
-                blockloc2.getBlock().getState().update();
-            }
-            case "red" -> {
-                blockloc1.getBlock().setType(Material.GRAY_GLAZED_TERRACOTTA);
-                Directional dir1 = (Directional) blockloc1.getBlock().getBlockData();
-                dir1.setFacing(BlockFace.NORTH);
-                blockloc1.getBlock().setBlockData(dir1);
-                blockloc1.getBlock().getState().update();
-
-                blockloc2.getBlock().setType(Material.GRAY_GLAZED_TERRACOTTA);
-                Directional dir2 = (Directional) blockloc2.getBlock().getBlockData();
-                dir2.setFacing(BlockFace.NORTH);
-                blockloc2.getBlock().setBlockData(dir2);
-                blockloc2.getBlock().getState().update();
-            }
-            case "white" -> {
-                blockloc1.getBlock().setType(Material.GRAY_GLAZED_TERRACOTTA);
-                Directional dir1 = (Directional) blockloc1.getBlock().getBlockData();
-                dir1.setFacing(BlockFace.SOUTH);
-                blockloc1.getBlock().setBlockData(dir1);
-                blockloc1.getBlock().getState().update();
-
-                blockloc2.getBlock().setType(Material.GRAY_GLAZED_TERRACOTTA);
-                Directional dir2 = (Directional) blockloc2.getBlock().getBlockData();
-                dir2.setFacing(BlockFace.SOUTH);
-                blockloc2.getBlock().setBlockData(dir2);
-                blockloc2.getBlock().getState().update();
-            }
-            case "yellow" -> {
-                blockloc1.getBlock().setType(Material.GRAY_GLAZED_TERRACOTTA);
-                Directional dir1 = (Directional) blockloc1.getBlock().getBlockData();
-                dir1.setFacing(BlockFace.WEST);
-                blockloc1.getBlock().setBlockData(dir1);
-                blockloc1.getBlock().getState().update();
-
-                blockloc2.getBlock().setType(Material.GRAY_GLAZED_TERRACOTTA);
-                Directional dir2 = (Directional) blockloc2.getBlock().getBlockData();
-                dir2.setFacing(BlockFace.WEST);
-                blockloc2.getBlock().setBlockData(dir2);
-                blockloc2.getBlock().getState().update();
+            case "red", "white", "yellow" -> {
+                block1.setType(Material.GRAY_GLAZED_TERRACOTTA);
+                block2.setType(Material.GRAY_GLAZED_TERRACOTTA);
             }
         }
 
+        switch (team) {
+            //north
+            case "cyan", "magenta", "red" -> {
+                Directional dir1 = (Directional) block1.getBlockData();
+                dir1.setFacing(BlockFace.NORTH);
+                block1.setBlockData(dir1);
+
+                Directional dir2 = (Directional) block1.getBlockData();
+                dir2.setFacing(BlockFace.NORTH);
+                block2.setBlockData(dir2);
+            }
+            //east
+            case "blue", "lime" -> {
+                Directional dir1 = (Directional) block1.getBlockData();
+                dir1.setFacing(BlockFace.EAST);
+                block1.setBlockData(dir1);
+
+                Directional dir2 = (Directional) block1.getBlockData();
+                dir2.setFacing(BlockFace.EAST);
+                block2.setBlockData(dir2);
+            }
+            //south
+            case "green", "white" -> {
+                Directional dir1 = (Directional) block1.getBlockData();
+                dir1.setFacing(BlockFace.SOUTH);
+                block1.setBlockData(dir1);
+
+                Directional dir2 = (Directional) block1.getBlockData();
+                dir2.setFacing(BlockFace.SOUTH);
+                block2.setBlockData(dir2);
+            }
+            //west
+            case "yellow" -> {
+                Directional dir1 = (Directional) block1.getBlockData();
+                dir1.setFacing(BlockFace.WEST);
+                block1.setBlockData(dir1);
+
+                Directional dir2 = (Directional) block1.getBlockData();
+                dir2.setFacing(BlockFace.WEST);
+                block2.setBlockData(dir2);
+            }
+        }
+        block1.getState().update();
+        block2.getState().update();
     }
 }

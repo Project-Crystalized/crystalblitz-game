@@ -1,5 +1,6 @@
 package cc.crystalized;
 
+import io.papermc.paper.persistence.PersistentDataContainerView;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
@@ -220,7 +222,10 @@ public class CrystalBlitzItems {
         for (CBItem cb : items) {
             ItemStack i = item.clone();
             i.setAmount(cb.item.getAmount());
-            if (cb.item.equals(i)) {
+            PersistentDataContainerView pdc = item.getPersistentDataContainer();
+            if (pdc.has(new NamespacedKey("crystalblitz", "internalname"))
+                    && pdc.get(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING).equals(cb.internalName)
+            ) {
                 return cb;
             }
         }
@@ -239,7 +244,6 @@ public class CrystalBlitzItems {
     public static ItemStack getShopItem(String internalName, Player p) {
         for (CBItem cb : items) {
             if (cb.internalName.equals(internalName)) {
-                PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
                 if (p.getInventory().containsAtLeast(cb.priceType.item, cb.price)) {
                     return cb.shopItem;
                 } else {
@@ -267,6 +271,8 @@ public class CrystalBlitzItems {
             meta.lore(lore);
         }
         meta.setUnbreakable(true);
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        pdc.set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, internalName);
         item.setItemMeta(meta);
         item.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         item.setAmount(itemAmount);
@@ -287,6 +293,8 @@ public class CrystalBlitzItems {
             meta.lore(lore);
         }
         meta.setUnbreakable(true);
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        pdc.set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, internalName);
         meta.setItemModel(itemModel);
         item.setItemMeta(meta);
         item.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -310,6 +318,8 @@ public class CrystalBlitzItems {
             meta.lore(lore);
         }
         meta.setUnbreakable(true);
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        pdc.set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, internalName);
         meta.setItemModel(itemModel);
         item.setItemMeta(meta);
         item.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -324,6 +334,8 @@ public class CrystalBlitzItems {
     ) {
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        pdc.set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, internalName);
         item.setItemMeta(meta);
         List<Material> blockReturn = List.of(blueBlock, cyanBlock, greenBlock, limeBlock, magentaBlock, redBlock, whiteBlock, yellowBlock);
         return new CBItem_Block(item, internalName, price, priceType, blockReturn, blockAmount);
@@ -332,6 +344,8 @@ public class CrystalBlitzItems {
     public static CBItem_Block setupBlock(String internalName, Material mat, int price, Shop.ShardTypes priceType, Material returnBlock, int blockAmount) {
         ItemStack item = new ItemStack(mat);
         ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        pdc.set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, internalName);
         item.setItemMeta(meta);
         List<Material> blockReturn = new ArrayList<>();
         for (int i = 0 ; i < 8 ; i++) {
@@ -343,6 +357,8 @@ public class CrystalBlitzItems {
     public static CBItem_Armor setupArmor(String internalName, Material chestplateMat, int price, Shop.ShardTypes priceType, String downgradeTo, List<String> mustNotHave) {
         ItemStack item = new ItemStack(chestplateMat);
         ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        pdc.set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, internalName);
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
         return new CBItem_Armor(item, internalName, price, priceType, downgradeTo, mustNotHave);
@@ -480,7 +496,7 @@ class CBItem_Armor extends CBItem{
         if (item.getType().equals(Material.LEATHER_CHESTPLATE)) {
             ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-            meta.setColor(Teams.TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
+            meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
             meta.setUnbreakable(true);
             item.setItemMeta(meta);
             whoFor.getInventory().setChestplate(item);
@@ -492,7 +508,7 @@ class CBItem_Armor extends CBItem{
         if (leggings.getType().equals(Material.LEATHER_LEGGINGS)) {
             ItemStack item = new ItemStack(Material.LEATHER_LEGGINGS);
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
-            meta.setColor(Teams.TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
+            meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
             meta.setUnbreakable(true);
             item.setItemMeta(meta);
             whoFor.getInventory().setLeggings(item);
@@ -503,7 +519,7 @@ class CBItem_Armor extends CBItem{
         //boots (will always be leather boots, so no material check here)
         ItemStack leatherBoots = new ItemStack(Material.LEATHER_BOOTS);
         LeatherArmorMeta leatherBoots_meta = (LeatherArmorMeta) leatherBoots.getItemMeta();
-        leatherBoots_meta.setColor(Teams.TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
+        leatherBoots_meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
         leatherBoots_meta.setUnbreakable(true);
         leatherBoots.setItemMeta(leatherBoots_meta);
         whoFor.getInventory().setBoots(leatherBoots);

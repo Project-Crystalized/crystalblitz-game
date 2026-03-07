@@ -53,7 +53,7 @@ public class Shop{
     public static ItemStack CategoryOffence = new ItemStack(Material.COAL);
     public static ItemStack CategoryDefence = new ItemStack(Material.COAL);
     public static ItemStack CategoryUtility = new ItemStack(Material.COAL);
-    public static ItemStack CategoryUpgrades = new ItemStack(Material.COAL);
+    public static ItemStack CategoryUpgrades = new ItemStack(Material.PINK_STAINED_GLASS);
     public static ItemStack EnderChest = new ItemStack(Material.ENDER_CHEST);
     public static ItemStack Back = new ItemStack(Material.COAL);
 
@@ -75,6 +75,11 @@ public class Shop{
         CategoryUtility_im.customName(text("Utility").decoration(TextDecoration.ITALIC, false));
         CategoryUtility_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryUtility.setItemMeta(CategoryUtility_im);
+
+        ItemMeta CategoryUpgrades_im = CategoryUpgrades.getItemMeta();
+        CategoryUpgrades_im.customName(text("Team Upgrades").decoration(TextDecoration.ITALIC, false));
+        CategoryUpgrades_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
+        CategoryUpgrades.setItemMeta(CategoryUpgrades_im);
 
         ItemMeta EChest_im = EnderChest.getItemMeta();
         List<Component> EChest_lore = new ArrayList<>();
@@ -110,37 +115,43 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00B").color(NamedTextColor.WHITE));
         view.clear();
 
-        view.setItem(0, CategoryOffence);
-        view.setItem(1, CategoryOffence);
-        view.setItem(2, CategoryOffence);
         view.setItem(9, CategoryOffence);
         view.setItem(10, CategoryOffence);
         view.setItem(11, CategoryOffence);
         view.setItem(18, CategoryOffence);
         view.setItem(19, CategoryOffence);
         view.setItem(20, CategoryOffence);
+        view.setItem(27, CategoryOffence);
+        view.setItem(28, CategoryOffence);
+        view.setItem(29, CategoryOffence);
 
-        view.setItem(3, CategoryDefence);
-        view.setItem(4, CategoryDefence);
-        view.setItem(5, CategoryDefence);
         view.setItem(12, CategoryDefence);
         view.setItem(13, CategoryDefence);
         view.setItem(14, CategoryDefence);
         view.setItem(21, CategoryDefence);
         view.setItem(22, CategoryDefence);
         view.setItem(23, CategoryDefence);
+        view.setItem(30, CategoryDefence);
+        view.setItem(31, CategoryDefence);
+        view.setItem(32, CategoryDefence);
 
-        view.setItem(6, CategoryUtility);
-        view.setItem(7, CategoryUtility);
-        view.setItem(8, CategoryUtility);
         view.setItem(15, CategoryUtility);
         view.setItem(16, CategoryUtility);
         view.setItem(17, CategoryUtility);
         view.setItem(24, CategoryUtility);
         view.setItem(25, CategoryUtility);
         view.setItem(26, CategoryUtility);
+        view.setItem(33, CategoryDefence);
+        view.setItem(34, CategoryDefence);
+        view.setItem(35, CategoryDefence);
 
-        view.setItem(31, EnderChest);
+        view.setItem(3, CategoryUpgrades);
+        view.setItem(4, CategoryUpgrades);
+        view.setItem(5, CategoryUpgrades);
+        view.setItem(6, CategoryUpgrades);
+        view.setItem(7, CategoryUpgrades);
+
+        view.setItem(40, EnderChest);
 
         p.openInventory(view);
     }
@@ -190,6 +201,26 @@ public class Shop{
         view.setItem(4, CrystalBlitzItems.getShopItem("wind_arrow", p));
         //TODO defence totem
         //TODO healing totem
+
+        p.openInventory(view);
+    }
+
+    public static void openTeamUpgrades(Player p) {
+        TeamData td = Teams.getTeamData(Teams.getPlayerTeam(p));
+
+        view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA013").color(NamedTextColor.WHITE));
+        view.clear();
+        view.setItem(0, Back);
+        view.setItem(1, TeamUpgrades.getUpgradeShopItem(upgrades.nexusHeal, p));
+        view.setItem(2, TeamUpgrades.getUpgradeShopItem(upgrades.slimeTotemAlarm, p));
+        if (td.teamUpgrades.hasUpgrade(upgrades.strongerShardGen1)) {
+            view.setItem(3, TeamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen2, p));
+        } else {
+            view.setItem(3, TeamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen1, p));
+        }
+        view.setItem(4, TeamUpgrades.getUpgradeShopItem(upgrades.sharpness, p));
+        view.setItem(5, TeamUpgrades.getUpgradeShopItem(upgrades.totemMoreHealth, p));
+        view.setItem(6, TeamUpgrades.getUpgradeShopItem(upgrades.protection, p));
 
         p.openInventory(view);
     }

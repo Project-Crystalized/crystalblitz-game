@@ -3,8 +3,10 @@ package cc.crystalized;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -76,6 +78,9 @@ public class ShopListener implements Listener {
         } else if (e.getCurrentItem().equals(Shop.CategoryUtility)) {
             Shop.openUtility((Player) p);
             return;
+        } else if (e.getCurrentItem().equals(Shop.CategoryUpgrades)) {
+            Shop.openTeamUpgrades((Player) p);
+            return;
         } else if (e.getCurrentItem().equals(Shop.Back)) {
             p1.closeInventory();
             new Shop(p1);
@@ -87,10 +92,35 @@ public class ShopListener implements Listener {
 
         ItemStack item = e.getCurrentItem();
         PersistentDataContainer pdc = item.getItemMeta().getPersistentDataContainer();
+        String title = PlainTextComponentSerializer.plainText().serialize(e.getView().title());
+
+        if (pdc.has(new NamespacedKey("crystalblitz", "isupgrade"))) {
+            upgrades u = upgrades.valueOf(pdc.get(new NamespacedKey("crystalblitz", "upgradename"), PersistentDataType.STRING));
+            TeamData td = Teams.getTeamData(Teams.getPlayerTeam((Player) p));
+
+            if (td.teamUpgrades.hasUpgrade(u)) {
+                p.sendMessage(text("[!] You already have this team upgrade."));
+                return;
+            }
+
+            if (p.getInventory().containsAtLeast(u.priceType.item, u.price)) {
+                ItemStack removingShards = u.priceType.item.clone();
+                removingShards.setAmount(u.price);
+                p.getInventory().removeItem(removingShards);
+
+                refreshShop(p, title);
+                td.teamUpgrades.getUpgrade(u, (Player) p);
+                ((Player) p).playSound(p, "minecraft:block.note_block.pling", 50, 2); //TODO maybe different sound for upgrades?
+                refreshShop(p, title);
+            } else {
+                p.sendMessage(text("[!] Insufficient funds")); //TODO make this translatable
+            }
+            return;
+        }
+
         if (pdc.has(new NamespacedKey("crystalized", "canbuy"))) {
             boolean canbuy = pdc.get(new NamespacedKey("crystalized", "canbuy"), PersistentDataType.BOOLEAN);
             if (canbuy) {
-                String title = PlainTextComponentSerializer.plainText().serialize(e.getView().title());
                 CBItem cbItem = CrystalBlitzItems.getCBShopItem(item);
                 if (cbItem == null) {
                     return;
@@ -105,250 +135,6 @@ public class ShopListener implements Listener {
                 p.sendMessage(text("[!] Insufficient funds")); //TODO make this translatable
             }
         }
-
-        /*
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.StoneSword)) {
-            List<ItemStack> remove = new ArrayList<>();
-            remove.add(CrystalBlitzItems.WoodenSword);
-            List<ItemStack> nothave = new ArrayList<>();
-            nothave.add(CrystalBlitzItems.StoneSword_item);
-            nothave.add(CrystalBlitzItems.IronSword_item);
-            nothave.add(CrystalBlitzItems.DiamondSword_item);
-            buyItem(p, Shop.ShardTypes.Weak, 10, remove, CrystalBlitzItems.StoneSword_item, nothave);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.StonePickaxe)) {
-            List<ItemStack> remove = new ArrayList<>();
-            remove.add(CrystalBlitzItems.WoodenPickaxe);
-            List<ItemStack> nothave = new ArrayList<>();
-            nothave.add(CrystalBlitzItems.StonePickaxe_item);
-            nothave.add(CrystalBlitzItems.IronPickaxe_item);
-            nothave.add(CrystalBlitzItems.DiamondPickaxe_item);
-            buyItem(p, Shop.ShardTypes.Weak, 10, remove, CrystalBlitzItems.StonePickaxe_item, nothave);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.IronSword)) {
-            List<ItemStack> remove = new ArrayList<>();
-            remove.add(CrystalBlitzItems.WoodenSword);
-            remove.add(CrystalBlitzItems.StoneSword_item);
-            List<ItemStack> nothave = new ArrayList<>();
-            nothave.add(CrystalBlitzItems.IronSword_item);
-            nothave.add(CrystalBlitzItems.DiamondSword_item);
-            buyItem(p, Shop.ShardTypes.Strong, 10, remove, CrystalBlitzItems.IronSword_item, nothave);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.IronPickaxe)) {
-            List<ItemStack> remove = new ArrayList<>();
-            remove.add(CrystalBlitzItems.WoodenPickaxe);
-            remove.add(CrystalBlitzItems.StonePickaxe_item);
-            List<ItemStack> nothave = new ArrayList<>();
-            nothave.add(CrystalBlitzItems.IronPickaxe_item);
-            nothave.add(CrystalBlitzItems.DiamondPickaxe_item);
-            buyItem(p, Shop.ShardTypes.Strong, 10, remove, CrystalBlitzItems.IronPickaxe_item, nothave);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.BreezeDagger)) {
-            List<ItemStack> remove = new ArrayList<>();
-            remove.add(CrystalBlitzItems.WoodenSword);
-            remove.add(CrystalBlitzItems.StoneSword_item);
-            List<ItemStack> nothave = new ArrayList<>();
-            nothave.add(CrystalBlitzItems.BreezeDagger_item);
-            buyItem(p, Shop.ShardTypes.Strong, 30, remove, CrystalBlitzItems.BreezeDagger_item, nothave);
-
-            String PCHint = "\uE10B";
-            String XboxHint = "\uE118";
-            String PSNHint = "\uE10C";
-            String NXHint = "\uE10E";
-            String a = null;
-            FloodgateApi fapi = FloodgateApi.getInstance();
-
-            if (fapi.isFloodgatePlayer(p.getUniqueId())) {
-                switch (fapi.getPlayer(p.getUniqueId()).getDeviceOs()) {
-                    case DeviceOs.XBOX -> {
-                        a = XboxHint;
-                    }
-                    case DeviceOs.NX -> {
-                        a = NXHint;
-                    }
-                    case DeviceOs.PS4 -> {
-                        a = PSNHint;
-                    }
-                    default -> {
-                        a = PCHint;
-                    }
-                }
-            } else {
-                a = PCHint;
-            }
-
-            p.showTitle(Title.title(translatable("crystalized.sword.wind.name"), text(a + " to Dash."), Title.Times.times(Duration.ofMillis(500), Duration.ofSeconds(5), Duration.ofSeconds(1))));
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.DiamondSword)) {
-            List<ItemStack> remove = new ArrayList<>();
-            remove.add(CrystalBlitzItems.WoodenSword);
-            remove.add(CrystalBlitzItems.StoneSword_item);
-            remove.add(CrystalBlitzItems.IronSword_item);
-            buyItem(p, Shop.ShardTypes.Nexus, 2, remove, CrystalBlitzItems.DiamondSword_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.DiamondPickaxe)) {
-            List<ItemStack> remove = new ArrayList<>();
-            remove.add(CrystalBlitzItems.WoodenPickaxe);
-            remove.add(CrystalBlitzItems.StonePickaxe_item);
-            remove.add(CrystalBlitzItems.IronPickaxe_item);
-            buyItem(p, Shop.ShardTypes.Nexus, 2, remove, CrystalBlitzItems.DiamondPickaxe_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.Shears)) {
-            buyItem(p, Shop.ShardTypes.Weak, 40, null, CrystalBlitzItems.Shears_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.Bow)) {
-            buyItem(p, Shop.ShardTypes.Strong, 25, null, CrystalBlitzItems.Bow_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.ChargedCrossbow)) {
-            List<ItemStack> remove = new ArrayList<>();
-            remove.add(CrystalBlitzItems.Bow_item);
-            buyItem(p, Shop.ShardTypes.Nexus, 4, remove, CrystalBlitzItems.ChargedCrossbow_item, null, Shop.ShardTypes.Strong, 20);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.WingedOrb)) {
-            buyItem(p, Shop.ShardTypes.Strong, 35, null, CrystalBlitzItems.WingedOrb_item, null);
-        }
-
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.ConcreteBlocks)) {
-            ItemStack item = null;
-            switch (Teams.getPlayerTeam(p1)) {
-                case "blue" -> {
-                    item = new ItemStack(Material.BLUE_CONCRETE);
-                    item.setAmount(16);
-                }
-                case "cyan" -> {
-                    item = new ItemStack(Material.CYAN_CONCRETE);
-                    item.setAmount(16);
-                }
-                case "green" -> {
-                    item = new ItemStack(Material.GREEN_CONCRETE);
-                    item.setAmount(16);
-                }
-                case "lime" -> {
-                    item = new ItemStack(Material.LIME_CONCRETE);
-                    item.setAmount(16);
-                }
-                case "magenta" -> {
-                    item = new ItemStack(Material.MAGENTA_CONCRETE);
-                    item.setAmount(16);
-                }
-                case "red" -> {
-                    item = new ItemStack(Material.RED_CONCRETE);
-                    item.setAmount(16);
-                }
-                case "white" -> {
-                    item = new ItemStack(Material.WHITE_CONCRETE);
-                    item.setAmount(16);
-                }
-                case "yellow" -> {
-                    item = new ItemStack(Material.YELLOW_CONCRETE);
-                    item.setAmount(16);
-                }
-            }
-            buyItem(p, Shop.ShardTypes.Weak, 8, null, item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.CopperBlocks)) {
-            ItemStack item = new ItemStack(Material.COPPER_BLOCK);
-            item.setAmount(8);
-            buyItem(p, Shop.ShardTypes.Weak, 10, null, item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.WoolBlocks)) {
-            ItemStack item = null;
-            switch (Teams.getPlayerTeam(p1)) {
-                case "blue" -> {
-                    item = new ItemStack(Material.BLUE_WOOL);
-                    item.setAmount(8);
-                }
-                case "cyan" -> {
-                    item = new ItemStack(Material.CYAN_WOOL);
-                    item.setAmount(8);
-                }
-                case "green" -> {
-                    item = new ItemStack(Material.GREEN_WOOL);
-                    item.setAmount(8);
-                }
-                case "lime" -> {
-                    item = new ItemStack(Material.LIME_WOOL);
-                    item.setAmount(8);
-                }
-                case "magenta" -> {
-                    item = new ItemStack(Material.MAGENTA_WOOL);
-                    item.setAmount(8);
-                }
-                case "red" -> {
-                    item = new ItemStack(Material.RED_WOOL);
-                    item.setAmount(8);
-                }
-                case "white" -> {
-                    item = new ItemStack(Material.WHITE_WOOL);
-                    item.setAmount(8);
-                }
-                case "yellow" -> {
-                    item = new ItemStack(Material.YELLOW_WOOL);
-                    item.setAmount(8);
-                }
-            }
-            buyItem(p, Shop.ShardTypes.Weak, 8, null, item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.ObsidianBlocks)) {
-            ItemStack item = new ItemStack(Material.OBSIDIAN);
-            item.setAmount(10);
-            buyItem(p, Shop.ShardTypes.Nexus, 4, null, item, null);
-        }
-
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.ChainmailChestplate)) {
-            List<Shop.ArmourType> a = new ArrayList<>();
-            a.add(Shop.ArmourType.Chainmail);
-            a.add(Shop.ArmourType.Iron);
-            a.add(Shop.ArmourType.Diamond);
-            buyItem(p, Shop.ShardTypes.Weak, 40, Shop.ArmourType.Chainmail, a);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.IronChestplate)) {
-            List<Shop.ArmourType> a = new ArrayList<>();
-            a.add(Shop.ArmourType.Iron);
-            a.add(Shop.ArmourType.Diamond);
-            buyItem(p, Shop.ShardTypes.Strong, 10, Shop.ArmourType.Iron, a);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.DiamondChestplate)) {
-            List<Shop.ArmourType> a = new ArrayList<>();
-            a.add(Shop.ArmourType.Diamond);
-            buyItem(p, Shop.ShardTypes.Nexus, 4, Shop.ArmourType.Diamond, a);
-        }
-
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.BoostOrb)) {
-            buyItem(p, Shop.ShardTypes.Strong, 20, null, CrystalBlitzItems.BoostOrb_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.Gapples)) {
-            buyItem(p, Shop.ShardTypes.Weak, 20, null, new ItemStack(Material.GOLDEN_APPLE), null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.GrapplingOrb)) {
-            buyItem(p, Shop.ShardTypes.Strong, 20, null, CrystalBlitzItems.GrapplingOrb_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.CloudTotem)) {
-            buyItem(p, Shop.ShardTypes.Strong, 30, null, CrystalBlitzItems.CloudTotem_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.AntiAirTotem)) {
-            buyItem(p, Shop.ShardTypes.Weak, 40, null, CrystalBlitzItems.AntiAirTotem_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.DefenceTotem)) {
-            buyItem(p, Shop.ShardTypes.Strong, 30, null, CrystalBlitzItems.DefenceTotem_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.LaunchTotem)) {
-            buyItem(p, Shop.ShardTypes.Strong, 35, null, CrystalBlitzItems.LaunchTotem_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.BridgeOrb)) {
-            buyItem(p, Shop.ShardTypes.Weak, 40, null, CrystalBlitzItems.BridgeOrb_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.PoisonOrb)) {
-            buyItem(p, Shop.ShardTypes.Strong, 10, null, CrystalBlitzItems.PoisonOrb_item, null);
-        }
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.ExplosiveOrb)) {
-            buyItem(p, Shop.ShardTypes.Weak, 40, null, CrystalBlitzItems.ExplosiveOrb_item, null);
-        }
-
-        //No Category
-        else if (e.getCurrentItem().equals(CrystalBlitzItems.Arrows)) {
-            buyItem(p, Shop.ShardTypes.Strong, 2, null, CrystalBlitzItems.Arrows_item, null);
-        }*/
     }
 
     private static void refreshShop(HumanEntity p , String title) {
@@ -360,10 +146,13 @@ public class ShopListener implements Listener {
             Shop.openUtility((Player) p);
         } else if (title.contains("\uA00B")) {
             new Shop((Player) p);
+        } else if (title.contains("\uA013")) {
+            Shop.openTeamUpgrades((Player) p);
         }
     }
 
     public static void buyItem(HumanEntity p, CBItem cbItem) {
+        TeamData td = Teams.getTeamData(Teams.getPlayerTeam((Player) p));
 
         //check if inventory contains something we shouldn't have (eg, an iron sword when buying a stone sword)
         for (ItemStack i : p.getInventory()) {
@@ -385,8 +174,12 @@ public class ShopListener implements Listener {
 
         switch (cbItem.type) {
             case Melee, Pickaxe, Ranged, Shears -> {
+                ItemStack item = cbItem.item.clone();
+                if (cbItem.type.equals(CrystalBlitzItems.ItemType.Melee) && td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
+                    item.addEnchantment(Enchantment.SHARPNESS, 1);
+                }
                 removeItemType(p, cbItem.type);
-                p.getInventory().addItem(cbItem.item);
+                p.getInventory().addItem(item);
             }
             case Armor -> {
                 if (cbItem instanceof CBItem_Armor cbArmor) {
