@@ -101,7 +101,7 @@ public class CrystalBlitzItems {
                 "bow", List.of("explosive_bow"), new NamespacedKey("crystalized", "explosive_bow"), 1)
         );
         items.add(setup("shears", Material.SHEARS, null, null, 40, Shop.ShardTypes.Weak, ItemType.Shears, "shears", List.of("shears"), 1));
-        items.add(setup("crossbow", Material.BOW, null,
+        items.add(setup("crossbow", Material.CROSSBOW, null,
                 List.of(translatable("crystalized.crossbow.desc")),
                 35, Shop.ShardTypes.Strong, ItemType.Ranged,
                 "", null, 1)
