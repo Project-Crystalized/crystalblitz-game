@@ -186,8 +186,8 @@ public class CrystalBlitzItems {
         ));
         items.add(setupBlock("copper", Material.WAXED_CHISELED_COPPER, 10, Shop.ShardTypes.Weak, Material.WAXED_CHISELED_COPPER, 8));
         items.add(setupBlock("wool", Material.WHITE_WOOL, 8, Shop.ShardTypes.Weak,
-                Material.BLUE_CONCRETE, Material.CYAN_CONCRETE, Material.GREEN_CONCRETE, Material.LIME_CONCRETE,
-                Material.MAGENTA_CONCRETE, Material.RED_CONCRETE, Material.YELLOW_CONCRETE, Material.WHITE_CONCRETE, 8
+                Material.BLUE_WOOL, Material.CYAN_WOOL, Material.GREEN_WOOL, Material.LIME_WOOL,
+                Material.MAGENTA_WOOL, Material.RED_WOOL, Material.YELLOW_WOOL, Material.WHITE_WOOL, 8
         ));
         items.add(setupBlock("glass", Material.WHITE_STAINED_GLASS, 40, Shop.ShardTypes.Strong,
                 Material.BLUE_STAINED_GLASS, Material.CYAN_STAINED_GLASS, Material.GREEN_STAINED_GLASS, Material.LIME_STAINED_GLASS,

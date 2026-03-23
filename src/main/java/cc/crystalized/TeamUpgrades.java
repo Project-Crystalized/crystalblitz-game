@@ -112,6 +112,7 @@ public class TeamUpgrades {
         upgradesBought.add(u);
 
         //do special shit for some upgrades
+        MapData md = crystalBlitz.getInstance().mapdata;
         switch (u) {
             case nexusHeal -> {
                 TeamData td = Teams.getTeamData(buyer);
@@ -120,6 +121,28 @@ public class TeamUpgrades {
                 Bukkit.getServer().sendMessage(text(td.name + " nexus has been healed by ").append(buyer.displayName())); //TODO temporary message
                 //TODO play sound (maybe reverse nexus shatter?)
             }
+            case doubleStaleShards -> {
+                Location origin = md.getStaleShardLoc(Teams.getPlayerTeam(buyer));
+                Location loc = origin.clone().add(0, 1, 0);
+
+                //top block
+                Block b = loc.getBlock();
+                b.setType(Material.BLACK_GLAZED_TERRACOTTA);
+                Directional dir = (Directional) b.getBlockData();
+                dir.setFacing(BlockFace.EAST);
+                b.setBlockData(dir);
+                b.getState().update(true, false);
+
+                //side shard blocks
+                resetSideStaleShard(loc.clone().add(0, 0, 1), BlockFace.SOUTH, false);
+                resetSideStaleShard(loc.clone().add(0, 0, -1), BlockFace.NORTH, false);
+                resetSideStaleShard(loc.clone().add(1, 0, 0), BlockFace.EAST, false);
+                resetSideStaleShard(loc.clone().add(-1, 0, 0), BlockFace.WEST, false);
+
+                //move stale shard nametag up
+                staleShardTag.teleport(staleShardTag.getLocation().clone().add(0, 1, 0));
+            }
+            case autoShardCollect -> {autoShardCollection();}
             case sharpness -> {
                 for (String s : team) {
                     Player p = Bukkit.getPlayer(s);
@@ -175,7 +198,6 @@ public class TeamUpgrades {
         }
     }
 
-
     public static ItemStack getUpgradeShopItem(upgrades u, Player p) {
         if (upgradesBought.contains(u)) {
             return u.shopItem_alreadyHas;
@@ -184,6 +206,27 @@ public class TeamUpgrades {
         } else {
             return u.shopItem_cantbuy;
         }
+    }
+
+    private void autoShardCollection() {
+        new BukkitRunnable() {
+            public void run() {
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    cancel();
+                }
+                for (String s : team) {
+                    Player p = Bukkit.getPlayer(s);
+                    if (p != null) {
+                        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+                        ItemStack item = Shop.ShardTypes.Weak.item.clone();
+                        item.setAmount(1);
+                        pd.enderChest.addItem(item);
+                        p.sendActionBar(text("+1 Stale Shard -> echest"));
+                        p.playSound(p, "minecraft:block.note_block.bell", 50, 2); //this might be annoying
+                    }
+                }
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 20 * 10);
     }
 }
 

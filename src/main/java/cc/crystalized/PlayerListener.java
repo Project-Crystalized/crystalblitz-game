@@ -10,10 +10,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Waterlogged;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -319,116 +321,127 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
+        Block b = e.getBlock();
         if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
         } else {
-            if (crystalBlitz.getInstance().Blocks.contains(e.getBlock())) {
-                crystalBlitz.getInstance().Blocks.remove(e.getBlock());
+            if (crystalBlitz.getInstance().Blocks.contains(b)) {
+                crystalBlitz.getInstance().Blocks.remove(b);
             } else {
                 //this and the hit nexus method is a bit messy
                 ItemStack holding = p.getInventory().getItemInMainHand();
-                if (e.getBlock().getType().equals(Material.WHITE_GLAZED_TERRACOTTA) || e.getBlock().getType().equals(Material.GRAY_GLAZED_TERRACOTTA)
-                        || e.getBlock().getType().equals(Material.LIGHT_GRAY_GLAZED_TERRACOTTA)) {
-                    if (!p.getInventory().getItemInMainHand().toString().toLowerCase().contains("pickaxe")) {
-                        p.sendMessage(text("[!] You need to use your Pickaxe to break this."));
-                    }
-                    e.setCancelled(true);
-                    Directional dir = (Directional) e.getBlock().getBlockData();
-                    switch (e.getBlock().getType()) {
-                        case Material.WHITE_GLAZED_TERRACOTTA -> {
-                            switch (dir.getFacing()) {
-                                case BlockFace.EAST:
-                                    Teams.getTeamData("blue").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
-                                    break;
-                                case BlockFace.NORTH:
-                                    Teams.getTeamData("cyan").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
-                                    break;
-                                case BlockFace.SOUTH:
-                                    Teams.getTeamData("green").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
-                                    break;
-                            }
-                        }
-                        case Material.GRAY_GLAZED_TERRACOTTA -> {
-                            switch (dir.getFacing()) {
-                                case BlockFace.NORTH:
-                                    Teams.getTeamData("red").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
-                                    break;
-                                case BlockFace.SOUTH:
-                                    Teams.getTeamData("white").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
-                                    break;
-                                case BlockFace.WEST:
-                                    Teams.getTeamData("yellow").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
-                                    break;
-                            }
-                        }
-                        case Material.LIGHT_GRAY_GLAZED_TERRACOTTA -> {
-                            switch (dir.getFacing()) {
-                                case BlockFace.EAST:
-                                    Teams.getTeamData("lime").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
-                                    break;
-                                case BlockFace.NORTH:
-                                    Teams.getTeamData("magenta").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
-                                    break;
-                            }
+
+                switch (b.getType()) {
+                    case OAK_SLAB -> {
+                        Slab data = (Slab) b.getBlockData();
+                        if (data.getType().equals(Slab.Type.DOUBLE) && data.isWaterlogged()) {
+                            //TODO rainbow nexus shard block
                         }
                     }
-                }
-
-                //Weak and Strong Shard blocks
-                else if (e.getBlock().getType().equals(Material.BLACK_GLAZED_TERRACOTTA)) {
-                    e.setCancelled(true);
-                    Directional dir = (Directional) e.getBlock().getBlockData();
-                    switch (dir.getFacing()) {
-                        case BlockFace.EAST:
-                            ItemStack weak = Shop.ShardTypes.Weak.item.clone();
-                            switch (holding.getType()) {
-                                case Material.DIAMOND_PICKAXE -> {weak.setAmount(4);}
-                                case Material.IRON_PICKAXE -> {weak.setAmount(3);}
-                                case Material.STONE_PICKAXE -> {weak.setAmount(2);}
-                                default -> {weak.setAmount(1);}
+                    case WHITE_GLAZED_TERRACOTTA, GRAY_GLAZED_TERRACOTTA, LIGHT_GRAY_GLAZED_TERRACOTTA -> {
+                        if (!p.getInventory().getItemInMainHand().toString().toLowerCase().contains("pickaxe")) {
+                            p.sendMessage(text("[!] You need to use your Pickaxe to break this."));
+                            return;
+                        }
+                        e.setCancelled(true);
+                        Directional dir = (Directional) e.getBlock().getBlockData();
+                        switch (e.getBlock().getType()) {
+                            case Material.WHITE_GLAZED_TERRACOTTA -> {
+                                switch (dir.getFacing()) {
+                                    case BlockFace.EAST:
+                                        Teams.getTeamData("blue").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
+                                        break;
+                                    case BlockFace.NORTH:
+                                        Teams.getTeamData("cyan").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
+                                        break;
+                                    case BlockFace.SOUTH:
+                                        Teams.getTeamData("green").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
+                                        break;
+                                }
                             }
-                            p.getInventory().addItem(weak);
-                            break;
-                        case BlockFace.NORTH:
-                            ItemStack strong = Shop.ShardTypes.Strong.item.clone();
-                            switch (holding.getType()) {
-                                case Material.DIAMOND_PICKAXE -> {strong.setAmount(4);}
-                                case Material.IRON_PICKAXE -> {strong.setAmount(3);}
-                                case Material.STONE_PICKAXE -> {strong.setAmount(2);}
-                                default -> {strong.setAmount(1);}
+                            case Material.GRAY_GLAZED_TERRACOTTA -> {
+                                switch (dir.getFacing()) {
+                                    case BlockFace.NORTH:
+                                        Teams.getTeamData("red").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
+                                        break;
+                                    case BlockFace.SOUTH:
+                                        Teams.getTeamData("white").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
+                                        break;
+                                    case BlockFace.WEST:
+                                        Teams.getTeamData("yellow").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
+                                        break;
+                                }
                             }
-                            p.getInventory().addItem(strong);
-                            break;
-                        default:
-                            p.sendMessage(text("Broken black terracotta but this isn't weak or strong shards, please report this."));
-                            break;
-
+                            case Material.LIGHT_GRAY_GLAZED_TERRACOTTA -> {
+                                switch (dir.getFacing()) {
+                                    case BlockFace.EAST:
+                                        Teams.getTeamData("lime").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
+                                        break;
+                                    case BlockFace.NORTH:
+                                        Teams.getTeamData("magenta").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
+                                        break;
+                                }
+                            }
+                        }
                     }
-                    p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
-                }
+                    case BLACK_GLAZED_TERRACOTTA -> {
+                        e.setCancelled(true);
+                        Directional dir = (Directional) e.getBlock().getBlockData();
+                        switch (dir.getFacing()) {
+                            case BlockFace.EAST:
+                                ItemStack weak = Shop.ShardTypes.Weak.item.clone();
+                                switch (holding.getType()) {
+                                    case Material.DIAMOND_PICKAXE -> {weak.setAmount(4);}
+                                    case Material.IRON_PICKAXE -> {weak.setAmount(3);}
+                                    case Material.STONE_PICKAXE -> {weak.setAmount(2);}
+                                    default -> {weak.setAmount(1);}
+                                }
+                                p.getInventory().addItem(weak);
+                                break;
+                            case BlockFace.NORTH:
+                                ItemStack strong = Shop.ShardTypes.Strong.item.clone();
+                                switch (holding.getType()) {
+                                    case Material.DIAMOND_PICKAXE -> {strong.setAmount(4);}
+                                    case Material.IRON_PICKAXE -> {strong.setAmount(3);}
+                                    case Material.STONE_PICKAXE -> {strong.setAmount(2);}
+                                    default -> {strong.setAmount(1);}
+                                }
+                                p.getInventory().addItem(strong);
+                                break;
+                            default:
+                                p.sendMessage(text("Broken black terracotta but this isn't weak or strong shards, please report this."));
+                                break;
 
-                //Weak and Strong Shards (not blocks)
-                else if (e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_FAN) || e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_WALL_FAN)
-                    || e.getBlock().getType().equals(Material.AMETHYST_CLUSTER)
-                ) {
-                    if (e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_FAN) || e.getBlock().getType().equals(Material.DEAD_BRAIN_CORAL_WALL_FAN)) {
-                        ItemStack weak = Shop.ShardTypes.Weak.item.clone();
-                        weak.setAmount(2);
-                        p.getInventory().addItem(weak);
-                    } else if (e.getBlock().getType().equals(Material.AMETHYST_CLUSTER)) {
-                        ItemStack strong = Shop.ShardTypes.Strong.item.clone();
-                        strong.setAmount(2);
-                        p.getInventory().addItem(strong);
+                        }
+                        p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                     }
-                    p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
-                    e.setCancelled(true);
-                    new CrystalShardBlock(e.getBlock().getType(), e.getBlock().getLocation(), e.getBlock().getBlockData());
-                    e.getBlock().setType(Material.AIR);
-                }
-
-
-                else {
-                    e.setCancelled(true);
+                    case DEAD_BRAIN_CORAL_FAN, DEAD_BRAIN_CORAL_WALL_FAN, AMETHYST_CLUSTER, LARGE_AMETHYST_BUD -> {
+                        //this is dumb, but decide what shard we're giving to the player
+                        switch (b.getType()) {
+                            case DEAD_BRAIN_CORAL_WALL_FAN -> {
+                                ItemStack weak = Shop.ShardTypes.Weak.item.clone();
+                                weak.setAmount(2);
+                                p.getInventory().addItem(weak);
+                            }
+                            case LARGE_AMETHYST_BUD -> {
+                                ItemStack strong = Shop.ShardTypes.Strong.item.clone();
+                                strong.setAmount(1);
+                                p.getInventory().addItem(strong);
+                            }
+                            case AMETHYST_CLUSTER -> {
+                                ItemStack strong = Shop.ShardTypes.Strong.item.clone();
+                                strong.setAmount(2);
+                                p.getInventory().addItem(strong);
+                            }
+                        }
+                        p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
+                        e.setCancelled(true);
+                        new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData());
+                        b.setType(Material.AIR);
+                    }
+                    default -> {
+                        e.setCancelled(true);
+                    }
                 }
             }
         }
@@ -495,16 +508,12 @@ public class PlayerListener implements Listener {
 }
 
 class CrystalShardBlock {
-    public CrystalShardBlock(Material input, Location loc, BlockData data) {
-        cc.crystalized.BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
+    public CrystalShardBlock(Player p, Material input, Location loc, BlockData data) {
+        BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
         int timer = 0;
         switch (bossbar.currentstate) {
-            case BossBarStates.starting -> {
-                timer = crystalBlitz.getInstance().getRandomNumber(3, 9);
-            }
-            case BossBarStates.GenUpgradeI -> {
-                timer = crystalBlitz.getInstance().getRandomNumber(2, 7);
-            }
+            case BossBarStates.starting -> {timer = crystalBlitz.getInstance().getRandomNumber(3, 9);}
+            case BossBarStates.GenUpgradeI -> {timer = crystalBlitz.getInstance().getRandomNumber(2, 7);}
             case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing, BossBarStates.NexusDestroyed -> {
                 timer = crystalBlitz.getInstance().getRandomNumber(1, 5);
             }
@@ -517,7 +526,18 @@ class CrystalShardBlock {
             public void run () {
 
                 if (timer2 == 0 || crystalBlitz.getInstance().gamemanager == null) {
-                    loc.getBlock().setType(input);
+                    //decide material
+                    //this is for strongerShardGen team upgrade to work properly
+                    Material finalInput = Material.AIR;
+                    switch (input) {
+                        case AMETHYST_CLUSTER -> {finalInput = input;}
+                        case LARGE_AMETHYST_BUD, DEAD_BRAIN_CORAL_WALL_FAN -> {
+                            finalInput = Material.DEAD_BRAIN_CORAL_WALL_FAN;
+                        }
+                    }
+
+                    //set block
+                    loc.getBlock().setType(finalInput);
                     Directional dir = (Directional) loc.getBlock().getBlockData();
                     Directional dir2 = (Directional) data;
 
