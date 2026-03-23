@@ -3,6 +3,7 @@ package cc.crystalized;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,11 +30,13 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 public class Nexus {
 
     public String team = "";
+    private TeamData td;
     public int health = 10;
 
-    public Nexus(String t) {
-        team = t;
-        HealthBar(t);
+    public Nexus(TeamData td) {
+        team = td.name;
+        this.td = td;
+        HealthBar(td.name);
 
         new BukkitRunnable() {
             public void run() {
@@ -66,14 +69,10 @@ public class Nexus {
         return text("(" + health + "/10)").color(WHITE);
     }
 
-    public String getTeam() {
-        return this.team;
-    }
-
     private void HealthBar(String t) {
         Location loc = new Location(Bukkit.getWorld(""),
                 crystalBlitz.getInstance().mapdata.getNexus(t)[0] + 0.5,
-                crystalBlitz.getInstance().mapdata.getNexus(t)[1] + 2,
+                crystalBlitz.getInstance().mapdata.getNexus(t)[1] + 2.3,
                 crystalBlitz.getInstance().mapdata.getNexus(t)[2] + 0.5
         );
         TextDisplay display = Bukkit.getWorld("world").spawn(loc, TextDisplay.class, entity -> {
@@ -81,10 +80,20 @@ public class Nexus {
             entity.setBillboard(Display.Billboard.CENTER);
             entity.text(text("loading..."));
         });
+        Bukkit.getWorld("world").spawn(loc.clone().add(0, 0.7, 0), TextDisplay.class, entity -> {
+            entity.setSeeThrough(true);
+            entity.setBillboard(Display.Billboard.CENTER);
+            entity.text(
+                    translatable("crystalized.game.crystalblitz." + team + "nexus")
+                            .color(TextColor.color(td.color.asRGB()))
+            );
+        });
 
         new BukkitRunnable() {
-            @Override
             public void run() {
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    cancel();
+                }
                 display.text(
                         text("\uE11A").append(text("\uE11B".repeat(health))).append(text("\uE11C".repeat(10 - health))).append(text("\uE11D"))
                 );
@@ -93,10 +102,7 @@ public class Nexus {
 
     }
 
-    public void hitNexus(String t, ItemStack i, Player p) {
-        if (team != t) {
-            return;
-        }
+    public void hitNexus(ItemStack i, Player p) {
         if (Teams.getPlayerTeam(p).equals(team)) {
             p.sendMessage(text("[!] You cannot break your own Nexus! You need to defend this from the other teams!"));
             return;
@@ -136,20 +142,20 @@ public class Nexus {
 
         if (health < 0 || health == 0) {
             health = 0;
-            destroyNexus(t, p);
+            destroyNexus(team, p);
         }
     }
 
     public void destroyNexus(String t) {
         Location blockloc1 = new Location(Bukkit.getWorld("world"),
-                crystalBlitz.getInstance().mapdata.getNexus(t)[0],
-                crystalBlitz.getInstance().mapdata.getNexus(t)[1],
-                crystalBlitz.getInstance().mapdata.getNexus(t)[2]
+                crystalBlitz.getInstance().mapdata.getNexus(team)[0],
+                crystalBlitz.getInstance().mapdata.getNexus(team)[1],
+                crystalBlitz.getInstance().mapdata.getNexus(team)[2]
         );
         Location blockloc2 = new Location(Bukkit.getWorld("world"),
-                crystalBlitz.getInstance().mapdata.getNexus(t)[0],
-                crystalBlitz.getInstance().mapdata.getNexus(t)[1] + 1,
-                crystalBlitz.getInstance().mapdata.getNexus(t)[2]
+                crystalBlitz.getInstance().mapdata.getNexus(team)[0],
+                crystalBlitz.getInstance().mapdata.getNexus(team)[1] + 1,
+                crystalBlitz.getInstance().mapdata.getNexus(team)[2]
         );
         blockloc1.getBlock().setType(Material.DIORITE);
         blockloc2.getBlock().setType(Material.DIORITE);

@@ -223,10 +223,9 @@ public class PlayerListener implements Listener {
 
         Bukkit.getServer().sendMessage(deathprefix.append(killer).append(deathcauseicon).append(pd.cachedRankIcon_small.append(text(" ").append(p.displayName()))));
 
-        if (crystalBlitz.getInstance().gamemanager.getNexus(Teams.getPlayerTeam(p)).health != 0) {
+        if (Teams.getTeamData(p).nexus.health != 0) {
             new BukkitRunnable() {
                 int timer = 5;
-                @Override
                 public void run() {
                     if (crystalBlitz.getInstance().gamemanager == null) {cancel();}
                     p.sendActionBar(translatable("crystalized.game.knockoff.respawn1").append(text(timer)).append(translatable("crystalized.game.knockoff.respawn2")));
@@ -339,36 +338,36 @@ public class PlayerListener implements Listener {
                         case Material.WHITE_GLAZED_TERRACOTTA -> {
                             switch (dir.getFacing()) {
                                 case BlockFace.EAST:
-                                    crystalBlitz.getInstance().gamemanager.getNexus("blue").hitNexus("blue", p.getInventory().getItemInMainHand(), p);
+                                    Teams.getTeamData("blue").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
                                     break;
                                 case BlockFace.NORTH:
-                                    crystalBlitz.getInstance().gamemanager.getNexus("cyan").hitNexus("cyan", p.getInventory().getItemInMainHand(), p);
+                                    Teams.getTeamData("cyan").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
                                     break;
                                 case BlockFace.SOUTH:
-                                    crystalBlitz.getInstance().gamemanager.getNexus("green").hitNexus("green", p.getInventory().getItemInMainHand(), p);
+                                    Teams.getTeamData("green").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
                                     break;
                             }
                         }
                         case Material.GRAY_GLAZED_TERRACOTTA -> {
                             switch (dir.getFacing()) {
                                 case BlockFace.NORTH:
-                                    crystalBlitz.getInstance().gamemanager.getNexus("red").hitNexus("red", p.getInventory().getItemInMainHand(), p);
+                                    Teams.getTeamData("red").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
                                     break;
                                 case BlockFace.SOUTH:
-                                    crystalBlitz.getInstance().gamemanager.getNexus("white").hitNexus("white", p.getInventory().getItemInMainHand(), p);
+                                    Teams.getTeamData("white").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
                                     break;
                                 case BlockFace.WEST:
-                                    crystalBlitz.getInstance().gamemanager.getNexus("yellow").hitNexus("yellow", p.getInventory().getItemInMainHand(), p);
+                                    Teams.getTeamData("yellow").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
                                     break;
                             }
                         }
                         case Material.LIGHT_GRAY_GLAZED_TERRACOTTA -> {
                             switch (dir.getFacing()) {
                                 case BlockFace.EAST:
-                                    crystalBlitz.getInstance().gamemanager.getNexus("lime").hitNexus("lime", p.getInventory().getItemInMainHand(), p);
+                                    Teams.getTeamData("lime").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
                                     break;
                                 case BlockFace.NORTH:
-                                    crystalBlitz.getInstance().gamemanager.getNexus("magenta").hitNexus("magenta", p.getInventory().getItemInMainHand(), p);
+                                    Teams.getTeamData("magenta").nexus.hitNexus(p.getInventory().getItemInMainHand(), p);
                                     break;
                             }
                         }

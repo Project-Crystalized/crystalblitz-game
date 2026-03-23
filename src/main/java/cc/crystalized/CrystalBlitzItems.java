@@ -199,8 +199,8 @@ public class CrystalBlitzItems {
         items.add(setupArmor("diamond_armor", Material.DIAMOND_CHESTPLATE, 12, Shop.ShardTypes.Nexus, "iron_armor", List.of("diamond_armor")));
 
         items.add(setup("arrow", Material.ARROW, null, null, 20, Shop.ShardTypes.Strong, ItemType.other, "", null, 4));
-        items.add(setup("wind_arrow", Material.ARROW, translatable("crystalized.arrow.wind.name"),
-                List.of(translatable("crystalized.arrow.wind.desc")),
+        items.add(setup("wind_arrow", Material.ARROW, translatable("crystalized.item.windarrow.name"),
+                List.of(translatable("crystalized.item.windarrow.desc")),
                 16, Shop.ShardTypes.Strong, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "wind_arrow"), 1)
         );

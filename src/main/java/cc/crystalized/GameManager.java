@@ -28,11 +28,9 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 public class GameManager {
 
     public Teams teams;
-    public static ArrayList<Nexus> nexuses;
     public BossbarManager bossbar = new BossbarManager();
     public WorldBorderManager worldborder = new WorldBorderManager();
     public static List<PlayerData> playerDatas = new ArrayList<>();
-    public static List<Shop> shopList = new ArrayList<>();
     public static GameTypes GameType;
 
     enum GameTypes {
@@ -44,10 +42,6 @@ public class GameManager {
     }
 
     public GameManager(GameTypes type) {
-        GameType = type;
-        teams = new Teams(type);
-        TeamStatus.Init();
-
         Bukkit.getServer().sendMessage(text("Starting Game!"));
         for (Entity e : Bukkit.getWorld("world").getEntities()) {
             if (e instanceof Villager || e instanceof TextDisplay || e instanceof Arrow || e instanceof Item) {
@@ -55,8 +49,12 @@ public class GameManager {
             }
         }
 
+        GameType = type;
+        teams = new Teams(type);
+        TeamStatus.Init();
         playerDatas.clear();
         setupEntities();
+
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.getEnderChest().setMaxStackSize(54);
             p.getEnderChest();
@@ -163,30 +161,19 @@ public class GameManager {
                 crystalBlitz.getInstance().Blocks.removeAll(remove_set);
                 if (crystalBlitz.getInstance().Blocks.isEmpty()) {
                     Bukkit.getLogger().log(Level.INFO, "Removed all player-made blocks! You may rejoin to start another game");
-                    crystalBlitz.getInstance().gamemanager = null;
-                    for (Nexus n : nexuses) {
-                        n.resetNexuses();
+                    for (TeamData td : Teams.team_datas) {
+                        td.nexus.resetNexuses();
                     }
+                    crystalBlitz.getInstance().gamemanager = null;
                     cancel();
                 }
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
     }
 
-    public Nexus getNexus(String team) {
-        for (Nexus n : nexuses) {
-            if (n.getTeam().equals(team)) {
-                return n;
-            }
-        }
-
-        Bukkit.getLogger().log(Level.WARNING, "unknown team " + team);
-        return null;
-    }
-
     public void destroyAllNexuses() {
-        for (Nexus n : nexuses) {
-            n.destroyNexus(n.getTeam());
+        for (TeamData td : Teams.team_datas) {
+            td.nexus.destroyNexus(td.name);
         }
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.playSound(p, "crystalized:effect.nexus_crystal_destroyed", 50, 1);
@@ -195,14 +182,6 @@ public class GameManager {
 
     private static void setupEntities() {
         Component name = text("Shop");
-
-        nexuses = new ArrayList<>();
-        for (String team: Teams.teams) {
-            if (!team.equals("spectator")) {
-                Nexus n = new Nexus(team);
-                nexuses.add(n);
-            }
-        }
 
         for (String team : Teams.teams) {
             if (!team.equals("spectator")) {
