@@ -5,8 +5,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.CoralWallFan;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,9 +45,46 @@ public class TeamUpgrades {
                 }
 
                 team.addAll(teamList);
+
+                resetStaleShard(crystalBlitz.getInstance().mapdata.getStaleShardLoc(t));
                 cancel();
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
+    }
+
+    private void resetStaleShard(Location center) {
+        center.setWorld(Bukkit.getWorld("world")); //throws a NPE if we dont do this, idk why
+        Block cb = center.getBlock();
+        cb.setType(Material.BLACK_GLAZED_TERRACOTTA);
+        Directional dir = (Directional) cb.getBlockData();
+        dir.setFacing(BlockFace.EAST);
+        cb.setBlockData(dir);
+        cb.getState().update(true, false);
+
+        resetSideStaleShard(center.clone().add(0, 0, 1), BlockFace.SOUTH, false);
+        resetSideStaleShard(center.clone().add(0, 0, -1), BlockFace.NORTH, false);
+        resetSideStaleShard(center.clone().add(1, 0, 0), BlockFace.EAST, false);
+        resetSideStaleShard(center.clone().add(-1, 0, 0), BlockFace.WEST, false);
+
+        center.clone().add(0, 1, 0).getBlock().setType(Material.AIR);
+        resetSideStaleShard(center.clone().add(0, 1, 1), null, true);
+        resetSideStaleShard(center.clone().add(0, 1, -1), null, true);
+        resetSideStaleShard(center.clone().add(1, 1, 0), null, true);
+        resetSideStaleShard(center.clone().add(-1, 1, 0), null, true);
+    }
+
+    private void resetSideStaleShard(Location loc, BlockFace facing ,boolean remove) {
+        if (remove) {
+            loc.getBlock().setType(Material.AIR);
+        } else {
+            Block b = loc.getBlock();
+            b.setType(Material.DEAD_BRAIN_CORAL_WALL_FAN);
+            CoralWallFan data = (CoralWallFan) b.getBlockData();
+            data.setWaterlogged(false);
+            data.setFacing(facing);
+            b.setBlockData(data);
+            b.getState().update(true, false);
+        }
     }
 
     public boolean hasUpgrade(upgrades u) {
