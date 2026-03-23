@@ -1,5 +1,7 @@
 package cc.crystalized;
 
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.CustomModelData;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -121,6 +123,9 @@ public class TeamUpgrades {
                 Bukkit.getServer().sendMessage(text(td.name + " nexus has been healed by ").append(buyer.displayName())); //TODO temporary message
                 //TODO play sound (maybe reverse nexus shatter?)
             }
+            case slimeTotemAlarm -> {
+                //TODO theres no slime totem in essentials yet
+            }
             case doubleStaleShards -> {
                 Location origin = md.getStaleShardLoc(Teams.getPlayerTeam(buyer));
                 Location loc = origin.clone().add(0, 1, 0);
@@ -142,6 +147,12 @@ public class TeamUpgrades {
                 //move stale shard nametag up
                 staleShardTag.teleport(staleShardTag.getLocation().clone().add(0, 1, 0));
             }
+            case strongerShardGen1 -> {
+                //TODO
+            }
+            case strongerShardGen2 -> {
+                //TODO
+            }
             case autoShardCollect -> {autoShardCollection();}
             case sharpness -> {
                 for (String s : team) {
@@ -155,6 +166,24 @@ public class TeamUpgrades {
                                 CBItem cbItem = CrystalBlitzItems.getCBItem(internalNameFromPDC);
                                 if (internalNameFromPDC != null && cbItem != null && cbItem.type.equals(CrystalBlitzItems.ItemType.Melee)) {
                                     i.addEnchantment(Enchantment.SHARPNESS, 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            case totemMoreHealth -> {
+                for (String s : team) {
+                    Player p = Bukkit.getPlayer(s);
+                    if (p != null) {
+                        for (ItemStack i : p.getInventory()) {
+                            //a mess
+                            if (i != null) {
+                                PersistentDataContainerView pdc = i.getPersistentDataContainer();
+                                String internalNameFromPDC = pdc.get(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING);
+                                CBItem cbItem = CrystalBlitzItems.getCBItem(internalNameFromPDC);
+                                if (internalNameFromPDC != null && cbItem != null && internalNameFromPDC.contains("totem")) {
+                                    i.setData(DataComponentTypes.CUSTOM_MODEL_DATA, CustomModelData.customModelData().addFloat(1).build());
                                 }
                             }
                         }

@@ -1,5 +1,7 @@
 package cc.crystalized;
 
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.CustomModelData;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
@@ -188,6 +190,9 @@ public class ShopListener implements Listener {
                 ItemStack item = cbItem.item.clone();
                 if (cbItem.type.equals(CrystalBlitzItems.ItemType.Melee) && td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
                     item.addEnchantment(Enchantment.SHARPNESS, 1);
+                }
+                if (cbItem.internalName.contains("totem")) {
+                    item.setData(DataComponentTypes.CUSTOM_MODEL_DATA, CustomModelData.customModelData().addFloat(1).build());
                 }
                 removeItemType(p, cbItem.type);
                 p.getInventory().addItem(item);
