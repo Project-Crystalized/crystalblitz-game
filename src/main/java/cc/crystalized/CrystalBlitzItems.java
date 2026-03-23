@@ -6,6 +6,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -492,16 +493,22 @@ class CBItem_Armor extends CBItem{
     }
 
     public void add(Player whoFor) {
+        TeamData td = Teams.getTeamData(whoFor);
+
         //chestplate
         if (item.getType().equals(Material.LEATHER_CHESTPLATE)) {
             ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
             meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
             meta.setUnbreakable(true);
+            if (td.teamUpgrades.hasUpgrade(upgrades.protection)) {
+                meta.addEnchant(Enchantment.PROTECTION, 1, true);
+            }
             item.setItemMeta(meta);
             whoFor.getInventory().setChestplate(item);
         } else {
             whoFor.getInventory().setChestplate(item);
+            whoFor.getInventory().getChestplate().addEnchantment(Enchantment.PROTECTION, 1);
         }
 
         //leggings
@@ -510,10 +517,14 @@ class CBItem_Armor extends CBItem{
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
             meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
             meta.setUnbreakable(true);
+            if (td.teamUpgrades.hasUpgrade(upgrades.protection)) {
+                meta.addEnchant(Enchantment.PROTECTION, 1, true);
+            }
             item.setItemMeta(meta);
             whoFor.getInventory().setLeggings(item);
         } else {
             whoFor.getInventory().setLeggings(leggings);
+            whoFor.getInventory().getLeggings().addEnchantment(Enchantment.PROTECTION, 1);
         }
 
         //boots (will always be leather boots, so no material check here)
@@ -521,6 +532,9 @@ class CBItem_Armor extends CBItem{
         LeatherArmorMeta leatherBoots_meta = (LeatherArmorMeta) leatherBoots.getItemMeta();
         leatherBoots_meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
         leatherBoots_meta.setUnbreakable(true);
+        if (td.teamUpgrades.hasUpgrade(upgrades.protection)) {
+            leatherBoots_meta.addEnchant(Enchantment.PROTECTION, 1, true);
+        }
         leatherBoots.setItemMeta(leatherBoots_meta);
         whoFor.getInventory().setBoots(leatherBoots);
 

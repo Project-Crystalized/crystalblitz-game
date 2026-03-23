@@ -204,6 +204,8 @@ public class Shop{
         } else {
             view.setItem(3, TeamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen1, p));
         }
+        view.setItem(12, TeamUpgrades.getUpgradeShopItem(upgrades.doubleStaleShards, p));
+        view.setItem(21, TeamUpgrades.getUpgradeShopItem(upgrades.autoShardCollect, p));
         view.setItem(4, TeamUpgrades.getUpgradeShopItem(upgrades.sharpness, p));
         view.setItem(5, TeamUpgrades.getUpgradeShopItem(upgrades.totemMoreHealth, p));
         view.setItem(6, TeamUpgrades.getUpgradeShopItem(upgrades.protection, p));

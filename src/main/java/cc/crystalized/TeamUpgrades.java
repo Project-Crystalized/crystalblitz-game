@@ -13,7 +13,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.CoralWallFan;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -32,6 +34,8 @@ public class TeamUpgrades {
 
     List<String> team = new ArrayList<>();
     private static List<upgrades> upgradesBought = new ArrayList<>();
+
+    public TextDisplay staleShardTag;
 
     public TeamUpgrades(String t) {
         this.team.clear();
@@ -71,6 +75,13 @@ public class TeamUpgrades {
         resetSideStaleShard(center.clone().add(0, 1, -1), null, true);
         resetSideStaleShard(center.clone().add(1, 1, 0), null, true);
         resetSideStaleShard(center.clone().add(-1, 1, 0), null, true);
+
+        //spawn the block's nametag
+        staleShardTag = Bukkit.getWorld("world").spawn(center.clone().add(0.5, 1.5, 0.5), TextDisplay.class, entity -> {
+            entity.setSeeThrough(true);
+            entity.setBillboard(Display.Billboard.CENTER);
+            entity.text(translatable("crystalized.game.crystalblitz.weaknode.mine").color(DARK_RED));
+        });
     }
 
     private void resetSideStaleShard(Location loc, BlockFace facing ,boolean remove) {
@@ -105,16 +116,29 @@ public class TeamUpgrades {
             case sharpness -> {
                 for (String s : team) {
                     Player p = Bukkit.getPlayer(s);
-                    for (ItemStack i : p.getInventory()) {
-                        //a mess
-                        if (i != null) {
-                            PersistentDataContainerView pdc = i.getPersistentDataContainer();
-                            String internalNameFromPDC = pdc.get(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING);
-                            CBItem cbItem = CrystalBlitzItems.getCBItem(internalNameFromPDC);
-                            if (internalNameFromPDC != null && cbItem != null && cbItem.type.equals(CrystalBlitzItems.ItemType.Melee)) {
-                                i.addEnchantment(Enchantment.SHARPNESS, 1);
+                    if (p != null) {
+                        for (ItemStack i : p.getInventory()) {
+                            //a mess
+                            if (i != null) {
+                                PersistentDataContainerView pdc = i.getPersistentDataContainer();
+                                String internalNameFromPDC = pdc.get(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING);
+                                CBItem cbItem = CrystalBlitzItems.getCBItem(internalNameFromPDC);
+                                if (internalNameFromPDC != null && cbItem != null && cbItem.type.equals(CrystalBlitzItems.ItemType.Melee)) {
+                                    i.addEnchantment(Enchantment.SHARPNESS, 1);
+                                }
                             }
                         }
+                    }
+                }
+            }
+            case protection -> {
+                for (String s : team) {
+                    Player p = Bukkit.getPlayer(s);
+                    if (p != null) {
+                        //these might return NPEs, but everyone should be wearing armor at this point
+                        p.getInventory().getChestplate().addEnchantment(Enchantment.PROTECTION, 1);
+                        p.getInventory().getLeggings().addEnchantment(Enchantment.PROTECTION, 1);
+                        p.getInventory().getBoots().addEnchantment(Enchantment.PROTECTION, 1);
                     }
                 }
             }
@@ -159,10 +183,10 @@ public class TeamUpgrades {
 enum upgrades{
     nexusHeal(Material.COAL, "Nexus Heal", "Restores your Nexus with half health", "nexus_shard", 40, Shop.ShardTypes.Weak),
     slimeTotemAlarm(Material.COAL, "Slime Totem Alarm", "desc", "slime_totem", 40, Shop.ShardTypes.Weak),
-    doubleStaleShards(Material.COAL, "Double Stale Shards", "adds another stale shard block ontop of your one at base.", "weak_shard", 40, Shop.ShardTypes.Weak),
+    doubleStaleShards(Material.COAL, "Double Stale Shards", "adds another stale shard block ontop of your one at base.", "weak_shard", 32, Shop.ShardTypes.Weak),
     strongerShardGen1(Material.LARGE_AMETHYST_BUD, "Stronger Shard Generation 1", "LVL1: The Stale shard block at base may grow Pure shards if left long enough", "", 40, Shop.ShardTypes.Weak),
-    strongerShardGen2(Material.AMETHYST_CLUSTER, "Stronger Shard Generation 2", "LVL2: Pure Shards can grow Larger", "", 40, Shop.ShardTypes.Weak),
-    autoShardCollect(Material.COAL, "Auto Shard Collection", "Every 10 seconds, a stale shard block will be broken and its contents will go in your echest.", "strong_shard", 40, Shop.ShardTypes.Weak),
+    strongerShardGen2(Material.AMETHYST_CLUSTER, "Stronger Shard Generation 2", "LVL2: Pure Shards can grow Larger", "", 20, Shop.ShardTypes.Strong),
+    autoShardCollect(Material.COAL, "Auto Shard Collection", "Every 10 seconds, a stale shard block will be broken and its contents will go in your echest.", "strong_shard", 30, Shop.ShardTypes.Weak),
     sharpness(Material.ENCHANTED_BOOK, "Sharpness", "Gives melee weapons sharpness automatically", "", 40, Shop.ShardTypes.Weak),
     totemMoreHealth(Material.COAL, "More Totem Health", "Newly placed totems gain more health", "antiair_totem", 40, Shop.ShardTypes.Weak),
     protection(Material.ENCHANTED_BOOK, "Protection", "Gives Protection 1 to armour", "", 40, Shop.ShardTypes.Weak),
