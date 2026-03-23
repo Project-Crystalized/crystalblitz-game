@@ -162,7 +162,7 @@ public class Nexus {
         health = 0;
     }
 
-    private void destroyNexus(String t, Player p) {
+    public void destroyNexus(String t, Player p) {
         p.playSound(p, "crystalized:effect.nexus_crystal_destroyed", 50, 1);
         Location blockloc1 = new Location(Bukkit.getWorld("world"),
                 crystalBlitz.getInstance().mapdata.getNexus(t)[0],
@@ -195,7 +195,6 @@ public class Nexus {
     }
 
     public void resetNexuses() {
-        Bukkit.getLogger().log(Level.INFO, "[NEXUS] resetting nexus " + team);
         Location blockloc1 = new Location(Bukkit.getWorld("world"),
                 crystalBlitz.getInstance().mapdata.getNexus(team)[0],
                 crystalBlitz.getInstance().mapdata.getNexus(team)[1],

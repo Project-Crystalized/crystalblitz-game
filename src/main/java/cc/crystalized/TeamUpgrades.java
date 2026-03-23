@@ -113,6 +113,13 @@ public class TeamUpgrades {
 
         //do special shit for some upgrades
         switch (u) {
+            case nexusHeal -> {
+                TeamData td = Teams.getTeamData(buyer);
+                td.nexus.resetNexuses();
+                td.nexus.health = 5;
+                Bukkit.getServer().sendMessage(text(td.name + " nexus has been healed by ").append(buyer.displayName())); //TODO temporary message
+                //TODO play sound (maybe reverse nexus shatter?)
+            }
             case sharpness -> {
                 for (String s : team) {
                     Player p = Bukkit.getPlayer(s);

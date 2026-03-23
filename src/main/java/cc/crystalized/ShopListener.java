@@ -96,11 +96,22 @@ public class ShopListener implements Listener {
 
         if (pdc.has(new NamespacedKey("crystalblitz", "isupgrade"))) {
             upgrades u = upgrades.valueOf(pdc.get(new NamespacedKey("crystalblitz", "upgradename"), PersistentDataType.STRING));
-            TeamData td = Teams.getTeamData(Teams.getPlayerTeam((Player) p));
+            TeamData td = Teams.getTeamData((Player) p);
 
             if (td.teamUpgrades.hasUpgrade(u)) {
                 p.sendMessage(text("[!] You already have this team upgrade."));
                 return;
+            }
+
+            if (u.equals(upgrades.nexusHeal)) {
+                GameManager gm = crystalBlitz.getInstance().gamemanager;
+                if (gm.bossbar.currentstate.equals(BossBarStates.NexusDestroyed) || gm.bossbar.currentstate.equals(BossBarStates.WorldBorderClosing)) {
+                    p.sendRichMessage("<red>[!] You cannot buy this now.");
+                }
+                if (td.nexus.health != 0) {
+                    p.sendRichMessage("<red>[!] This can only be bought when your Nexus is shattered.");
+                    return;
+                }
             }
 
             if (p.getInventory().containsAtLeast(u.priceType.item, u.price)) {
