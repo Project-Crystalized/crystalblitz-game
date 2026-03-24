@@ -492,11 +492,6 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onExplosion(EntityExplodeEvent e) {
-        e.setCancelled(true);
-    }
-
-    @EventHandler
     public void onWaterFlow(FluidLevelChangeEvent e) {
         e.setCancelled(true);
     }
