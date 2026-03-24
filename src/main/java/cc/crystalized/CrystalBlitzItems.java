@@ -166,7 +166,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("defence_totem", Material.COAL, translatable("crystalized.totem.defence.name"),
                 List.of(translatable("crystalized.totem.defence.desc")),
-                30, Shop.ShardTypes.Strong, ItemType.other,
+                120, Shop.ShardTypes.Weak, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "defense_totem"), 1)
         );
         items.add(setup("healing_totem", Material.COAL, translatable("crystalized.totem.healing.name"),

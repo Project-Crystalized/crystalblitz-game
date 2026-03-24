@@ -152,11 +152,12 @@ public class Shop{
         view.setItem(4, CrystalBlitzItems.getShopItem("stone_sword", p));
         view.setItem(5, CrystalBlitzItems.getShopItem("iron_sword", p));
         view.setItem(6, CrystalBlitzItems.getShopItem("diamond_sword", p));
-        //TODO wiffle bat
+        //TODO wiffle bat slot 7
         view.setItem(10, CrystalBlitzItems.getShopItem("precise_crossbow", p));
         view.setItem(11, CrystalBlitzItems.getShopItem("crossbow", p));
         view.setItem(12, CrystalBlitzItems.getShopItem("bow", p));
         view.setItem(13, CrystalBlitzItems.getShopItem("arrow", p));
+        view.setItem(14, CrystalBlitzItems.getShopItem("wind_arrow", p));
 
         p.openInventory(view);
     }
@@ -184,8 +185,7 @@ public class Shop{
         view.setItem(1, CrystalBlitzItems.getShopItem("feather_orb", p));
         view.setItem(2, CrystalBlitzItems.getShopItem("boost_orb", p));
         view.setItem(3, CrystalBlitzItems.getShopItem("gapple", p));
-        view.setItem(4, CrystalBlitzItems.getShopItem("wind_arrow", p));
-        //TODO defence totem
+        view.setItem(10, CrystalBlitzItems.getShopItem("defence_totem", p));
         //TODO healing totem
 
         p.openInventory(view);
