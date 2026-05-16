@@ -9,6 +9,8 @@ import org.bukkit.World;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class MapData {
@@ -25,11 +27,7 @@ public class MapData {
     public double[] border_mid;
     public int border_size;
 
-    //In order of:
-    //blue, cyan, green, lime, magenta, red, yellow and white
-    public double[] nexuses;
-    public double[] shops;
-    public double[] spawns;
+    List<MapData_Teams> teamInfo = new ArrayList<>();
 
     public MapData() {
         try {
@@ -44,8 +42,8 @@ public class MapData {
                 Bukkit.getLogger().log(Level.SEVERE, "You've inserted a game config for \"" + this.game + "\", Please update the world file to be compatible with Crystal Blitz");
                 throw new Exception();
             }
-            if (ConfigVersion != 1) {
-                Bukkit.getLogger().log(Level.SEVERE, "Incorrect Config Version!, Excepted 1 but got " + ConfigVersion);
+            if (ConfigVersion != 2) {
+                Bukkit.getLogger().log(Level.SEVERE, "Incorrect Config Version!, Excepted 2 but got " + ConfigVersion);
                 throw new Exception();
             }
 
@@ -62,69 +60,21 @@ public class MapData {
             this.border_mid = new double[] {border_mid_.get(0).getAsDouble(), border_mid_.get(1).getAsDouble()};
             this.border_size = json.get("border_size").getAsInt();
 
-            JsonArray bluenexus = json.get("blue_nexus").getAsJsonArray();
-            JsonArray cyannexus = json.get("cyan_nexus").getAsJsonArray();
-            JsonArray greennexus = json.get("green_nexus").getAsJsonArray();
-            JsonArray limenexus = json.get("lime_nexus").getAsJsonArray();
-            JsonArray magentanexus = json.get("magenta_nexus").getAsJsonArray();
-            JsonArray rednexus = json.get("red_nexus").getAsJsonArray();
-            JsonArray yellownexus = json.get("yellow_nexus").getAsJsonArray();
-            JsonArray whitenexus = json.get("white_nexus").getAsJsonArray();
-            this.nexuses = new double[] {
-                    bluenexus.get(0).getAsDouble(), bluenexus.get(1).getAsDouble(), bluenexus.get(2).getAsDouble(),
-                    cyannexus.get(0).getAsDouble(), cyannexus.get(1).getAsDouble(), cyannexus.get(2).getAsDouble(),
-                    greennexus.get(0).getAsDouble(), greennexus.get(1).getAsDouble(), greennexus.get(2).getAsDouble(),
-                    limenexus.get(0).getAsDouble(), limenexus.get(1).getAsDouble(), limenexus.get(2).getAsDouble(),
-                    magentanexus.get(0).getAsDouble(), magentanexus.get(1).getAsDouble(), magentanexus.get(2).getAsDouble(),
-                    rednexus.get(0).getAsDouble(), rednexus.get(1).getAsDouble(), rednexus.get(2).getAsDouble(),
-                    yellownexus.get(0).getAsDouble(), yellownexus.get(1).getAsDouble(), yellownexus.get(2).getAsDouble(),
-                    whitenexus.get(0).getAsDouble(), whitenexus.get(1).getAsDouble(), whitenexus.get(2).getAsDouble()
-            };
-
-            JsonArray blueshop = json.get("blue_shop").getAsJsonArray();
-            JsonArray cyanshop = json.get("cyan_shop").getAsJsonArray();
-            JsonArray greenshop = json.get("green_shop").getAsJsonArray();
-            JsonArray limeshop = json.get("lime_shop").getAsJsonArray();
-            JsonArray magentashop = json.get("magenta_shop").getAsJsonArray();
-            JsonArray redshop = json.get("red_shop").getAsJsonArray();
-            JsonArray yellowshop = json.get("yellow_shop").getAsJsonArray();
-            JsonArray whiteshop = json.get("white_shop").getAsJsonArray();
-            this.shops = new double[] {
-                    blueshop.get(0).getAsDouble(), blueshop.get(1).getAsDouble(), blueshop.get(2).getAsDouble(),
-                    cyanshop.get(0).getAsDouble(), cyanshop.get(1).getAsDouble(), cyanshop.get(2).getAsDouble(),
-                    greenshop.get(0).getAsDouble(), greenshop.get(1).getAsDouble(), greenshop.get(2).getAsDouble(),
-                    limeshop.get(0).getAsDouble(), limeshop.get(1).getAsDouble(), limeshop.get(2).getAsDouble(),
-                    magentashop.get(0).getAsDouble(), magentashop.get(1).getAsDouble(), magentashop.get(2).getAsDouble(),
-                    redshop.get(0).getAsDouble(), redshop.get(1).getAsDouble(), redshop.get(2).getAsDouble(),
-                    yellowshop.get(0).getAsDouble(), yellowshop.get(1).getAsDouble(), yellowshop.get(2).getAsDouble(),
-                    whiteshop.get(0).getAsDouble(), whiteshop.get(1).getAsDouble(), whiteshop.get(2).getAsDouble()
-            };
-
-            JsonArray bluespawn = json.get("blue_spawn").getAsJsonArray();
-            JsonArray cyanspawn = json.get("cyan_spawn").getAsJsonArray();
-            JsonArray greenspawn = json.get("green_spawn").getAsJsonArray();
-            JsonArray limespawn = json.get("lime_spawn").getAsJsonArray();
-            JsonArray magentaspawn = json.get("magenta_spawn").getAsJsonArray();
-            JsonArray redspawn = json.get("red_spawn").getAsJsonArray();
-            JsonArray yellowspawn = json.get("yellow_spawn").getAsJsonArray();
-            JsonArray whitespawn = json.get("white_spawn").getAsJsonArray();
-            this.spawns = new double[] {
-                    bluespawn.get(0).getAsDouble(), bluespawn.get(1).getAsDouble(), bluespawn.get(2).getAsDouble(),
-                    cyanspawn.get(0).getAsDouble(), cyanspawn.get(1).getAsDouble(), cyanspawn.get(2).getAsDouble(),
-                    greenspawn.get(0).getAsDouble(), greenspawn.get(1).getAsDouble(), greenspawn.get(2).getAsDouble(),
-                    limespawn.get(0).getAsDouble(), limespawn.get(1).getAsDouble(), limespawn.get(2).getAsDouble(),
-                    magentaspawn.get(0).getAsDouble(), magentaspawn.get(1).getAsDouble(), magentaspawn.get(2).getAsDouble(),
-                    redspawn.get(0).getAsDouble(), redspawn.get(1).getAsDouble(), redspawn.get(2).getAsDouble(),
-                    yellowspawn.get(0).getAsDouble(), yellowspawn.get(1).getAsDouble(), yellowspawn.get(2).getAsDouble(),
-                    whitespawn.get(0).getAsDouble(), whitespawn.get(1).getAsDouble(), whitespawn.get(2).getAsDouble()
-            };
+            JsonObject teams = json.get("teams").getAsJsonObject();
+            teamInfo.add(new MapData_Teams("blue", teams.get("blue").getAsJsonObject()));
+            teamInfo.add(new MapData_Teams("cyan", teams.get("cyan").getAsJsonObject()));
+            teamInfo.add(new MapData_Teams("green", teams.get("green").getAsJsonObject()));
+            teamInfo.add(new MapData_Teams("lime", teams.get("lime").getAsJsonObject()));
+            teamInfo.add(new MapData_Teams("magenta", teams.get("magenta").getAsJsonObject()));
+            teamInfo.add(new MapData_Teams("red", teams.get("red").getAsJsonObject()));
+            teamInfo.add(new MapData_Teams("yellow", teams.get("yellow").getAsJsonObject()));
+            teamInfo.add(new MapData_Teams("white", teams.get("white").getAsJsonObject()));
 
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Could not load the maps configuration file!\n Error:");
             e.printStackTrace();
             Bukkit.getLogger().log(Level.SEVERE, "The plugin will be disabled!");
             Bukkit.getPluginManager().disablePlugin(crystalBlitz.getInstance());
-            throw new RuntimeException(new Exception());
         }
     }
 
@@ -132,78 +82,61 @@ public class MapData {
         return new Location(w, queue_spawn[0], queue_spawn[1], queue_spawn[2]);
     }
 
-    public double[] getNexus(String team) {
-        double[] J = nexuses;
-        switch (team) {
-            case "blue":
-                return new double[] {J[0], J[1], J[2]};
-            case "cyan":
-                return new double[] {J[3], J[4], J[5]};
-            case "green":
-                return new double[] {J[6], J[7], J[8]};
-            case "lime":
-                return new double[] {J[9], J[10], J[11]};
-            case "magenta":
-                return new double[] {J[12], J[13], J[14]};
-            case "red":
-                return new double[] {J[15], J[16], J[17]};
-            case "yellow":
-                return new double[] {J[18], J[19], J[20]};
-            case "white":
-                return new double[] {J[21], J[22], J[23]};
-            default:
-                Bukkit.getLogger().log(Level.SEVERE, "unknown team" + team);
-                throw new RuntimeException();
+    private MapData_Teams getTeamInfo(String team) {
+        for (MapData_Teams t : teamInfo) {
+            if (t.name.equals(team)) {
+                return t;
+            }
         }
+        return null;
+    }
+
+    public double[] getNexus(String team) {
+        MapData_Teams t = getTeamInfo(team);
+        Location loc = t.nexusBlock;
+        return new double[] {loc.getX(), loc.getY(), loc.getZ()};
     }
 
     public double[] getSpawn(String team) {
-        double[] J = spawns;
-        switch (team) {
-            case "blue":
-                return new double[] {J[0], J[1], J[2]};
-            case "cyan":
-                return new double[] {J[3], J[4], J[5]};
-            case "green":
-                return new double[] {J[6], J[7], J[8]};
-            case "lime":
-                return new double[] {J[9], J[10], J[11]};
-            case "magenta":
-                return new double[] {J[12], J[13], J[14]};
-            case "red":
-                return new double[] {J[15], J[16], J[17]};
-            case "yellow":
-                return new double[] {J[18], J[19], J[20]};
-            case "white":
-                return new double[] {J[21], J[22], J[23]};
-            default:
-                Bukkit.getLogger().log(Level.SEVERE, "unknown team" + team);
-                throw new RuntimeException();
-        }
+        MapData_Teams t = getTeamInfo(team);
+        Location loc = t.spawn;
+        return new double[] {loc.getX(), loc.getY(), loc.getZ()};
     }
 
     public double[] getShop(String team) {
-        double[] J = shops;
-        switch (team) {
-            case "blue":
-                return new double[] {J[0], J[1], J[2]};
-            case "cyan":
-                return new double[] {J[3], J[4], J[5]};
-            case "green":
-                return new double[] {J[6], J[7], J[8]};
-            case "lime":
-                return new double[] {J[9], J[10], J[11]};
-            case "magenta":
-                return new double[] {J[12], J[13], J[14]};
-            case "red":
-                return new double[] {J[15], J[16], J[17]};
-            case "yellow":
-                return new double[] {J[18], J[19], J[20]};
-            case "white":
-                return new double[] {J[21], J[22], J[23]};
-            default:
-                Bukkit.getLogger().log(Level.SEVERE, "unknown team" + team);
-                throw new RuntimeException();
-        }
+        MapData_Teams t = getTeamInfo(team);
+        Location loc = t.shopSpawn;
+        return new double[] {loc.getX(), loc.getY(), loc.getZ()};
+    }
+
+    public Location getStaleShardLoc(String team) {
+        MapData_Teams t = getTeamInfo(team);
+        Location loc = t.staleShard;
+        return loc;
+    }
+}
+
+class MapData_Teams{
+
+    String name;
+    Location nexusBlock; //bottom block
+    Location spawn;
+    Location shopSpawn;
+    Location staleShard; //center block
+
+    public MapData_Teams(String name, JsonObject json) {
+        this.name = name;
+
+        JsonArray nb = json.get("nexus").getAsJsonArray();
+        this.nexusBlock = new Location(Bukkit.getWorld("world"), nb.get(0).getAsDouble(), nb.get(1).getAsDouble(), nb.get(2).getAsDouble());
+
+        JsonArray s = json.get("spawn").getAsJsonArray();
+        this.spawn = new Location(Bukkit.getWorld("world"), s.get(0).getAsDouble(), s.get(1).getAsDouble(), s.get(2).getAsDouble());
+
+        JsonArray shop = json.get("shop").getAsJsonArray();
+        this.shopSpawn = new Location(Bukkit.getWorld("world"), shop.get(0).getAsDouble(), shop.get(1).getAsDouble(), shop.get(2).getAsDouble());
+
+        JsonArray stale = json.get("staleshard").getAsJsonArray();
+        this.staleShard = new Location(Bukkit.getWorld("world"), stale.get(0).getAsDouble(), stale.get(1).getAsDouble(), stale.get(2).getAsDouble());
     }
 }

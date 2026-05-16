@@ -14,6 +14,7 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -114,6 +115,16 @@ public final class crystalBlitz extends JavaPlugin {
                 }
                 return Command.SINGLE_SUCCESS;
             }));
+            command.then(Commands.literal("debug").requires(sender -> sender.getSender().hasPermission("minecraft.command.op"))
+                    .then(Commands.literal("shatter_my_nexus").executes(ctx -> {
+                        if (gamemanager != null && ctx.getSource().getSender() instanceof Player p) {
+                            TeamData td = Teams.getTeamData(p);
+                            td.nexus.health = 0;
+                            td.nexus.destroyNexus(td.name, p);
+                        }
+                        return 0;
+                    }))
+            );
 
             LiteralCommandNode<CommandSourceStack> buildCommand = command.build();
             commands.registrar().register(buildCommand);

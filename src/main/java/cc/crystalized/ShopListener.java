@@ -1,5 +1,7 @@
 package cc.crystalized;
 
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.CustomModelData;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
@@ -96,11 +98,22 @@ public class ShopListener implements Listener {
 
         if (pdc.has(new NamespacedKey("crystalblitz", "isupgrade"))) {
             upgrades u = upgrades.valueOf(pdc.get(new NamespacedKey("crystalblitz", "upgradename"), PersistentDataType.STRING));
-            TeamData td = Teams.getTeamData(Teams.getPlayerTeam((Player) p));
+            TeamData td = Teams.getTeamData((Player) p);
 
             if (td.teamUpgrades.hasUpgrade(u)) {
                 p.sendMessage(text("[!] You already have this team upgrade."));
                 return;
+            }
+
+            if (u.equals(upgrades.nexusHeal)) {
+                GameManager gm = crystalBlitz.getInstance().gamemanager;
+                if (gm.bossbar.currentstate.equals(BossBarStates.NexusDestroyed) || gm.bossbar.currentstate.equals(BossBarStates.WorldBorderClosing)) {
+                    p.sendRichMessage("<red>[!] You cannot buy this now.");
+                }
+                if (td.nexus.health != 0) {
+                    p.sendRichMessage("<red>[!] This can only be bought when your Nexus is shattered.");
+                    return;
+                }
             }
 
             if (p.getInventory().containsAtLeast(u.priceType.item, u.price)) {
@@ -177,6 +190,9 @@ public class ShopListener implements Listener {
                 ItemStack item = cbItem.item.clone();
                 if (cbItem.type.equals(CrystalBlitzItems.ItemType.Melee) && td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
                     item.addEnchantment(Enchantment.SHARPNESS, 1);
+                }
+                if (cbItem.internalName.contains("totem")) {
+                    item.setData(DataComponentTypes.CUSTOM_MODEL_DATA, CustomModelData.customModelData().addFloat(1).build());
                 }
                 removeItemType(p, cbItem.type);
                 p.getInventory().addItem(item);

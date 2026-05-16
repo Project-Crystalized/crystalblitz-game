@@ -6,6 +6,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -165,7 +166,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("defence_totem", Material.COAL, translatable("crystalized.totem.defence.name"),
                 List.of(translatable("crystalized.totem.defence.desc")),
-                30, Shop.ShardTypes.Strong, ItemType.other,
+                120, Shop.ShardTypes.Weak, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "defense_totem"), 1)
         );
         items.add(setup("healing_totem", Material.COAL, translatable("crystalized.totem.healing.name"),
@@ -185,8 +186,8 @@ public class CrystalBlitzItems {
         ));
         items.add(setupBlock("copper", Material.WAXED_CHISELED_COPPER, 10, Shop.ShardTypes.Weak, Material.WAXED_CHISELED_COPPER, 8));
         items.add(setupBlock("wool", Material.WHITE_WOOL, 8, Shop.ShardTypes.Weak,
-                Material.BLUE_CONCRETE, Material.CYAN_CONCRETE, Material.GREEN_CONCRETE, Material.LIME_CONCRETE,
-                Material.MAGENTA_CONCRETE, Material.RED_CONCRETE, Material.YELLOW_CONCRETE, Material.WHITE_CONCRETE, 8
+                Material.BLUE_WOOL, Material.CYAN_WOOL, Material.GREEN_WOOL, Material.LIME_WOOL,
+                Material.MAGENTA_WOOL, Material.RED_WOOL, Material.YELLOW_WOOL, Material.WHITE_WOOL, 8
         ));
         items.add(setupBlock("glass", Material.WHITE_STAINED_GLASS, 40, Shop.ShardTypes.Strong,
                 Material.BLUE_STAINED_GLASS, Material.CYAN_STAINED_GLASS, Material.GREEN_STAINED_GLASS, Material.LIME_STAINED_GLASS,
@@ -199,8 +200,8 @@ public class CrystalBlitzItems {
         items.add(setupArmor("diamond_armor", Material.DIAMOND_CHESTPLATE, 12, Shop.ShardTypes.Nexus, "iron_armor", List.of("diamond_armor")));
 
         items.add(setup("arrow", Material.ARROW, null, null, 20, Shop.ShardTypes.Strong, ItemType.other, "", null, 4));
-        items.add(setup("wind_arrow", Material.ARROW, translatable("crystalized.arrow.wind.name"),
-                List.of(translatable("crystalized.arrow.wind.desc")),
+        items.add(setup("wind_arrow", Material.ARROW, translatable("crystalized.item.windarrow.name"),
+                List.of(translatable("crystalized.item.windarrow.desc")),
                 16, Shop.ShardTypes.Strong, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "wind_arrow"), 1)
         );
@@ -492,16 +493,22 @@ class CBItem_Armor extends CBItem{
     }
 
     public void add(Player whoFor) {
+        TeamData td = Teams.getTeamData(whoFor);
+
         //chestplate
         if (item.getType().equals(Material.LEATHER_CHESTPLATE)) {
             ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
             meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
             meta.setUnbreakable(true);
+            if (td.teamUpgrades.hasUpgrade(upgrades.protection)) {
+                meta.addEnchant(Enchantment.PROTECTION, 1, true);
+            }
             item.setItemMeta(meta);
             whoFor.getInventory().setChestplate(item);
         } else {
             whoFor.getInventory().setChestplate(item);
+            whoFor.getInventory().getChestplate().addEnchantment(Enchantment.PROTECTION, 1);
         }
 
         //leggings
@@ -510,10 +517,14 @@ class CBItem_Armor extends CBItem{
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
             meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
             meta.setUnbreakable(true);
+            if (td.teamUpgrades.hasUpgrade(upgrades.protection)) {
+                meta.addEnchant(Enchantment.PROTECTION, 1, true);
+            }
             item.setItemMeta(meta);
             whoFor.getInventory().setLeggings(item);
         } else {
             whoFor.getInventory().setLeggings(leggings);
+            whoFor.getInventory().getLeggings().addEnchantment(Enchantment.PROTECTION, 1);
         }
 
         //boots (will always be leather boots, so no material check here)
@@ -521,6 +532,9 @@ class CBItem_Armor extends CBItem{
         LeatherArmorMeta leatherBoots_meta = (LeatherArmorMeta) leatherBoots.getItemMeta();
         leatherBoots_meta.setColor(TeamData.get_team_data(Teams.getPlayerTeam(whoFor)).color);
         leatherBoots_meta.setUnbreakable(true);
+        if (td.teamUpgrades.hasUpgrade(upgrades.protection)) {
+            leatherBoots_meta.addEnchant(Enchantment.PROTECTION, 1, true);
+        }
         leatherBoots.setItemMeta(leatherBoots_meta);
         whoFor.getInventory().setBoots(leatherBoots);
 

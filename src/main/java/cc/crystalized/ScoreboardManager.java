@@ -123,57 +123,31 @@ public class ScoreboardManager {
         player.setScoreboard(scoreboard);
 
         new BukkitRunnable() {
-            @Override
             public void run() {
                 if (crystalBlitz.getInstance().gamemanager == null) {
                     cancel();
                 } else {
                     BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
-                    if (floodgateapi.isFloodgatePlayer(player.getUniqueId())) {
-                        //Bedrock
-
-                        switch (bossbar.currentstate) {
-                            case BossBarStates.starting -> {
-                                obj.getScore("11").customName(translatable("crystalized.game.crystalblitz.genspeed").append(text("0")));
-                            }
-                            case BossBarStates.GenUpgradeI -> {
-                                obj.getScore("11").customName(translatable("crystalized.game.crystalblitz.genspeed").append(text("I")));
-                            }
-                            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing -> {
-                                obj.getScore("11").customName(translatable("crystalized.game.crystalblitz.genspeed").append(text("II")));
-                            }
+                    //Java
+                    switch (bossbar.currentstate) {
+                        case BossBarStates.starting -> {
+                            genspeed.suffix(text("0"));
                         }
-                        obj.getScore("9").customName(translatable("crystalized.game.generic.team.blue").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("blue").getColoredHealth()));
-                        obj.getScore("8").customName(translatable("crystalized.game.generic.team.cyan").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("cyan").getColoredHealth()));
-                        obj.getScore("7").customName(translatable("crystalized.game.generic.team.green").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("green").getColoredHealth()));
-                        obj.getScore("6").customName(translatable("crystalized.game.generic.team.lime").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("lime").getColoredHealth()));
-                        obj.getScore("5").customName(translatable("crystalized.game.generic.team.magenta").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("magenta").getColoredHealth()));
-                        obj.getScore("4").customName(translatable("crystalized.game.generic.team.red").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("red").getColoredHealth()));
-                        obj.getScore("3").customName(translatable("crystalized.game.generic.team.white").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("white").getColoredHealth()));
-                        obj.getScore("2").customName(translatable("crystalized.game.generic.team.yellow").append(text(": ")).append(crystalBlitz.getInstance().gamemanager.getNexus("yellow").getColoredHealth()));
-
-                    } else {
-                        //Java
-                        switch (bossbar.currentstate) {
-                            case BossBarStates.starting -> {
-                                genspeed.suffix(text("0"));
-                            }
-                            case BossBarStates.GenUpgradeI -> {
-                                genspeed.suffix(text("I"));
-                            }
-                            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing -> {
-                                genspeed.suffix(text("II"));
-                            }
+                        case BossBarStates.GenUpgradeI -> {
+                            genspeed.suffix(text("I"));
                         }
-                        blue.suffix(crystalBlitz.getInstance().gamemanager.getNexus("blue").getColoredHealth());
-                        cyan.suffix(crystalBlitz.getInstance().gamemanager.getNexus("cyan").getColoredHealth());
-                        green.suffix(crystalBlitz.getInstance().gamemanager.getNexus("green").getColoredHealth());
-                        lime.suffix(crystalBlitz.getInstance().gamemanager.getNexus("lime").getColoredHealth());
-                        magenta.suffix(crystalBlitz.getInstance().gamemanager.getNexus("magenta").getColoredHealth());
-                        red.suffix(crystalBlitz.getInstance().gamemanager.getNexus("red").getColoredHealth());
-                        white.suffix(crystalBlitz.getInstance().gamemanager.getNexus("white").getColoredHealth());
-                        yellow.suffix(crystalBlitz.getInstance().gamemanager.getNexus("yellow").getColoredHealth());
+                        case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing -> {
+                            genspeed.suffix(text("II"));
+                        }
                     }
+                    blue.suffix(Teams.getTeamData("blue").nexus.getColoredHealth());
+                    cyan.suffix(Teams.getTeamData("cyan").nexus.getColoredHealth());
+                    green.suffix(Teams.getTeamData("green").nexus.getColoredHealth());
+                    lime.suffix(Teams.getTeamData("lime").nexus.getColoredHealth());
+                    magenta.suffix(Teams.getTeamData("magenta").nexus.getColoredHealth());
+                    red.suffix(Teams.getTeamData("red").nexus.getColoredHealth());
+                    white.suffix(Teams.getTeamData("white").nexus.getColoredHealth());
+                    yellow.suffix(Teams.getTeamData("yellow").nexus.getColoredHealth());
                 }
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 20, 1);

@@ -15,18 +15,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 
 public class Shop{
 
     public enum ShardTypes {
         Weak(" Stale Shards", new NamespacedKey("crystalized", "weak_shard"),
-                setup("Stale Shard", "weak_shard", "weak_shard")
+                setup("crystalized.item.weakshard.name", "weak_shard", "weak_shard")
         ),
         Strong(" Pure Shards", new NamespacedKey("crystalized", "strong_shard"),
-                setup("Pure Shard", "strong_shard", "strong_shard")
+                setup("crystalized.item.stoneshard.name", "strong_shard", "strong_shard")
         ),
         Nexus(" Nexus Shards", new NamespacedKey("crystalized", "nexus_shard"),
-                setup("Nexus Shard", "nexus_shard", "nexus_shard")
+                setup("crystalized.item.nexusshard.name", "nexus_shard", "nexus_shard")
         )
         ;
 
@@ -42,7 +43,7 @@ public class Shop{
         private static ItemStack setup(String name, String itemModel, String tooltipstyle) {
             ItemStack item = new ItemStack(Material.COAL);
             ItemMeta meta = item.getItemMeta();
-            meta.displayName(text(name).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+            meta.displayName(translatable(name).color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
             meta.setItemModel(new NamespacedKey("crystalized", itemModel));
             meta.setTooltipStyle(new NamespacedKey("crystalized", tooltipstyle));
             item.setItemMeta(meta);
@@ -94,26 +95,17 @@ public class Shop{
         Back.setItemMeta(Back_im);
     }
 
-    /*
-    Categories:
-    Offense, Defense, Utility, All Items
-
-    Offense:
-    Swords, Bows, Pickaxes, Armor
-
-    Defense:
-    All Totems except Cloud and AntiAir, Blocks
-
-    Utility:
-    Cloud and Antiair Totems, Orbs, Gapples, Potions,
-
-     */
-
     public Shop(Player p) {
         owner = p;
 
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00B").color(NamedTextColor.WHITE));
         view.clear();
+
+        view.setItem(3, CategoryUpgrades);
+        view.setItem(4, CategoryUpgrades);
+        view.setItem(5, CategoryUpgrades);
+        view.setItem(6, CategoryUpgrades);
+        view.setItem(7, CategoryUpgrades);
 
         view.setItem(9, CategoryOffence);
         view.setItem(10, CategoryOffence);
@@ -145,12 +137,6 @@ public class Shop{
         view.setItem(34, CategoryDefence);
         view.setItem(35, CategoryDefence);
 
-        view.setItem(3, CategoryUpgrades);
-        view.setItem(4, CategoryUpgrades);
-        view.setItem(5, CategoryUpgrades);
-        view.setItem(6, CategoryUpgrades);
-        view.setItem(7, CategoryUpgrades);
-
         view.setItem(40, EnderChest);
 
         p.openInventory(view);
@@ -166,11 +152,12 @@ public class Shop{
         view.setItem(4, CrystalBlitzItems.getShopItem("stone_sword", p));
         view.setItem(5, CrystalBlitzItems.getShopItem("iron_sword", p));
         view.setItem(6, CrystalBlitzItems.getShopItem("diamond_sword", p));
-        //TODO wiffle bat
+        //TODO wiffle bat slot 7
         view.setItem(10, CrystalBlitzItems.getShopItem("precise_crossbow", p));
         view.setItem(11, CrystalBlitzItems.getShopItem("crossbow", p));
         view.setItem(12, CrystalBlitzItems.getShopItem("bow", p));
         view.setItem(13, CrystalBlitzItems.getShopItem("arrow", p));
+        view.setItem(14, CrystalBlitzItems.getShopItem("wind_arrow", p));
 
         p.openInventory(view);
     }
@@ -198,8 +185,7 @@ public class Shop{
         view.setItem(1, CrystalBlitzItems.getShopItem("feather_orb", p));
         view.setItem(2, CrystalBlitzItems.getShopItem("boost_orb", p));
         view.setItem(3, CrystalBlitzItems.getShopItem("gapple", p));
-        view.setItem(4, CrystalBlitzItems.getShopItem("wind_arrow", p));
-        //TODO defence totem
+        view.setItem(10, CrystalBlitzItems.getShopItem("defence_totem", p));
         //TODO healing totem
 
         p.openInventory(view);
@@ -218,6 +204,8 @@ public class Shop{
         } else {
             view.setItem(3, TeamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen1, p));
         }
+        view.setItem(12, TeamUpgrades.getUpgradeShopItem(upgrades.doubleStaleShards, p));
+        view.setItem(21, TeamUpgrades.getUpgradeShopItem(upgrades.autoShardCollect, p));
         view.setItem(4, TeamUpgrades.getUpgradeShopItem(upgrades.sharpness, p));
         view.setItem(5, TeamUpgrades.getUpgradeShopItem(upgrades.totemMoreHealth, p));
         view.setItem(6, TeamUpgrades.getUpgradeShopItem(upgrades.protection, p));

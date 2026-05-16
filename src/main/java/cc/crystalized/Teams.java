@@ -4,6 +4,7 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
@@ -342,6 +343,10 @@ public class Teams {
         }
         return null;
     }
+
+    public static TeamData getTeamData(Player p) {
+        return getTeamData(getPlayerTeam(p));
+    }
 }
 
 //I hate this class still.
@@ -429,6 +434,7 @@ class TeamData{
     public final Color color;
     public final String symbol;
 
+    public Nexus nexus;
     public TeamUpgrades teamUpgrades;
 
     public static List<TeamData> create_teams() {
@@ -457,6 +463,10 @@ class TeamData{
         this.name = name;
         this.color = color;
         this.symbol = symbol;
+
+        if (name != "spectator") {
+            this.nexus = new Nexus(this);
+        }
         this.teamUpgrades = new TeamUpgrades(name);
     }
 }
