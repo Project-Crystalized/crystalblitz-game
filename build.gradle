@@ -22,13 +22,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
     compileOnly('org.geysermc.floodgate:api:2.2.3-SNAPSHOT')
     //implementation('org.xerial:sqlite-jdbc:3.50.3.0');
     implementation('gg.crystalized.lobby:Lobby_plugin:1.0-SNAPSHOT')
 }
 
-def targetJavaVersion = 21
+def targetJavaVersion = 25
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion

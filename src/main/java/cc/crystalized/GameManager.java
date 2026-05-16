@@ -1,5 +1,6 @@
 package cc.crystalized;
 
+import gg.crystalized.lobby.LevelManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -128,6 +129,10 @@ public class GameManager {
 
     public static void ForceEndGame() {
         for (Player p : Bukkit.getOnlinePlayers()) {
+            try {
+                LevelManager.giveExperience(p, 5);
+                LevelManager.giveMoney(p, 20);
+            } catch (NoClassDefFoundError e) {}
             p.kick();
         }
 
