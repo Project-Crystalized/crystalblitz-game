@@ -323,12 +323,14 @@ class CrystalBlitzDatabase{
 
 
         String create_cb_games = "CREATE TABLE IF NOT EXISTS CrystalBlitzGames ("
+                + "game_id INTEGER PRIMARY KEY,"
                 + "map STRING,"
                 + "winner_team STRING,"
                 + "gametype STRING,"
                 + "timestamp INTEGER"
                 + ");";
         String create_cb_players = "CREATE TABLE IF NOT EXISTS CbGamesPlayers ("
+                + "game INTEGER REFERENCES CrystalBlitzGames(game_id),"
                 + "player_uuid BLOB,"
                 + "team STRING,"
                 + "kills INTEGER,"
@@ -336,7 +338,7 @@ class CrystalBlitzDatabase{
                 + "nexus_kills INTEGER," //nexuses broken
                 + "games_won INTEGER"
                 + ");";
-
+        addGameIdColumn();
         try (Connection conn = DriverManager.getConnection(URL)) {
             Statement stmt = conn.createStatement();
             stmt.execute(create_cb_games);
@@ -349,8 +351,38 @@ class CrystalBlitzDatabase{
         }
     }
 
+    public static void addGameIdColumn(){
+        String create_id_column = "ALTER TABLE CrystalBlitzGames ADD COLUMN game_id INTEGER;";
+        String check_id_column = "SELECT game_id FROM CrystalBlitzGames LIMIT 1;";
+
+        String create_game_column = "ALTER TABLE CbGamesPlayers ADD COLUMN game INTEGER REFERENCES KnockoffGames(game_id);";
+        String check_game_column = "SELECT game FROM CbGamesPlayers LIMIT 1;";
+
+        try (Connection conn = DriverManager.getConnection(URL)) {
+            conn.createStatement().execute(check_id_column);
+        } catch (SQLException e) {
+            // if we catch a sql error, it mean the column doesnt exist, so we add it
+            try (Connection conn = DriverManager.getConnection(URL)) {
+                conn.createStatement().execute(create_id_column);
+            } catch (SQLException ex) {
+                Bukkit.getLogger().severe(ex.getMessage());
+                Bukkit.getLogger().severe("uh weird error, idk bro ;-; (id)");
+            }
+        }
+
+        try (Connection conn = DriverManager.getConnection(URL)) {
+            conn.createStatement().execute(check_game_column);
+        } catch (SQLException e) {
+            try (Connection conn = DriverManager.getConnection(URL)) {
+                conn.createStatement().execute(create_game_column);
+            } catch (SQLException ex) {
+                Bukkit.getLogger().severe("uh weird error, idk bro ;-; (game)");
+            }
+        }
+    }
+
     public static void save_game(String WinningTeam) {
-        String save_game = "INSERT INTO CrystalBlitzGames(map, winner_team, gametype, timestamp) VALUES(?, ?, ?, unixepoch())";
+        String save_game = "INSERT INTO CrystalBlitzGames(game_id, map, winner_team, gametype, timestamp) VALUES(?, ?, ?, ?, unixepoch())";
         GameManager gm = crystalBlitz.getInstance().gamemanager;
 
         try (Connection conn = DriverManager.getConnection(URL)) {
@@ -360,21 +392,22 @@ class CrystalBlitzDatabase{
             game_stmt.setString(3, gm.GameType.toString());
             game_stmt.executeUpdate();
 
-            String save_player = "INSERT INTO CbGamesPlayers(player_uuid, team, kills, deaths, nexus_kills, games_won)"
+            String save_player = "INSERT INTO CbGamesPlayers(game, player_uuid, team, kills, deaths, nexus_kills, games_won)"
                     + " VALUES(?, ?, ?, ?, ?, ?)";
             PreparedStatement player_stmt = conn.prepareStatement(save_player);
             for (Player p : Bukkit.getOnlinePlayers()) {
                 PlayerData pd = gm.getPlayerData(p);
-
-                player_stmt.setBytes(1, uuid_to_bytes(p));
-                player_stmt.setString(2, Teams.getPlayerTeam(p));
-                player_stmt.setInt(3, pd.kills);
-                player_stmt.setInt(4, pd.deaths);
-                player_stmt.setInt(5, pd.nexus_kills);
+                int game_id = conn.prepareStatement("SELECT last_insert_rowid();").executeQuery().getInt("last_insert_rowid()");
+                player_stmt.setInt(1, game_id);
+                player_stmt.setBytes(2, uuid_to_bytes(p));
+                player_stmt.setString(3, Teams.getPlayerTeam(p));
+                player_stmt.setInt(4, pd.kills);
+                player_stmt.setInt(5, pd.deaths);
+                player_stmt.setInt(6, pd.nexus_kills);
                 if (WinningTeam.equals(Teams.getPlayerTeam(p))) {
-                    player_stmt.setInt(6, 1);
+                    player_stmt.setInt(7, 1);
                 } else {
-                    player_stmt.setInt(6, 0);
+                    player_stmt.setInt(7, 0);
                 }
                 player_stmt.executeUpdate();
             }
