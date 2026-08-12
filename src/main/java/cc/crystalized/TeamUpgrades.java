@@ -91,12 +91,14 @@ public class TeamUpgrades {
             loc.getBlock().setType(Material.AIR);
         } else {
             Block b = loc.getBlock();
-            b.setType(Material.DEAD_BRAIN_CORAL_WALL_FAN);
+            //Fixed an exception in console by making sure physics is not aplied otherwise it was the liquid type - MT
+            b.setType(Material.DEAD_BRAIN_CORAL_WALL_FAN, false);
             CoralWallFan data = (CoralWallFan) b.getBlockData();
             data.setWaterlogged(false);
             data.setFacing(facing);
             b.setBlockData(data);
             b.getState().update(true, false);
+            //System.out.println(b.getLocation());
         }
     }
 
