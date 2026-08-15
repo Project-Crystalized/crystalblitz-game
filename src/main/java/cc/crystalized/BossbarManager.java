@@ -52,6 +52,8 @@ public class BossbarManager {
                     switch (currentstate) {
                         case starting -> {
                             currentstate = BossBarStates.GenUpgradeI;
+                            //This revies all the broken shards on gen 1 upgrade
+                            crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                             for (Player p : Bukkit.getOnlinePlayers()) {
                                 p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
                             }
@@ -59,6 +61,8 @@ public class BossbarManager {
                         }
                         case GenUpgradeI -> {
                             currentstate = BossBarStates.GenUpgradeII;
+                            //This revies all the broken shards on gen 2 upgrade
+                            crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                             for (Player p : Bukkit.getOnlinePlayers()) {
                                 p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
                             }

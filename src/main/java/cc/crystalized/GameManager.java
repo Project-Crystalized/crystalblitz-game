@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
@@ -31,6 +32,8 @@ public class GameManager {
     public Teams teams;
     public BossbarManager bossbar = new BossbarManager();
     public WorldBorderManager worldborder = new WorldBorderManager();
+    //The list of pure shard generators, added for health and disabeling them - Mish
+    public final List<PureShardGenerator> pureShardGenerators = new ArrayList<>();
     public static List<PlayerData> playerDatas = new ArrayList<>();
     public static GameTypes GameType;
 
@@ -55,6 +58,8 @@ public class GameManager {
         TeamStatus.Init();
         playerDatas.clear();
         setupEntities();
+        //The pure shard generators set up
+        setupPureShardGenerators();
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.getEnderChest().setMaxStackSize(54);
@@ -77,6 +82,8 @@ public class GameManager {
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[2]
             );
+            //So if falling not die immiditely when teleported
+            p.setFallDistance(0);
             p.teleport(ploc);
             playerDatas.add(new PlayerData(p));
             new CustomPlayerNametags(p);
@@ -169,6 +176,8 @@ public class GameManager {
                     for (TeamData td : Teams.team_datas) {
                         td.nexus.resetNexuses();
                     }
+                    //ensures that all the pure shards generators will be propely fixed/revived at game shut down
+                    crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                     crystalBlitz.getInstance().gamemanager = null;
                     cancel();
                 }
@@ -318,6 +327,74 @@ public class GameManager {
 
         return null;
     }
+
+    //Methods for Pure shard generators
+
+    //The set up method for pure shard generators
+    private void setupPureShardGenerators() {
+        //Gets the world assuming it is titled world
+        World world = Bukkit.getWorld("world");
+        //If null nothing happens
+        if (world == null) {
+            return;
+        }
+        //Scans loaded chunks once when the game starts. Searching for the generators blocks and setting them
+        for (Chunk chunk : world.getLoadedChunks()) {
+
+            //Multiplied by 16 as chunck.getX/Z is a chunk cordinate and needs to converted
+            int startX = chunk.getX() * 16;
+            int startZ = chunk.getZ() * 16;
+            //Goes through x an z of the chunck and the world height
+            for (int x = startX; x < startX + 16; x++) {
+                for (int z = startZ; z < startZ + 16; z++) {
+                    for (int y = world.getMinHeight(); y < world.getMaxHeight(); y++) {
+                        //gets the block at the location
+                        Block block = world.getBlockAt(x, y, z);
+                        //Skips non pure shard generator block
+                        if (!PureShardGenerator.isPureGeneratorSourceBlock(block)) {
+                            continue;
+                        }
+                        //Ensure that the generator is not created for the upper block, only lower blocks
+                        if (PureShardGenerator.isPureGeneratorSourceBlock(block.getRelative(BlockFace.DOWN))) {
+                            continue;
+                        }
+                        //Creates the new pure shard generator based on the bottom block of the generator
+                        pureShardGenerators.add(new PureShardGenerator(block));
+                    }
+                }
+            }
+        }
+    }
+    //This is to get the pure shard generator based on location
+    public PureShardGenerator getPureShardGenerator(Location loc) {
+        //Goes through the generators and if it is a source block location returns the generator
+        //If not found returns null
+        for (PureShardGenerator generator : pureShardGenerators) {
+            if (generator.isSourceBlock(loc)) {
+                return generator;
+            }
+        }
+
+        return null;
+    }
+    //This gets the generator from the spikes locations
+    public PureShardGenerator getPureShardGeneratorFromSpike(Location loc) {
+        //Goes through the generators and checks it is owns the spike bases on location, returns the generator if found
+        for (PureShardGenerator generator : pureShardGenerators) {
+            if (generator.ownsSpike(loc)) {
+                return generator;
+            }
+        }
+
+        return null;
+    }
+    //This methods revies all the generators for gen upgrade/game end/shut down
+    public void revivePureShardGenerators() {
+        //goes through all pure shards generators and revies each one
+        for (PureShardGenerator generator : pureShardGenerators) {
+            generator.revive();
+        }
+    }
 }
 
 class TabMenu {
@@ -367,4 +444,5 @@ class TabMenu {
 
         p.sendPlayerListFooter(StatsPlayerList);
     }
+
 }

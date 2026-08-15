@@ -32,6 +32,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -124,6 +125,23 @@ public class PlayerListener implements Listener {
         if (inv.contains(originitem)) {
             inv.removeItem(originitem);
             inv.addItem(replacementitem);
+        }
+    }
+    //Added this to prevent infinity fall before game starts - Mish
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e) {
+        //Ensures this happens only when game manager is null, so not during the game
+        if (crystalBlitz.getInstance().gamemanager != null) {
+            return;
+        }
+        //Gets the player
+        Player p = e.getPlayer();
+        //If player's Y location is beyhond maps death limit
+        //Teleports the player back to the original spawn location
+        if (p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit) {
+            p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(Bukkit.getWorld("world")));
+            //makes sure fall distanse is 0
+            p.setFallDistance(0);
         }
     }
 
@@ -399,14 +417,40 @@ public class PlayerListener implements Listener {
                                 p.getInventory().addItem(weak);
                                 break;
                             case BlockFace.NORTH:
+                                //Gets the pure shard generator based on the blocks location
+                                PureShardGenerator pureShardGenerator = crystalBlitz.getInstance().gamemanager.getPureShardGenerator(b.getLocation());
+                                //If null or non acctive nothing happens
+                                if(pureShardGenerator == null || !pureShardGenerator.isActive()){
+                                    return;
+                                }
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
+                                //will take diffrent damage depending on a pick
+                                int damage = 0;
                                 switch (holding.getType()) {
-                                    case Material.DIAMOND_PICKAXE -> {strong.setAmount(4);}
-                                    case Material.IRON_PICKAXE -> {strong.setAmount(3);}
-                                    case Material.STONE_PICKAXE -> {strong.setAmount(2);}
-                                    default -> {strong.setAmount(1);}
+                                    case Material.DIAMOND_PICKAXE -> {
+                                        strong.setAmount(4);
+                                        damage = 4;
+                                    }
+                                    case Material.IRON_PICKAXE -> {
+                                        strong.setAmount(3);
+                                        damage = 3;
+                                    }
+                                    case Material.STONE_PICKAXE -> {
+                                        strong.setAmount(2);
+                                        damage = 2;
+                                    }
+                                    default -> {
+                                        strong.setAmount(1);
+                                        damage = 1;
+                                    }
+                                }
+                                //If didn't cause any damage breaks out before giving pure shards
+                                if (damage == 0) {
+                                    break;
                                 }
                                 p.getInventory().addItem(strong);
+                                //Deals the damage to the generator
+                                pureShardGenerator.damage(damage);
                                 break;
                             default:
                                 p.sendMessage(text("Broken black terracotta but this isn't weak or strong shards, please report this."));
@@ -519,8 +563,24 @@ class CrystalShardBlock {
             int timer2 = finalTimer;
 
             public void run () {
+                //The original if: (timer2 == 0 || crystalBlitz.getInstance().gamemanager == null)
+                //Or it is equal to null then it will run, seemed to be incorrect so I fixed it.
+                //Now when null it cancels the task and returns
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    cancel();
+                    return;
+                }
+                //Gets the pure shard generator from the spike/crystal
+                PureShardGenerator generator = crystalBlitz.getInstance().gamemanager.getPureShardGeneratorFromSpike(loc);
 
-                if (timer2 == 0 || crystalBlitz.getInstance().gamemanager == null) {
+                //Makes sure that when the crystal belogns to a broken/non-active pure shard generator it will not regenerate
+                //Must not be null and be not active, so that the weak shard generator still works
+                //so no need to fix this to make the upgrades at base generators work
+                if (generator != null && !generator.isActive()) {
+                    cancel();
+                    return;
+                }
+                if (timer2 == 0) {
                     //decide material
                     //this is for strongerShardGen team upgrade to work properly
                     Material finalInput = Material.AIR;
