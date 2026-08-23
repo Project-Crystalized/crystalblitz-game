@@ -89,6 +89,7 @@ public class BossbarManager {
                             timer = 1;
                         }
                         case WorldBorderClosing -> {
+                            crystalBlitz.getInstance().gamemanager.worldborder.setTrueSizeBorder();
                             crystalBlitz.getInstance().gamemanager.worldborder.ShrinkBorder();
                             cancel();
                         }
