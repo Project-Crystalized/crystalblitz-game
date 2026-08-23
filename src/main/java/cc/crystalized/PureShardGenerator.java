@@ -16,7 +16,8 @@ import java.util.List;
 //This class is for Pure Shard (Strong Shard) Generators, so that they have health, etc
 public class PureShardGenerator {
     //Change max health of the crystals here - mish
-    public static final int MAX_HEALTH = 10;
+    //Changed to 30 as Mite said - Mish
+    public static final int MAX_HEALTH = 30;
     //This is the material it will become when destroyed
     //change the material when destoryed here - mish
     private static final Material DESTROYED_MATERIAL = Material.WHITE_CONCRETE;
