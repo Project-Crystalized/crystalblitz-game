@@ -18,6 +18,8 @@ public class BossbarManager {
     BossBarStates currentstate =  BossBarStates.starting; //Reset state
     int timerdefaultvalue = 20 * 15; //300 =5 Minutes, 30 is testing
     int timer = timerdefaultvalue;
+    //aded a specific check for if nexuses can be revived
+    private boolean canNexusesBeRevived = true;
 
     public BossbarManager() {
         texture = BossBar.bossBar(text("\uE402"), 0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
@@ -74,6 +76,8 @@ public class BossbarManager {
                                 //TODO add a sound or smth here
                                 p.sendMessage(translatable("crystalized.game.crystalblitz.chat.worldborder").color(NamedTextColor.RED));
                             }
+                            //ensuring that it is false right before they break, so no perfect time revival.
+                            canNexusesBeRevived = false;
                             crystalBlitz.getInstance().gamemanager.destroyAllNexuses();
                             timer = 60;
                         }
@@ -114,6 +118,10 @@ public class BossbarManager {
                 bar.name(text("World Border Closing!"));
             }
         }
+    }
+    //Just a getter method to use it in the shop.
+    public boolean getCanNexusesBeRevived(){
+        return canNexusesBeRevived;
     }
 }
 
