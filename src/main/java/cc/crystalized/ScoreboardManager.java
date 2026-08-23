@@ -129,6 +129,7 @@ public class ScoreboardManager {
                 } else {
                     BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
                     //Java
+                    //Changed the scor boredors to update to 4 generators as well
                     switch (bossbar.currentstate) {
                         case BossBarStates.starting -> {
                             genspeed.suffix(text("0"));
@@ -136,8 +137,14 @@ public class ScoreboardManager {
                         case BossBarStates.GenUpgradeI -> {
                             genspeed.suffix(text("I"));
                         }
-                        case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing -> {
+                        case BossBarStates.GenUpgradeII -> {
                             genspeed.suffix(text("II"));
+                        }
+                        case BossBarStates.GenUpgradeIII -> {
+                            genspeed.suffix(text("III"));
+                        }
+                        case BossBarStates.GenUpgradeIV, BossBarStates.Overtime -> {
+                            genspeed.suffix(text("IV"));
                         }
                     }
                     blue.suffix(Teams.getTeamData("blue").nexus.getColoredHealth());

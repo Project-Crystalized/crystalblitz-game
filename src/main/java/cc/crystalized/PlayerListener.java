@@ -662,13 +662,14 @@ public class PlayerListener implements Listener {
 
 class CrystalShardBlock {
     //Added the extra time parameter whicch will be 5 for Pure shards, and zero for weak/stale shards
+    //TODO: Seperate pure shards from this fully, and change the generator speeds
     public CrystalShardBlock(Player p, Material input, Location loc, BlockData data, int extraTime) {
         BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
         int timer = 0;
         switch (bossbar.currentstate) {
             case BossBarStates.starting -> {timer = crystalBlitz.getInstance().getRandomNumber(3, 9);}
             case BossBarStates.GenUpgradeI -> {timer = crystalBlitz.getInstance().getRandomNumber(2, 7);}
-            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing, BossBarStates.NexusDestroyed -> {
+            case BossBarStates.GenUpgradeII, BossBarStates.GenUpgradeIII, BossBarStates.GenUpgradeIV, BossBarStates.Overtime -> {
                 timer = crystalBlitz.getInstance().getRandomNumber(1, 5);
             }
         }
