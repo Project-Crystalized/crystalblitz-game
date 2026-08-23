@@ -226,6 +226,12 @@ public class PureShardGenerator {
                         .append(Component.text("\uE11D"))
         );
     }
+    //The method to clean up health bar if server shut down unexpectedly
+    public void removeHealthBar() {
+        if (healthDisplay != null && healthDisplay.isValid()) {
+            healthDisplay.remove();
+        }
+    }
 
     //This is the extrac spike data class, for the side crystals, should only be used in PureShardGenerator hence it is private
     //Made it statick as it is is juat a crystal/spike data holder. - Mish

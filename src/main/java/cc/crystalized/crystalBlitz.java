@@ -203,8 +203,10 @@ public final class crystalBlitz extends JavaPlugin {
     @Override
     public void onDisable() {
         //Ensuring that all generators will be revived before shut down happens
+        //and health bars removed
         if (gamemanager != null) {
             gamemanager.revivePureShardGenerators();
+            gamemanager.removePureShardHealthBars();
         }
     }
 

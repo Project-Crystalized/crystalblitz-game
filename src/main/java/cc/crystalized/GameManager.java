@@ -395,6 +395,12 @@ public class GameManager {
             generator.revive();
         }
     }
+    //Removes health bar for all generators on unexpected server shut down
+    public void removePureShardHealthBars() {
+        for (PureShardGenerator generator : pureShardGenerators) {
+            generator.removeHealthBar();
+        }
+    }
 }
 
 class TabMenu {
