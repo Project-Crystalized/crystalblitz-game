@@ -16,7 +16,7 @@ public class BossbarManager {
     BossBar texture;
     BossBar texture_br; //Bedrock bossbar texture, because Bedrock is inconsistent compared to java - Callum
     BossBarStates currentstate =  BossBarStates.starting; //Reset state
-    int timerdefaultvalue = 20 * 25; //300 =5 Minutes, 30 is testing
+    int timerdefaultvalue = 20 * 15; //300 =5 Minutes, 30 is testing
     int timer = timerdefaultvalue;
 
     public BossbarManager() {
