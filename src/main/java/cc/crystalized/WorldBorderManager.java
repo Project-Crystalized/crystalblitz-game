@@ -16,7 +16,7 @@ public class WorldBorderManager {
     //The border shrinking time modified so it ain't instant, current 2 minutes
     //Change the 2 to change in minutes
     //TODO: Maybe in the future we can make a more custom border so people can still build and go out of it while taking damage
-    //Something like in Sky Battle 
+    //Something like in Sky Battle
     private static final int BORDER_SHRINKING_TIME = 20 * (60 * 2);
 
     public WorldBorderManager() {

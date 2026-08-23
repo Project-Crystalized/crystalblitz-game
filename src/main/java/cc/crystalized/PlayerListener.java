@@ -19,6 +19,7 @@ import org.bukkit.block.data.type.Slab;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,6 +42,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.geysermc.floodgate.api.FloodgateApi;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
@@ -51,6 +55,14 @@ public class PlayerListener implements Listener {
     //This is the extra time for pure shard side crystals generators
     //As before they generated too fast
     private static final int EXTRA_TIME_FOR_PURE_SHARDS = 5;
+    //This maps for tracking the last attacker and time for void kills
+    //To give the shards to the killer even after falling
+    private final Map<UUID, UUID> lastAttacker = new HashMap<>();
+    //This keeps track of the last tick at which the player was attacked, so no longer than 10 seconds kill won't count
+    private final Map<UUID, Integer> lastAttackTick = new HashMap<>();
+    //The time that the kill credit will last after hit if the player fell off (10 seconds)
+    private static final int KILL_CREDIT_TIME = 20 * 10;
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -161,6 +173,20 @@ public class PlayerListener implements Listener {
         } else {
             k = null;
         }
+        //If there is no direct killer cheks if another player recently attacked them
+        if (k == null) {
+            //geting the unique id of the victim and through it getting the last attacker and the last tick at which victim was attacked
+            UUID victimUUID = p.getUniqueId();
+            UUID attackerUUID = lastAttacker.get(victimUUID);
+            Integer attackTick = lastAttackTick.get(victimUUID);
+
+            //if attacker uid is not null and the attack tick is not null, and most importantly the tick didn't exit the kill credit time frame
+            //sets the killer to the lastAttacker
+            if (attackerUUID != null && attackTick != null && Bukkit.getCurrentTick() - attackTick <= KILL_CREDIT_TIME) {
+                //gets the player through id
+                k = Bukkit.getPlayer(attackerUUID);
+            }
+        }
         Component killer;
 
         Location loc = new Location(
@@ -172,6 +198,11 @@ public class PlayerListener implements Listener {
         p.setGameMode(GameMode.SPECTATOR);
         p.teleport(loc);
 
+        //The shards lost will be regardless even if killer is null, takes in the killer to give shard too if not null
+        handleShardLoss(p, k);
+        //Clears out the the hash maps so no extra potential kill credits, after respawn
+        lastAttacker.remove(p.getUniqueId());
+        lastAttackTick.remove(p.getUniqueId());
         if (k != null) {
             PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(k);
             kpd.kills++;
@@ -285,16 +316,41 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        if (!(e instanceof Player)) {return;}
-        Player entity = (Player) e.getEntity();
-        Entity damager = e.getDamager();
-
-        if (!(damager instanceof Player)) {
+        //Fixed the check so now the code should execute making the team damage prevention logic work
+        if (!(e.getEntity() instanceof Player)) {
             return;
         }
-        if (Teams.getPlayerTeam(entity).equals(Teams.getPlayerTeam((Player) damager))) {
-            e.setCancelled(true);
+        Player victim = (Player) e.getEntity();
+        //Tracking the attacker as it is diffrent for mele and projectiles
+        Player attacker = null;
+        //mele
+        if(e.getDamager() instanceof Player player){
+            attacker = player;
         }
+        //bows etc
+        else if (e.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player player) {
+            attacker = player;
+        }
+
+        if (attacker == null) {
+            return;
+        }
+        //preventing team damage
+        if (Teams.getPlayerTeam(victim).equals(Teams.getPlayerTeam(attacker))) {
+            e.setCancelled(true);
+            return;
+        }
+        //if player somehow damages themself preventing that
+        if (victim.getUniqueId().equals(attacker.getUniqueId())) {
+            return;
+        }
+        //This is to remember who last attacked the player
+        //It is used to give credit when throughn into the void and give the killed shards
+        UUID victimUUID = victim.getUniqueId();
+        UUID attackerUUID = attacker.getUniqueId();
+        lastAttacker.put(victimUUID, attackerUUID);
+        //Gets the current tick to later see if the diffrence is below the kill credit time
+        lastAttackTick.put(victimUUID, Bukkit.getCurrentTick());
     }
 
     @EventHandler
@@ -551,6 +607,44 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onBlockUpdate(BlockFromToEvent e) {
         e.setCancelled(true);
+    }
+    //This method is for handeling shard loss and giving them to the killer
+    private void handleShardLoss(Player victim, Player killer) {
+        PlayerInventory victimInv = victim.getInventory();
+
+        //Goes through the victims inventory
+        for (int slot = 0; slot < victimInv.getStorageContents().length; slot++) {
+            ItemStack item = victimInv.getItem(slot);
+            //If it is not one of the shards continues
+            if (!isShard(item)) {
+                continue;
+            }
+            //clones the shards
+            ItemStack lostShards = item.clone();
+
+            //Removes shards from the victim allways
+            victimInv.setItem(slot, null);
+
+            //If there is a killer than the killer recives shards
+            if (killer != null) {
+                //adding the lostShards to the killer inviters and storing left over in the hash map
+                Map<Integer, ItemStack> leftovers = killer.getInventory().addItem(lostShards);
+                //If killers inventory is full than drops the left over shards next to the killer
+                for (ItemStack leftover : leftovers.values()) {
+                    killer.getWorld().dropItemNaturally(killer.getLocation(), leftover);
+                }
+            }
+        }
+    }
+
+    private boolean isShard(ItemStack item) {
+        //If it is null or air returns false
+        if (item == null || item.getType() == Material.AIR) {
+            return false;
+        }
+        //using isSimilar as amount doesn't matter
+        //returns true if it is a shard of any type
+        return item.isSimilar(Shop.ShardTypes.Weak.item) || item.isSimilar(Shop.ShardTypes.Strong.item) || item.isSimilar(Shop.ShardTypes.Nexus.item);
     }
 }
 
