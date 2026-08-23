@@ -33,7 +33,8 @@ public class Nexus {
     private TeamData td;
     public int health = 10;
     //This the amount that the player who broke the nexus shard will recive, changed from 4 to 8
-    private final static int NEXUS_SHARDS_AMOUNT_AFTER_BREAK = 8;
+    //relized I miss typed the coventional order so fixed it - mish
+    private static final int NEXUS_SHARDS_AMOUNT_AFTER_BREAK = 8;
 
     public Nexus(TeamData td) {
         team = td.name;

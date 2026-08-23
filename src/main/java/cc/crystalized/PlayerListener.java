@@ -48,6 +48,9 @@ import static net.kyori.adventure.text.Component.translatable;
 
 public class PlayerListener implements Listener {
 
+    //This is the extra time for pure shard side crystals generators
+    //As before they generated too fast
+    private static final int EXTRA_TIME_FOR_PURE_SHARDS = 5;
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -460,27 +463,32 @@ public class PlayerListener implements Listener {
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                     }
                     case DEAD_BRAIN_CORAL_FAN, DEAD_BRAIN_CORAL_WALL_FAN, AMETHYST_CLUSTER, LARGE_AMETHYST_BUD -> {
+                        //The extra time that will be added for pure shards
+                        int extraTime = 0;
                         //this is dumb, but decide what shard we're giving to the player
                         switch (b.getType()) {
                             case DEAD_BRAIN_CORAL_WALL_FAN -> {
                                 ItemStack weak = Shop.ShardTypes.Weak.item.clone();
                                 weak.setAmount(2);
                                 p.getInventory().addItem(weak);
+                                extraTime = 0;
                             }
                             case LARGE_AMETHYST_BUD -> {
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
                                 strong.setAmount(1);
                                 p.getInventory().addItem(strong);
+                                extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
                             }
                             case AMETHYST_CLUSTER -> {
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
                                 strong.setAmount(2);
                                 p.getInventory().addItem(strong);
+                                extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
                             }
                         }
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                         e.setCancelled(true);
-                        new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData());
+                        new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
                         b.setType(Material.AIR);
                     }
                     default -> {
@@ -547,7 +555,8 @@ public class PlayerListener implements Listener {
 }
 
 class CrystalShardBlock {
-    public CrystalShardBlock(Player p, Material input, Location loc, BlockData data) {
+    //Added the extra time parameter whicch will be 5 for Pure shards, and zero for weak/stale shards
+    public CrystalShardBlock(Player p, Material input, Location loc, BlockData data, int extraTime) {
         BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
         int timer = 0;
         switch (bossbar.currentstate) {
@@ -558,7 +567,8 @@ class CrystalShardBlock {
             }
         }
 
-        int finalTimer = timer; //I hate this
+        //The extra time is being added here
+        int finalTimer = timer + extraTime; //I hate this
         new BukkitRunnable() {
             int timer2 = finalTimer;
 
