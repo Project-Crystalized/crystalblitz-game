@@ -63,6 +63,18 @@ public class PlayerListener implements Listener {
     //The time that the kill credit will last after hit if the player fell off (10 seconds)
     private static final int KILL_CREDIT_TIME = 20 * 10;
 
+    //Prevening amethyst shards from spawning ever as mite requsted
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent e) {
+        //So that it only happens during the game
+        if (crystalBlitz.getInstance().gamemanager == null) {
+            return;
+        }
+        //So that amethist shards will never spawn
+        if (e.getEntity().getItemStack().getType() == Material.AMETHYST_SHARD) {
+            e.setCancelled(true);
+        }
+    }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
