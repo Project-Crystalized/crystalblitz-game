@@ -16,8 +16,10 @@ public class BossbarManager {
     BossBar texture;
     BossBar texture_br; //Bedrock bossbar texture, because Bedrock is inconsistent compared to java - Callum
     BossBarStates currentstate =  BossBarStates.starting; //Reset state
-    int timerdefaultvalue = 20 * 25; //300 =5 Minutes, 30 is testing
+    int timerdefaultvalue = 20 * 15; //300 =5 Minutes, 30 is testing
     int timer = timerdefaultvalue;
+    //aded a specific check for if nexuses can be revived
+    private boolean canNexusesBeRevived = true;
 
     public BossbarManager() {
         texture = BossBar.bossBar(text("\uE402"), 0f, BossBar.Color.BLUE, BossBar.Overlay.PROGRESS);
@@ -52,6 +54,8 @@ public class BossbarManager {
                     switch (currentstate) {
                         case starting -> {
                             currentstate = BossBarStates.GenUpgradeI;
+                            //This revies all the broken shards on gen 1 upgrade
+                            crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                             for (Player p : Bukkit.getOnlinePlayers()) {
                                 p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
                             }
@@ -59,6 +63,8 @@ public class BossbarManager {
                         }
                         case GenUpgradeI -> {
                             currentstate = BossBarStates.GenUpgradeII;
+                            //This revies all the broken shards on gen 2 upgrade
+                            crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                             for (Player p : Bukkit.getOnlinePlayers()) {
                                 p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
                             }
@@ -70,6 +76,8 @@ public class BossbarManager {
                                 //TODO add a sound or smth here
                                 p.sendMessage(translatable("crystalized.game.crystalblitz.chat.worldborder").color(NamedTextColor.RED));
                             }
+                            //ensuring that it is false right before they break, so no perfect time revival.
+                            canNexusesBeRevived = false;
                             crystalBlitz.getInstance().gamemanager.destroyAllNexuses();
                             timer = 60;
                         }
@@ -81,6 +89,7 @@ public class BossbarManager {
                             timer = 1;
                         }
                         case WorldBorderClosing -> {
+                            crystalBlitz.getInstance().gamemanager.worldborder.setTrueSizeBorder();
                             crystalBlitz.getInstance().gamemanager.worldborder.ShrinkBorder();
                             cancel();
                         }
@@ -110,6 +119,10 @@ public class BossbarManager {
                 bar.name(text("World Border Closing!"));
             }
         }
+    }
+    //Just a getter method to use it in the shop.
+    public boolean getCanNexusesBeRevived(){
+        return canNexusesBeRevived;
     }
 }
 

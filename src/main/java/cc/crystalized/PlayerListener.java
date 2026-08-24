@@ -19,6 +19,7 @@ import org.bukkit.block.data.type.Slab;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,6 +33,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,6 +42,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.geysermc.floodgate.api.FloodgateApi;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
@@ -47,6 +52,29 @@ import static net.kyori.adventure.text.Component.translatable;
 
 public class PlayerListener implements Listener {
 
+    //This is the extra time for pure shard side crystals generators
+    //As before they generated too fast
+    private static final int EXTRA_TIME_FOR_PURE_SHARDS = 5;
+    //This maps for tracking the last attacker and time for void kills
+    //To give the shards to the killer even after falling
+    private final Map<UUID, UUID> lastAttacker = new HashMap<>();
+    //This keeps track of the last tick at which the player was attacked, so no longer than 10 seconds kill won't count
+    private final Map<UUID, Integer> lastAttackTick = new HashMap<>();
+    //The time that the kill credit will last after hit if the player fell off (10 seconds)
+    private static final int KILL_CREDIT_TIME = 20 * 10;
+
+    //Prevening amethyst shards from spawning ever as mite requsted
+    @EventHandler
+    public void onItemSpawn(ItemSpawnEvent e) {
+        //So that it only happens during the game
+        if (crystalBlitz.getInstance().gamemanager == null) {
+            return;
+        }
+        //So that amethist shards will never spawn
+        if (e.getEntity().getItemStack().getType() == Material.AMETHYST_SHARD) {
+            e.setCancelled(true);
+        }
+    }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -126,6 +154,23 @@ public class PlayerListener implements Listener {
             inv.addItem(replacementitem);
         }
     }
+    //Added this to prevent infinity fall before game starts - Mish
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e) {
+        //Ensures this happens only when game manager is null, so not during the game
+        if (crystalBlitz.getInstance().gamemanager != null) {
+            return;
+        }
+        //Gets the player
+        Player p = e.getPlayer();
+        //If player's Y location is beyhond maps death limit
+        //Teleports the player back to the original spawn location
+        if (p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit) {
+            p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(Bukkit.getWorld("world")));
+            //makes sure fall distanse is 0
+            p.setFallDistance(0);
+        }
+    }
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
@@ -140,6 +185,20 @@ public class PlayerListener implements Listener {
         } else {
             k = null;
         }
+        //If there is no direct killer cheks if another player recently attacked them
+        if (k == null) {
+            //geting the unique id of the victim and through it getting the last attacker and the last tick at which victim was attacked
+            UUID victimUUID = p.getUniqueId();
+            UUID attackerUUID = lastAttacker.get(victimUUID);
+            Integer attackTick = lastAttackTick.get(victimUUID);
+
+            //if attacker uid is not null and the attack tick is not null, and most importantly the tick didn't exit the kill credit time frame
+            //sets the killer to the lastAttacker
+            if (attackerUUID != null && attackTick != null && Bukkit.getCurrentTick() - attackTick <= KILL_CREDIT_TIME) {
+                //gets the player through id
+                k = Bukkit.getPlayer(attackerUUID);
+            }
+        }
         Component killer;
 
         Location loc = new Location(
@@ -151,6 +210,11 @@ public class PlayerListener implements Listener {
         p.setGameMode(GameMode.SPECTATOR);
         p.teleport(loc);
 
+        //The shards lost will be regardless even if killer is null, takes in the killer to give shard too if not null
+        handleShardLoss(p, k);
+        //Clears out the the hash maps so no extra potential kill credits, after respawn
+        lastAttacker.remove(p.getUniqueId());
+        lastAttackTick.remove(p.getUniqueId());
         if (k != null) {
             PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(k);
             kpd.kills++;
@@ -264,16 +328,41 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
             return;
         }
-        if (!(e instanceof Player)) {return;}
-        Player entity = (Player) e.getEntity();
-        Entity damager = e.getDamager();
-
-        if (!(damager instanceof Player)) {
+        //Fixed the check so now the code should execute making the team damage prevention logic work
+        if (!(e.getEntity() instanceof Player)) {
             return;
         }
-        if (Teams.getPlayerTeam(entity).equals(Teams.getPlayerTeam((Player) damager))) {
-            e.setCancelled(true);
+        Player victim = (Player) e.getEntity();
+        //Tracking the attacker as it is diffrent for mele and projectiles
+        Player attacker = null;
+        //mele
+        if(e.getDamager() instanceof Player player){
+            attacker = player;
         }
+        //bows etc
+        else if (e.getDamager() instanceof Projectile projectile && projectile.getShooter() instanceof Player player) {
+            attacker = player;
+        }
+
+        if (attacker == null) {
+            return;
+        }
+        //preventing team damage
+        if (Teams.getPlayerTeam(victim).equals(Teams.getPlayerTeam(attacker))) {
+            e.setCancelled(true);
+            return;
+        }
+        //if player somehow damages themself preventing that
+        if (victim.getUniqueId().equals(attacker.getUniqueId())) {
+            return;
+        }
+        //This is to remember who last attacked the player
+        //It is used to give credit when throughn into the void and give the killed shards
+        UUID victimUUID = victim.getUniqueId();
+        UUID attackerUUID = attacker.getUniqueId();
+        lastAttacker.put(victimUUID, attackerUUID);
+        //Gets the current tick to later see if the diffrence is below the kill credit time
+        lastAttackTick.put(victimUUID, Bukkit.getCurrentTick());
     }
 
     @EventHandler
@@ -399,14 +488,40 @@ public class PlayerListener implements Listener {
                                 p.getInventory().addItem(weak);
                                 break;
                             case BlockFace.NORTH:
+                                //Gets the pure shard generator based on the blocks location
+                                PureShardGenerator pureShardGenerator = crystalBlitz.getInstance().gamemanager.getPureShardGenerator(b.getLocation());
+                                //If null or non acctive nothing happens
+                                if(pureShardGenerator == null || !pureShardGenerator.isActive()){
+                                    return;
+                                }
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
+                                //will take diffrent damage depending on a pick
+                                int damage = 0;
                                 switch (holding.getType()) {
-                                    case Material.DIAMOND_PICKAXE -> {strong.setAmount(4);}
-                                    case Material.IRON_PICKAXE -> {strong.setAmount(3);}
-                                    case Material.STONE_PICKAXE -> {strong.setAmount(2);}
-                                    default -> {strong.setAmount(1);}
+                                    case Material.DIAMOND_PICKAXE -> {
+                                        strong.setAmount(4);
+                                        damage = 4;
+                                    }
+                                    case Material.IRON_PICKAXE -> {
+                                        strong.setAmount(3);
+                                        damage = 3;
+                                    }
+                                    case Material.STONE_PICKAXE -> {
+                                        strong.setAmount(2);
+                                        damage = 2;
+                                    }
+                                    default -> {
+                                        strong.setAmount(1);
+                                        damage = 1;
+                                    }
+                                }
+                                //If didn't cause any damage breaks out before giving pure shards
+                                if (damage == 0) {
+                                    break;
                                 }
                                 p.getInventory().addItem(strong);
+                                //Deals the damage to the generator
+                                pureShardGenerator.damage(damage);
                                 break;
                             default:
                                 p.sendMessage(text("Broken black terracotta but this isn't weak or strong shards, please report this."));
@@ -416,27 +531,32 @@ public class PlayerListener implements Listener {
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                     }
                     case DEAD_BRAIN_CORAL_FAN, DEAD_BRAIN_CORAL_WALL_FAN, AMETHYST_CLUSTER, LARGE_AMETHYST_BUD -> {
+                        //The extra time that will be added for pure shards
+                        int extraTime = 0;
                         //this is dumb, but decide what shard we're giving to the player
                         switch (b.getType()) {
                             case DEAD_BRAIN_CORAL_WALL_FAN -> {
                                 ItemStack weak = Shop.ShardTypes.Weak.item.clone();
                                 weak.setAmount(2);
                                 p.getInventory().addItem(weak);
+                                extraTime = 0;
                             }
                             case LARGE_AMETHYST_BUD -> {
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
                                 strong.setAmount(1);
                                 p.getInventory().addItem(strong);
+                                extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
                             }
                             case AMETHYST_CLUSTER -> {
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
                                 strong.setAmount(2);
                                 p.getInventory().addItem(strong);
+                                extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
                             }
                         }
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                         e.setCancelled(true);
-                        new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData());
+                        new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
                         b.setType(Material.AIR);
                     }
                     default -> {
@@ -500,10 +620,49 @@ public class PlayerListener implements Listener {
     public void onBlockUpdate(BlockFromToEvent e) {
         e.setCancelled(true);
     }
+    //This method is for handeling shard loss and giving them to the killer
+    private void handleShardLoss(Player victim, Player killer) {
+        PlayerInventory victimInv = victim.getInventory();
+
+        //Goes through the victims inventory
+        for (int slot = 0; slot < victimInv.getStorageContents().length; slot++) {
+            ItemStack item = victimInv.getItem(slot);
+            //If it is not one of the shards continues
+            if (!isShard(item)) {
+                continue;
+            }
+            //clones the shards
+            ItemStack lostShards = item.clone();
+
+            //Removes shards from the victim allways
+            victimInv.setItem(slot, null);
+
+            //If there is a killer than the killer recives shards
+            if (killer != null) {
+                //adding the lostShards to the killer inviters and storing left over in the hash map
+                Map<Integer, ItemStack> leftovers = killer.getInventory().addItem(lostShards);
+                //If killers inventory is full than drops the left over shards next to the killer
+                for (ItemStack leftover : leftovers.values()) {
+                    killer.getWorld().dropItemNaturally(killer.getLocation(), leftover);
+                }
+            }
+        }
+    }
+
+    private boolean isShard(ItemStack item) {
+        //If it is null or air returns false
+        if (item == null || item.getType() == Material.AIR) {
+            return false;
+        }
+        //using isSimilar as amount doesn't matter
+        //returns true if it is a shard of any type
+        return item.isSimilar(Shop.ShardTypes.Weak.item) || item.isSimilar(Shop.ShardTypes.Strong.item) || item.isSimilar(Shop.ShardTypes.Nexus.item);
+    }
 }
 
 class CrystalShardBlock {
-    public CrystalShardBlock(Player p, Material input, Location loc, BlockData data) {
+    //Added the extra time parameter whicch will be 5 for Pure shards, and zero for weak/stale shards
+    public CrystalShardBlock(Player p, Material input, Location loc, BlockData data, int extraTime) {
         BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
         int timer = 0;
         switch (bossbar.currentstate) {
@@ -514,13 +673,30 @@ class CrystalShardBlock {
             }
         }
 
-        int finalTimer = timer; //I hate this
+        //The extra time is being added here
+        int finalTimer = timer + extraTime; //I hate this
         new BukkitRunnable() {
             int timer2 = finalTimer;
 
             public void run () {
+                //The original if: (timer2 == 0 || crystalBlitz.getInstance().gamemanager == null)
+                //Or it is equal to null then it will run, seemed to be incorrect so I fixed it.
+                //Now when null it cancels the task and returns
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    cancel();
+                    return;
+                }
+                //Gets the pure shard generator from the spike/crystal
+                PureShardGenerator generator = crystalBlitz.getInstance().gamemanager.getPureShardGeneratorFromSpike(loc);
 
-                if (timer2 == 0 || crystalBlitz.getInstance().gamemanager == null) {
+                //Makes sure that when the crystal belogns to a broken/non-active pure shard generator it will not regenerate
+                //Must not be null and be not active, so that the weak shard generator still works
+                //so no need to fix this to make the upgrades at base generators work
+                if (generator != null && !generator.isActive()) {
+                    cancel();
+                    return;
+                }
+                if (timer2 == 0) {
                     //decide material
                     //this is for strongerShardGen team upgrade to work properly
                     Material finalInput = Material.AIR;

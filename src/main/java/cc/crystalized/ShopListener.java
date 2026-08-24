@@ -107,8 +107,10 @@ public class ShopListener implements Listener {
 
             if (u.equals(upgrades.nexusHeal)) {
                 GameManager gm = crystalBlitz.getInstance().gamemanager;
-                if (gm.bossbar.currentstate.equals(BossBarStates.NexusDestroyed) || gm.bossbar.currentstate.equals(BossBarStates.WorldBorderClosing)) {
+                //Replaced the old logic with the new can nexuses be revived, and added a return, I think it wasn't working cause return wasn't there
+                if (gm.bossbar.getCanNexusesBeRevived() == false) {
                     p.sendRichMessage("<red>[!] You cannot buy this now.");
+                    return;
                 }
                 if (td.nexus.health != 0) {
                     p.sendRichMessage("<red>[!] This can only be bought when your Nexus is shattered.");
