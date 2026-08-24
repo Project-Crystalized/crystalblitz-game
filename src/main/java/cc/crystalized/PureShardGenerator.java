@@ -1,6 +1,7 @@
 package cc.crystalized;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -9,6 +10,8 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,18 @@ public class PureShardGenerator {
     private int health = MAX_HEALTH;
     //The text display for health of pure shard generator
     private TextDisplay healthDisplay;
+    //The timer display for spike regeneration
+    private TextDisplay spikeTimerRegenDisplay;
+    //The tick at which next spike should regen for text display
+    private int nextSpikeRegenTick;
+    //This is used to track if the regeneration for side crystal currently running, to prevent
+    //more than one regeneration task running at the same time
+    //After one side crystal regens it is set to false, which allows the next missing crystal to regenerate if there is one
+    private boolean spikeRegenerationCurrentlyRunning = false;
+    //The spike re-generation task to be able to cancel it when needed
+    private BukkitTask spikeRegenerationTask;
     //Takes in the source block when created
+
     public PureShardGenerator(Block sourceBlock) {
         Location bottomSourceloc = sourceBlock.getLocation();
         //If first block is top block moves block down
@@ -53,6 +67,8 @@ public class PureShardGenerator {
         findAndStoreSourceBlocksInArrayList();
         findSpikes();
         createHealthBar();
+        //For the timer to be displayed, the regeneration itself is triggered when a crystal is broken so not here anymore
+        createSpikeTimerRegenDisplay();
     }
 
     //This method is for checking if it is a pure genetator source block
@@ -161,6 +177,8 @@ public class PureShardGenerator {
 
     //This is the destruction method of the generator
     private void destroy() {
+        //so that any extra crystals not pop up
+        cancelSpikeRegeneration();
        //This is to change the source blocs to white concrete
         for (Location loc : sourceBlocks) {
             loc.getBlock().setType(DESTROYED_MATERIAL, false);
@@ -174,6 +192,8 @@ public class PureShardGenerator {
 
     //This is the method to revive a generator.
     public void revive() {
+        //So that any potential left over spikes don't regen
+        cancelSpikeRegeneration();
         //setting health back to the max health
         health = MAX_HEALTH;
 
@@ -231,7 +251,148 @@ public class PureShardGenerator {
         if (healthDisplay != null && healthDisplay.isValid()) {
             healthDisplay.remove();
         }
+        //now removes the timer as well
+        if (spikeTimerRegenDisplay != null && spikeTimerRegenDisplay.isValid()) {
+            spikeTimerRegenDisplay.remove();
+        }
     }
+
+    //The spike/side crytal re-generation logic
+    public void startSpikeRegeneration() {
+        //If the generator is broken nothing happens
+        if (!isActive()) {
+            return;
+        }
+        //If already counting/regenerating nothing happens
+        //That check is specificly for when the player breaks more than one side crystal so it won't start another task early as 1 crystal regen at a time
+        if (spikeRegenerationCurrentlyRunning) {
+            return;
+        }
+        //If generator is full nothing happens as there is nothing to regenerate
+        if (!hasMissingSpike()) {
+            return;
+        }
+        //the regeneration has started
+        spikeRegenerationCurrentlyRunning = true;
+        //The regeneration time depending on gen upgrades
+        int regenerationTimeInTicks = getSpikeRegenerationTime();
+        //when the next side crystal going to regen in ticks, for text display
+        nextSpikeRegenTick = Bukkit.getCurrentTick() + regenerationTimeInTicks;
+        //setting it to the task to be able to cancel later
+        spikeRegenerationTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                //When it runs it sets the regeneration to false and as task ended it sets to null
+                spikeRegenerationCurrentlyRunning = false;
+                spikeRegenerationTask = null;
+                //makes sure it will only happen during the game
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    return;
+                }
+                //makes sure it will not happen with a broken generator
+                if (!isActive()) {
+                    return;
+                }
+                //regenerates one crystal/spike
+                regenOneSpike();
+                //if there are crystals still mising starts another task
+                startSpikeRegeneration();
+            }
+        }.runTaskLater(crystalBlitz.getInstance(), regenerationTimeInTicks);
+    }
+
+
+    //This method is to get the regeneration time, here is to changed trhe time depending on gen upgrades
+    private int getSpikeRegenerationTime() {
+        BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
+        //I adjusted values to fit the gen upgrades nicely
+        return switch (state) {
+            case starting -> 20 * 12;
+            case GenUpgradeI -> 20 * 10;
+            case GenUpgradeII -> 20 * 8;
+            case GenUpgradeIII -> 20 * 6;
+            case GenUpgradeIV, Overtime -> 20 * 4;
+        };
+    }
+    //Regens of the missing spike method
+    private void regenOneSpike() {
+        for (SpikeData spike : spikes) {
+            Block block = spike.location.getBlock();
+            //if it ain't air skips
+            if (block.getType() != Material.AIR) {
+                continue;
+            }
+            block.setBlockData(spike.blockData.clone(), false);
+            //Only regens one spike at a time
+            return;
+        }
+    }
+    //checks if there any spikes/side crystals missing
+    private boolean hasMissingSpike() {
+        for (SpikeData spike : spikes) {
+            if (spike.location.getBlock().getType() == Material.AIR) {
+                return true;
+            }
+        }
+        return false;
+    }
+    //The timer text display logic
+    private void createSpikeTimerRegenDisplay() {
+        //The timer slightly below the health bar
+        Location displayLocation = theBottomSourceBlockLocation.clone().add(0.5, 2.5, 0.5);
+        spikeTimerRegenDisplay = theBottomSourceBlockLocation.getWorld().spawn(displayLocation, TextDisplay.class, display -> {
+                    display.setSeeThrough(true);
+                    display.setBillboard(Display.Billboard.CENTER);
+                }
+        );
+        //starts the timer task
+        startSpikeTimerRegenDisplay();
+    }
+    private void startSpikeTimerRegenDisplay() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                //If not in game canceles
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    cancel();
+                    return;
+                }
+                //If null or not valid cancels
+                if (spikeTimerRegenDisplay == null || !spikeTimerRegenDisplay.isValid()) {
+                    cancel();
+                    return;
+                }
+                //If generator is not active then display inactive text
+                if (!isActive()) {
+                    spikeTimerRegenDisplay.text(Component.text("Inactive"));
+                    return;
+                }
+                //If the regeneration is not runing displays that it is full
+                if (!spikeRegenerationCurrentlyRunning) {
+                    spikeTimerRegenDisplay.text(Component.text("Crystals Full"));
+                    return;
+                }
+                //calculates how many ticks remain before the next regeneration
+                //math.max so it will never go into negatives.
+                int ticksRemaining = Math.max(0, nextSpikeRegenTick - Bukkit.getCurrentTick());
+                //converst ticks to seconds, ceil so it rounds up
+                int secondsRemaining = (int) Math.ceil(ticksRemaining / 20.0);
+                //Displays when the next side crystal will regenerate in seonds
+                spikeTimerRegenDisplay.text(Component.text("Next Side Crystal: " + secondsRemaining + "s"));
+            }
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 1); //updates quite often so it is almost instant
+    }
+    //Canceling the task so it won't run on revival. And makes sure spike regeneration is set to false, so it can run again later
+    private void cancelSpikeRegeneration() {
+        if (spikeRegenerationTask != null) {
+            spikeRegenerationTask.cancel();
+            spikeRegenerationTask = null;
+        }
+        spikeRegenerationCurrentlyRunning = false;
+    }
+
+
+
 
     //This is the extrac spike data class, for the side crystals, should only be used in PureShardGenerator hence it is private
     //Made it statick as it is is juat a crystal/spike data holder. - Mish

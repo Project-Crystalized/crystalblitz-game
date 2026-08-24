@@ -546,18 +546,27 @@ public class PlayerListener implements Listener {
                                 strong.setAmount(1);
                                 p.getInventory().addItem(strong);
                                 extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
+
                             }
                             case AMETHYST_CLUSTER -> {
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
                                 strong.setAmount(2);
                                 p.getInventory().addItem(strong);
-                                extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
                             }
                         }
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                         e.setCancelled(true);
-                        new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
                         b.setType(Material.AIR);
+                        //Detects if it is a pure shard generator
+                        PureShardGenerator generator = crystalBlitz.getInstance().gamemanager.getPureShardGeneratorFromSpike(b.getLocation());
+                        if (generator != null) {
+                            //if it is starts the spike regeneration, where it slowly regens one at a time
+                            generator.startSpikeRegeneration();
+                        }
+                        //if it is the weak shard generator does the old generation
+                        else {
+                            new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
+                        }
                     }
                     default -> {
                         e.setCancelled(true);
