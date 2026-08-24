@@ -556,16 +556,18 @@ public class PlayerListener implements Listener {
                         }
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                         e.setCancelled(true);
-                        b.setType(Material.AIR);
                         //Detects if it is a pure shard generator
                         PureShardGenerator generator = crystalBlitz.getInstance().gamemanager.getPureShardGeneratorFromSpike(b.getLocation());
+                        //if it is weak shard does the old generation, the order is important as it is required to have that blcok property
+                        if(generator == null) {
+                            new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
+                        }
+                        //makes the block air
+                        b.setType(Material.AIR);
+                        //If generator is not null the order is important as it requires the side crystals to be air to detect missing
                         if (generator != null) {
                             //if it is starts the spike regeneration, where it slowly regens one at a time
                             generator.startSpikeRegeneration();
-                        }
-                        //if it is the weak shard generator does the old generation
-                        else {
-                            new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
                         }
                     }
                     default -> {
