@@ -649,7 +649,8 @@ public class PlayerListener implements Listener {
             victimInv.setItem(slot, null);
 
             //If there is a killer than the killer recives shards
-            if (killer != null) {
+            //Added a checker which ensures that the killer is in survival mode so not giving to dead players.
+            if (killer != null && killer.getGameMode().equals(GameMode.SURVIVAL)) {
                 //adding the lostShards to the killer inviters and storing left over in the hash map
                 Map<Integer, ItemStack> leftovers = killer.getInventory().addItem(lostShards);
                 //If killers inventory is full than drops the left over shards next to the killer

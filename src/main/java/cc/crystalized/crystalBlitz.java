@@ -207,6 +207,7 @@ public final class crystalBlitz extends JavaPlugin {
         if (gamemanager != null) {
             gamemanager.revivePureShardGenerators();
             gamemanager.removePureShardHealthBars();
+            gamemanager.cancelOverflowGenerationTasks();
         }
     }
 

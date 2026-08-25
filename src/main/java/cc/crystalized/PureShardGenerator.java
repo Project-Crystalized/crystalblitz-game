@@ -49,6 +49,10 @@ public class PureShardGenerator {
     private boolean spikeRegenerationCurrentlyRunning = false;
     //The spike re-generation task to be able to cancel it when needed
     private BukkitTask spikeRegenerationTask;
+    //This so that overflow generation can be stoped when generator is destroyed
+    private CrystalOverFlowGeneration pureCrystalOverFlowGeneration;
+    //This is so that pure generators oveflow can be canceled if prefered to have only stale generators overflow
+    private static final boolean PURE_GENERATORS_OVERFLOW_ALLOWED = true;
     //Takes in the source block when created
 
     public PureShardGenerator(Block sourceBlock) {
@@ -69,6 +73,13 @@ public class PureShardGenerator {
         createHealthBar();
         //For the timer to be displayed, the regeneration itself is triggered when a crystal is broken so not here anymore
         createSpikeTimerRegenDisplay();
+        if(PURE_GENERATORS_OVERFLOW_ALLOWED){
+            //pure crystal overflow logicf
+            //so that the location is on top of the crystal
+            Location pureOverflowGenerationLocation = theBottomSourceBlockLocation.clone().add(0.5, 2.2, 0.5);
+            //so it starts the pure overflow generation with the pure genrator.
+            pureCrystalOverFlowGeneration = new CrystalOverFlowGeneration(pureOverflowGenerationLocation, OverflowGeneratorType.PURE, this);
+        }
     }
 
     //This method is for checking if it is a pure genetator source block
@@ -389,6 +400,12 @@ public class PureShardGenerator {
             spikeRegenerationTask = null;
         }
         spikeRegenerationCurrentlyRunning = false;
+    }
+    //So it can be canceled
+    public void cancelOverflowGenerationTask() {
+        if (pureCrystalOverFlowGeneration != null) {
+            pureCrystalOverFlowGeneration.cancelOverflowGeneration();
+        }
     }
 
 

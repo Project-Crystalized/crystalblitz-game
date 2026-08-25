@@ -177,7 +177,8 @@ public class Teams {
                             if (p == null) {
                                 crystalBlitz.getInstance().getLogger().log(Level.WARNING, "Player \"" + s + "\" is not online. cannot add them to a team.");
                             } else {
-                                cyan.add(Bukkit.getPlayer(s).getName());
+                                //Fixed this from cyan to white, as it probobly should be white
+                                white.add(Bukkit.getPlayer(s).getName());
                             }
                         }
                     }
