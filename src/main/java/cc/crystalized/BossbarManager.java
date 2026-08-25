@@ -16,7 +16,9 @@ public class BossbarManager {
     BossBar texture;
     BossBar texture_br; //Bedrock bossbar texture, because Bedrock is inconsistent compared to java - Callum
     BossBarStates currentstate =  BossBarStates.starting; //Reset state
-    int timerdefaultvalue = 20 * 15; //300 =5 Minutes, 30 is testing
+    //Changed to be 3 minutes as mite requsted
+    //This is the time between each gen upgrade
+    int timerdefaultvalue = 3 * 60;
     int timer = timerdefaultvalue;
     //aded a specific check for if nexuses can be revived
     private boolean canNexusesBeRevived = true;
@@ -40,62 +42,97 @@ public class BossbarManager {
             public void run() {
                 if (crystalBlitz.getInstance().gamemanager == null) {
                     cancel();
+                    return;
                 }
                 timer--;
                 ChangeBossbarText();
 
-                if (timer == 30 && currentstate == BossBarStates.GenUpgradeII) {
+                if (timer == 30 && currentstate == BossBarStates.GenUpgradeIV) {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendMessage(text("All Nexuses will be destroyed shortly!"));
+                        p.sendMessage(text("Overtime will beging shortly, All Nexuses will be destroyed soon!"));
                     }
                 }
-
-                if (timer == 0) {
-                    switch (currentstate) {
-                        case starting -> {
-                            currentstate = BossBarStates.GenUpgradeI;
-                            //This revies all the broken shards on gen 1 upgrade
-                            crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
-                            for (Player p : Bukkit.getOnlinePlayers()) {
-                                p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
-                            }
-                            timer = timerdefaultvalue;
+                //Changed the check as it started being slightly hard to read
+                if(timer != 0){
+                    return;
+                }
+                switch (currentstate) {
+                    //changed the gen upgrades to be as mite requsted, now there are 4 and overtime
+                    case starting -> {
+                        currentstate = BossBarStates.GenUpgradeI;
+                        //This revies all the broken shards on gen 1 upgrade
+                        crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
                         }
-                        case GenUpgradeI -> {
-                            currentstate = BossBarStates.GenUpgradeII;
-                            //This revies all the broken shards on gen 2 upgrade
-                            crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
-                            for (Player p : Bukkit.getOnlinePlayers()) {
-                                p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
-                            }
-                            timer = timerdefaultvalue;
-                        }
-                        case GenUpgradeII -> {
-                            currentstate = BossBarStates.NexusDestroyed;
-                            for (Player p : Bukkit.getOnlinePlayers()) {
-                                //TODO add a sound or smth here
-                                p.sendMessage(translatable("crystalized.game.crystalblitz.chat.worldborder").color(NamedTextColor.RED));
-                            }
-                            //ensuring that it is false right before they break, so no perfect time revival.
-                            canNexusesBeRevived = false;
-                            crystalBlitz.getInstance().gamemanager.destroyAllNexuses();
-                            timer = 60;
-                        }
-                        case NexusDestroyed -> {
-                            currentstate = BossBarStates.WorldBorderClosing;
-                            for (Player p : Bukkit.getOnlinePlayers()) {
-                                p.sendMessage(text("World border closing!")); //TODO translatable
-                            }
-                            timer = 1;
-                        }
-                        case WorldBorderClosing -> {
-                            crystalBlitz.getInstance().gamemanager.worldborder.setTrueSizeBorder();
-                            crystalBlitz.getInstance().gamemanager.worldborder.ShrinkBorder();
-                            cancel();
-                        }
+                        timer = timerdefaultvalue;
                     }
+                    case GenUpgradeI -> {
+                        currentstate = BossBarStates.GenUpgradeII;
+                        //This revies all the broken shards on gen 2 upgrade
+                        crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
+                        }
+                        timer = timerdefaultvalue;
+                    }
+                    case GenUpgradeII -> {
+                        currentstate = BossBarStates.GenUpgradeIII;
+                        //This revies all the broken shards on gen 3 upgrade
+                        crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
+                        }
+                        timer = timerdefaultvalue;
+                    }
+                    case GenUpgradeIII -> {
+                        currentstate = BossBarStates.GenUpgradeIV;
+                        //This revies all the broken shards on gen 4 upgrade
+                        crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
+                        }
+                        timer = timerdefaultvalue;
+                    }
+                    case GenUpgradeIV -> {
+                        //changes to Overtime which basicly combines the Nexus destruction and border moving, as mite requsted
+                        currentstate = BossBarStates.Overtime;
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            //TODO add a sound or smth here
+                            p.sendMessage(translatable("crystalized.game.crystalblitz.chat.worldborder").color(NamedTextColor.RED));
+                        }
+                        //ensuring that it is false right before they break, so no perfect time revival.
+                        canNexusesBeRevived = false;
+                        crystalBlitz.getInstance().gamemanager.destroyAllNexuses();
+                        crystalBlitz.getInstance().gamemanager.worldborder.setTrueSizeBorder();
+                        crystalBlitz.getInstance().gamemanager.worldborder.ShrinkBorder();
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            p.sendMessage(text("Overtime!! World border closing!").color(NamedTextColor.RED));
+                        }
+                        //changes the boss bar text here as it will not run again to change it later
+                        ChangeBossbarText();
+                        cancel();
+                    }
+                    case Overtime -> {
+                        //This should not be reached but incase cancels
+                        cancel();
+                    }
+                    /*
+                    case NexusDestroyed -> {
+                        currentstate = BossBarStates.WorldBorderClosing;
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            p.sendMessage(text("World border closing!")); //TODO translatable
+                        }
+                        timer = 1;
+                    }
+                    case WorldBorderClosing -> {
+                        crystalBlitz.getInstance().gamemanager.worldborder.setTrueSizeBorder();
+                        crystalBlitz.getInstance().gamemanager.worldborder.ShrinkBorder();
+                        cancel();
+                    }*/
                 }
             }
+
 
         }.runTaskTimer(crystalBlitz.getInstance(), 0, 20);
     }
@@ -103,6 +140,7 @@ public class BossbarManager {
     //TODO make these translatable
     private void ChangeBossbarText() {
         switch (currentstate) {
+            //Changed to match the four gen upgrades and Over tim
             case starting -> {
                 bar.name(translatable("crystalized.game.crystalblitz.bossbar.upgrade").append(text("(I)")).color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
@@ -110,13 +148,17 @@ public class BossbarManager {
                 bar.name(translatable("crystalized.game.crystalblitz.bossbar.upgrade").append(text("(II)")).color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case GenUpgradeII -> {
+                bar.name(translatable("crystalized.game.crystalblitz.bossbar.upgrade").append(text("(III)")).color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
+                //bar.name(text("All Nexuses will be destroyed in: ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
+            }
+            case GenUpgradeIII -> {
+                bar.name(translatable("crystalized.game.crystalblitz.bossbar.upgrade").append(text("(IV)")).color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
+            }
+            case GenUpgradeIV -> {
                 bar.name(text("All Nexuses will be destroyed in: ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
-            case NexusDestroyed -> {
-                bar.name(translatable("crystalized.game.crystalblitz.bossbar.worldborder").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
-            }
-            case WorldBorderClosing -> {
-                bar.name(text("World Border Closing!"));
+            case Overtime -> {
+                bar.name(text("Overtime!!").color(NamedTextColor.YELLOW));
             }
         }
     }
@@ -130,6 +172,9 @@ enum BossBarStates{
     starting,
     GenUpgradeI,
     GenUpgradeII,
-    NexusDestroyed,
-    WorldBorderClosing
+    GenUpgradeIII,
+    GenUpgradeIV,
+    //NexusDestroyed,
+    //WorldBorderClosing,
+    Overtime
 }

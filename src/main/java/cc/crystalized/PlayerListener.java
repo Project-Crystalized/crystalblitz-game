@@ -546,18 +546,29 @@ public class PlayerListener implements Listener {
                                 strong.setAmount(1);
                                 p.getInventory().addItem(strong);
                                 extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
+
                             }
                             case AMETHYST_CLUSTER -> {
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
                                 strong.setAmount(2);
                                 p.getInventory().addItem(strong);
-                                extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
                             }
                         }
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                         e.setCancelled(true);
-                        new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
+                        //Detects if it is a pure shard generator
+                        PureShardGenerator generator = crystalBlitz.getInstance().gamemanager.getPureShardGeneratorFromSpike(b.getLocation());
+                        //if it is weak shard does the old generation, the order is important as it is required to have that blcok property
+                        if(generator == null) {
+                            new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
+                        }
+                        //makes the block air
                         b.setType(Material.AIR);
+                        //If generator is not null the order is important as it requires the side crystals to be air to detect missing
+                        if (generator != null) {
+                            //if it is starts the spike regeneration, where it slowly regens one at a time
+                            generator.startSpikeRegeneration();
+                        }
                     }
                     default -> {
                         e.setCancelled(true);
@@ -638,7 +649,8 @@ public class PlayerListener implements Listener {
             victimInv.setItem(slot, null);
 
             //If there is a killer than the killer recives shards
-            if (killer != null) {
+            //Added a checker which ensures that the killer is in survival mode so not giving to dead players.
+            if (killer != null && killer.getGameMode().equals(GameMode.SURVIVAL)) {
                 //adding the lostShards to the killer inviters and storing left over in the hash map
                 Map<Integer, ItemStack> leftovers = killer.getInventory().addItem(lostShards);
                 //If killers inventory is full than drops the left over shards next to the killer
@@ -665,11 +677,14 @@ class CrystalShardBlock {
     public CrystalShardBlock(Player p, Material input, Location loc, BlockData data, int extraTime) {
         BossbarManager bossbar = crystalBlitz.getInstance().gamemanager.bossbar;
         int timer = 0;
+        //Made the gen upgrades have an effect
         switch (bossbar.currentstate) {
             case BossBarStates.starting -> {timer = crystalBlitz.getInstance().getRandomNumber(3, 9);}
             case BossBarStates.GenUpgradeI -> {timer = crystalBlitz.getInstance().getRandomNumber(2, 7);}
-            case BossBarStates.GenUpgradeII, BossBarStates.WorldBorderClosing, BossBarStates.NexusDestroyed -> {
-                timer = crystalBlitz.getInstance().getRandomNumber(1, 5);
+            case BossBarStates.GenUpgradeII -> {timer = crystalBlitz.getInstance().getRandomNumber(2, 6);}
+            case BossBarStates.GenUpgradeIII -> {timer = crystalBlitz.getInstance().getRandomNumber(1, 5);}
+            case BossBarStates.GenUpgradeIV, BossBarStates.Overtime -> {
+                timer = crystalBlitz.getInstance().getRandomNumber(1, 4);
             }
         }
 

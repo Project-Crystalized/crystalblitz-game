@@ -36,6 +36,8 @@ public class GameManager {
     public final List<PureShardGenerator> pureShardGenerators = new ArrayList<>();
     public static List<PlayerData> playerDatas = new ArrayList<>();
     public static GameTypes GameType;
+    //All the stale overflow generators, pure overflow handeled in Pure generators
+    private final List<CrystalOverFlowGeneration> crystalOverflowsStaleGenerators = new ArrayList<>();
 
     enum GameTypes {
         Custom,
@@ -60,6 +62,8 @@ public class GameManager {
         setupEntities();
         //The pure shard generators set up
         setupPureShardGenerators();
+        //The set up for stale crystals oveflow generators, no need for Pure shards as that is inside pure shard generators already
+        setupStaleCrystalOverflowGenerators();
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.getEnderChest().setMaxStackSize(54);
@@ -177,7 +181,10 @@ public class GameManager {
                         td.nexus.resetNexuses();
                     }
                     //ensures that all the pure shards generators will be propely fixed/revived at game shut down
+                    //TODO probobly should make it one method
                     crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
+                    crystalBlitz.getInstance().gamemanager.removePureShardHealthBars();
+                    crystalBlitz.getInstance().gamemanager.cancelOverflowGenerationTasks();
                     crystalBlitz.getInstance().gamemanager = null;
                     cancel();
                 }
@@ -400,6 +407,33 @@ public class GameManager {
         for (PureShardGenerator generator : pureShardGenerators) {
             generator.removeHealthBar();
         }
+    }
+    //cancels all overflow generators.
+    public void cancelOverflowGenerationTasks() {
+        for (PureShardGenerator generator : pureShardGenerators) {
+            generator.cancelOverflowGenerationTask();
+        }
+        //Cancels all stale oveflow generators
+        for (CrystalOverFlowGeneration overFlowStaleGeneration : crystalOverflowsStaleGenerators) {
+            overFlowStaleGeneration.cancelOverflowGeneration();
+        }
+        crystalOverflowsStaleGenerators.clear();
+    }
+    //This method sets up all stale overflow generators
+    private void setupStaleCrystalOverflowGenerators() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                //Goes through team data, and gets the stale shard location
+                for (TeamData team : Teams.team_datas) {
+                    Location staleLocation = crystalBlitz.getInstance().mapdata.getStaleShardLoc(team.name);
+                    //Slightly added the height to account for the gen upgrade which makes it higher, to not overcomplicate with chaning location for generating
+                    Location overflowLocation = staleLocation.clone().add(0.5, 2.2, 0.5);
+                    //Starts the stale oveflow generation and null pure generator as it is not a pure generator.
+                    crystalOverflowsStaleGenerators.add(new CrystalOverFlowGeneration(overflowLocation, OverflowGeneratorType.STALE, null));
+                }
+            } //small delay added during debuging.
+        }.runTaskLater(crystalBlitz.getInstance(), 1);
     }
 }
 

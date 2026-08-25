@@ -111,8 +111,9 @@ public class MapData {
 
     public Location getStaleShardLoc(String team) {
         MapData_Teams t = getTeamInfo(team);
-        Location loc = t.staleShard;
-        return loc;
+        //Fixed this due to it giving me a null world, so that stale overflow generators could work
+        Location fixedLocation = new Location(Bukkit.getWorld("world"), t.staleShard.getX(), t.staleShard.getY(), t.staleShard.getZ());
+        return fixedLocation;
     }
 }
 
