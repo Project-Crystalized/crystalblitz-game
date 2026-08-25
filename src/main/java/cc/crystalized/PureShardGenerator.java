@@ -317,12 +317,18 @@ public class PureShardGenerator {
     private int getSpikeRegenerationTime() {
         BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
         //I adjusted values to fit the gen upgrades nicely
+        //TODO: Renable the half health state later when fully configirued
+        int speedMultiplier = 1;
+        if(health < 15){
+            //Change to 2. So that it can start working
+            speedMultiplier = 1;
+        }
         return switch (state) {
-            case starting -> 20 * 12;
-            case GenUpgradeI -> 20 * 10;
-            case GenUpgradeII -> 20 * 8;
-            case GenUpgradeIII -> 20 * 6;
-            case GenUpgradeIV, Overtime -> 20 * 4;
+            case starting -> 20 * 12 * speedMultiplier;
+            case GenUpgradeI -> 20 * 10 * speedMultiplier;
+            case GenUpgradeII -> 20 * 8 * speedMultiplier;
+            case GenUpgradeIII -> 20 * 6 * speedMultiplier;
+            case GenUpgradeIV, Overtime -> 20 * 4 * speedMultiplier;
         };
     }
     //Regens of the missing spike method
