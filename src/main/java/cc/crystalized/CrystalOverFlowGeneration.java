@@ -28,9 +28,13 @@ public class CrystalOverFlowGeneration {
     private final PureShardGenerator pureGenerator;
     //This is the task that will generate the oveflowing crystals
     private BukkitTask overflowGeneratorTask;
-    //This is specificly for stale generators, as they start producing pure shards at gen upgrade 3, so this counts the required repets to generate a pure shard
-    //it will spawn one pure shard and reset the repeats.
-    private int staleOverflowRepeatsCountForPureShards = 0;
+    /*Not used anymore
+        //This is specificly for stale generators, as they start producing pure shards at gen upgrade 3, so this counts the required repets to generate a pure shard
+        //it will spawn one pure shard and reset the repeats.
+        //private int staleOverflowRepeatsCountForPureShards = 0;
+     */
+    //This task was added to be able to seperately tweak time of stale oveflow generators producing pure
+    private BukkitTask staleOveflowGeneratorPureProductionTask;
     //The constructor which sets the location the selected oveflow generator type and the pure shard generator if is a pure generator
     public CrystalOverFlowGeneration(Location dropLocation, OverflowGeneratorType overflowGeneratorType, PureShardGenerator pureGenerator) {
         this.dropLocation = dropLocation.clone();
@@ -54,6 +58,10 @@ public class CrystalOverFlowGeneration {
                 }
                 //schedules the overflow task
                 scheduleNextOverflow();
+                //Schedules pure production for stale oveflow generators, so time can be more easliy tweaked
+                if (overflowGeneratorType == OverflowGeneratorType.STALE) {
+                    scheduleNextPureProductionForStaleOverflowGenerators();
+                }
             }
         }.runTaskLater(crystalBlitz.getInstance(), 1);
     }
@@ -104,28 +112,31 @@ public class CrystalOverFlowGeneration {
         if (getDroppedSharAmount(Shop.ShardTypes.Weak) < STALE_OVERFLOW_CAP) {
             dropShard(Shop.ShardTypes.Weak);
         }
-        BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
+        //Now has a seperate task to adjust time easier
+        /*
+            BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
 
-        //Starting at GenIII stale can ocasionaly drop pure shards.
-        if (state == BossBarStates.GenUpgradeIII || state == BossBarStates.GenUpgradeIV || state == BossBarStates.Overtime) {
-            //It needs to repeat enough times so that a pure shard can generate
-            staleOverflowRepeatsCountForPureShards = staleOverflowRepeatsCountForPureShards + 1;
-            int requiredStaleOverflowsRepeats;
-            //on gen 3 requires 5 repeates, on gen 4 3 repeats
-            if (state == BossBarStates.GenUpgradeIII) {
-                requiredStaleOverflowsRepeats = 5;
-            } else {
-                requiredStaleOverflowsRepeats = 3;
-            }
-            if (staleOverflowRepeatsCountForPureShards >= requiredStaleOverflowsRepeats) {
-                //resets the number of repeates when it tries to create a pure shard
-                staleOverflowRepeatsCountForPureShards = 0;
-                //The same cap for pure in stale oveflow generators as in pure, could be changed later if it is too op
-                if (getDroppedSharAmount(Shop.ShardTypes.Strong) < PURE_OVERFLOW_CAP) {
-                    dropShard(Shop.ShardTypes.Strong);
+            //Starting at GenIII stale can ocasionaly drop pure shards.
+            if (state == BossBarStates.GenUpgradeIII || state == BossBarStates.GenUpgradeIV || state == BossBarStates.Overtime) {
+                //It needs to repeat enough times so that a pure shard can generate
+                staleOverflowRepeatsCountForPureShards = staleOverflowRepeatsCountForPureShards + 1;
+                int requiredStaleOverflowsRepeats;
+                //on gen 3 requires 5 repeates, on gen 4 3 repeats
+                if (state == BossBarStates.GenUpgradeIII) {
+                    requiredStaleOverflowsRepeats = 5;
+                } else {
+                    requiredStaleOverflowsRepeats = 3;
+                }
+                if (staleOverflowRepeatsCountForPureShards >= requiredStaleOverflowsRepeats) {
+                    //resets the number of repeates when it tries to create a pure shard
+                    staleOverflowRepeatsCountForPureShards = 0;
+                    //The same cap for pure in stale oveflow generators as in pure, could be changed later if it is too op
+                    if (getDroppedSharAmount(Shop.ShardTypes.Strong) < PURE_OVERFLOW_CAP) {
+                        dropShard(Shop.ShardTypes.Strong);
+                    }
                 }
             }
-        }
+         */
     }
     //For pure oveflow generators
     private void overflowPureGenerator() {
@@ -187,11 +198,63 @@ public class CrystalOverFlowGeneration {
             };
         };
     }
+    //The logic for pure production on stale shard oveflow generators.
+    private void scheduleNextPureProductionForStaleOverflowGenerators() {
+        if (crystalBlitz.getInstance().gamemanager == null) {
+            return;
+        }
+        BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
+
+        //When pure from stale oveflow generators is not yet unlocked
+        if (state == BossBarStates.starting || state == BossBarStates.GenUpgradeI || state == BossBarStates.GenUpgradeII) {
+            //Will check again later with the delay of 1 second, waiting for gen 3 to start producing
+            staleOveflowGeneratorPureProductionTask = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    scheduleNextPureProductionForStaleOverflowGenerators();
+                }
+            }.runTaskLater(crystalBlitz.getInstance(), 20);
+            //returns. So that there is no need for further state checks
+            return;
+        }
+        int delayBeforePureProductionInStaleOveflowGeneration = getPureProductionForStaleOverflowGenDelay();
+        //This will work only at gen 3, gen 4 and Overtime
+        staleOveflowGeneratorPureProductionTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                staleOveflowGeneratorPureProductionTask = null;
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    return;
+                }
+                //drops the shard if not meet the cap
+                if (getDroppedSharAmount(Shop.ShardTypes.Strong) < PURE_OVERFLOW_CAP) {
+                    dropShard(Shop.ShardTypes.Strong);
+                }
+                //schedules the next task
+                scheduleNextPureProductionForStaleOverflowGenerators();
+            }
+        }.runTaskLater(crystalBlitz.getInstance(), delayBeforePureProductionInStaleOveflowGeneration);
+    }
+    private int getPureProductionForStaleOverflowGenDelay() {
+        BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
+        return switch (state) {
+            case GenUpgradeIII -> 20 * 20; //will drop one Pure every 20 seconds on gen 3
+            case GenUpgradeIV, Overtime -> 20 * 12; //will drop one pure every 12 second on gen 4 upgrade
+            default -> 20 * 20; //keept default same as gen 3
+        };
+    }
+
+
     //Cancels the overflow generator task and sets it to null
     public void cancelOverflowGeneration() {
         if (overflowGeneratorTask != null) {
             overflowGeneratorTask.cancel();
             overflowGeneratorTask = null;
+        }
+        //Now also cancels the new stale oveflow gnerator pure production task
+        if (staleOveflowGeneratorPureProductionTask != null) {
+            staleOveflowGeneratorPureProductionTask.cancel();
+            staleOveflowGeneratorPureProductionTask = null;
         }
     }
 }
