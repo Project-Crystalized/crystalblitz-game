@@ -181,19 +181,20 @@ public class CrystalOverFlowGeneration {
         BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
         return switch (overflowGeneratorType) {
             //The stale oveflow generation speed, made it not super fast as mining still should be usesful.
+            //edit: made slightly faster to be better
             case STALE -> switch (state) {
-                case starting -> 20 * 8;
-                case GenUpgradeI -> 20 * 7;
-                case GenUpgradeII -> 20 * 6;
-                case GenUpgradeIII -> 20 * 5;
-                case GenUpgradeIV, Overtime -> 20 * 4;
+                case starting -> 20 * 5;
+                case GenUpgradeI -> 20 * 4;
+                case GenUpgradeII -> 20 * 3;
+                case GenUpgradeIII -> 20 * 2;
+                case GenUpgradeIV, Overtime -> 20 * 1;
             };
             //The pure overflow generation is much slower than stale.
             case PURE -> switch (state) {
-                case starting -> 20 * 30;
-                case GenUpgradeI -> 20 * 25;
-                case GenUpgradeII -> 20 * 20;
-                case GenUpgradeIII -> 20 * 15;
+                case starting -> 20 * 25;
+                case GenUpgradeI -> 20 * 20;
+                case GenUpgradeII -> 20 * 15;
+                case GenUpgradeIII -> 20 * 12;
                 case GenUpgradeIV, Overtime -> 20 * 10;
             };
         };
@@ -238,8 +239,8 @@ public class CrystalOverFlowGeneration {
     private int getPureProductionForStaleOverflowGenDelay() {
         BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
         return switch (state) {
-            case GenUpgradeIII -> 20 * 20; //will drop one Pure every 20 seconds on gen 3
-            case GenUpgradeIV, Overtime -> 20 * 12; //will drop one pure every 12 second on gen 4 upgrade
+            case GenUpgradeIII -> 20 * 15; //will drop one Pure every 15 seconds on gen 3
+            case GenUpgradeIV, Overtime -> 20 * 10; //will drop one pure every 10 second on gen 4 upgrade
             default -> 20 * 20; //keept default same as gen 3
         };
     }

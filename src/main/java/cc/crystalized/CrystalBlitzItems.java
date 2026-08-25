@@ -63,12 +63,12 @@ public class CrystalBlitzItems {
         );
         items.add(setup("iron_sword", Material.IRON_SWORD, null,
                 List.of(translatable("crystalized.sword.iron.desc")),
-                10, Shop.ShardTypes.Strong, ItemType.Melee,
+                24, Shop.ShardTypes.Strong, ItemType.Melee,
                 "stone_sword", List.of("iron_sword", "diamond_sword"), 1)
         );
         items.add(setup("iron_pickaxe", Material.IRON_PICKAXE, null,
                 List.of(translatable("crystalized.item.pickaxe.iron.desc1"), translatable("crystalized.item.pickaxe.iron.desc2")),
-                10, Shop.ShardTypes.Strong, ItemType.Pickaxe,
+                20, Shop.ShardTypes.Strong, ItemType.Pickaxe,
                 "stone_pickaxe", List.of("iron_pickaxe", "diamond_pickaxe"), 1)
         );
         items.add(setup("diamond_sword", Material.DIAMOND_SWORD, null,
@@ -88,7 +88,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("bow", Material.BOW, null,
                 List.of(translatable("crystalized.bow.desc")),
-                35, Shop.ShardTypes.Strong, ItemType.Ranged,
+                32, Shop.ShardTypes.Strong, ItemType.Ranged,
                 "", null, 1)
         );
         items.add(setup("marksman_bow", Material.BOW, translatable("crystalized.bow.marksman.name"),
@@ -104,7 +104,7 @@ public class CrystalBlitzItems {
         items.add(setup("shears", Material.SHEARS, null, null, 40, Shop.ShardTypes.Weak, ItemType.Shears, "shears", List.of("shears"), 1));
         items.add(setup("crossbow", Material.CROSSBOW, null,
                 List.of(translatable("crystalized.crossbow.desc")),
-                35, Shop.ShardTypes.Strong, ItemType.Ranged,
+                42, Shop.ShardTypes.Strong, ItemType.Ranged,
                 "", null, 1)
         );
         items.add(setup("precise_crossbow", Material.CROSSBOW, translatable("crystalized.crossbow.precise.name"),
@@ -125,7 +125,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("bridge_orb", Material.COAL, translatable("crystalized.orb.bridge.name"),
                 List.of(translatable("crystalized.orb.bridge.desc")),
-                12, Shop.ShardTypes.Weak, ItemType.other,
+                12, Shop.ShardTypes.Strong, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "bridge_orb"), 1)
         );
         items.add(setup("explosive_orb", Material.COAL, translatable("crystalized.orb.explosive.name"),
@@ -166,12 +166,12 @@ public class CrystalBlitzItems {
         );
         items.add(setup("defence_totem", Material.COAL, translatable("crystalized.totem.defence.name"),
                 List.of(translatable("crystalized.totem.defence.desc")),
-                120, Shop.ShardTypes.Weak, ItemType.other,
+                70, Shop.ShardTypes.Weak, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "defense_totem"), 1)
         );
         items.add(setup("healing_totem", Material.COAL, translatable("crystalized.totem.healing.name"),
                 List.of(translatable("crystalized.totem.healing.desc")),
-                26, Shop.ShardTypes.Strong, ItemType.other,
+                20, Shop.ShardTypes.Strong, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "healing_totem"), 1)
         );
         items.add(setup("launch_totem", Material.COAL, translatable("crystalized.totem.launch.name"),
@@ -184,10 +184,10 @@ public class CrystalBlitzItems {
                 Material.BLUE_CONCRETE, Material.CYAN_CONCRETE, Material.GREEN_CONCRETE, Material.LIME_CONCRETE,
                 Material.MAGENTA_CONCRETE, Material.RED_CONCRETE, Material.YELLOW_CONCRETE, Material.WHITE_CONCRETE, 16
         ));
-        items.add(setupBlock("copper", Material.WAXED_CHISELED_COPPER, 10, Shop.ShardTypes.Weak, Material.WAXED_CHISELED_COPPER, 8));
-        items.add(setupBlock("wool", Material.WHITE_WOOL, 8, Shop.ShardTypes.Weak,
+        items.add(setupBlock("copper", Material.WAXED_CHISELED_COPPER, 36, Shop.ShardTypes.Weak, Material.WAXED_CHISELED_COPPER, 6));
+        items.add(setupBlock("wool", Material.WHITE_WOOL, 30, Shop.ShardTypes.Strong,
                 Material.BLUE_WOOL, Material.CYAN_WOOL, Material.GREEN_WOOL, Material.LIME_WOOL,
-                Material.MAGENTA_WOOL, Material.RED_WOOL, Material.YELLOW_WOOL, Material.WHITE_WOOL, 8
+                Material.MAGENTA_WOOL, Material.RED_WOOL, Material.YELLOW_WOOL, Material.WHITE_WOOL, 12
         ));
         items.add(setupBlock("glass", Material.WHITE_STAINED_GLASS, 40, Shop.ShardTypes.Strong,
                 Material.BLUE_STAINED_GLASS, Material.CYAN_STAINED_GLASS, Material.GREEN_STAINED_GLASS, Material.LIME_STAINED_GLASS,
@@ -197,12 +197,12 @@ public class CrystalBlitzItems {
         items.add(setupArmor("leather_armor", Material.LEATHER_CHESTPLATE, 0, Shop.ShardTypes.Weak, "leather_armor", List.of("leather_armor", "chainmail_armor", "iron_armor", "diamond_armor")));
         items.add(setupArmor("chainmail_armor", Material.CHAINMAIL_CHESTPLATE, 30, Shop.ShardTypes.Weak, "leather_armor", List.of("chainmail_armor", "iron_armor", "diamond_armor")));
         items.add(setupArmor("iron_armor", Material.IRON_CHESTPLATE, 42, Shop.ShardTypes.Strong, "chainmail_armor", List.of("iron_armor", "diamond_armor")));
-        items.add(setupArmor("diamond_armor", Material.DIAMOND_CHESTPLATE, 12, Shop.ShardTypes.Nexus, "iron_armor", List.of("diamond_armor")));
+        items.add(setupArmor("diamond_armor", Material.DIAMOND_CHESTPLATE, 10, Shop.ShardTypes.Nexus, "iron_armor", List.of("diamond_armor")));
 
-        items.add(setup("arrow", Material.ARROW, null, null, 20, Shop.ShardTypes.Strong, ItemType.other, "", null, 4));
+        items.add(setup("arrow", Material.ARROW, null, null, 12, Shop.ShardTypes.Strong, ItemType.other, "", null, 4));
         items.add(setup("wind_arrow", Material.ARROW, translatable("crystalized.item.windarrow.name"),
                 List.of(translatable("crystalized.item.windarrow.desc")),
-                16, Shop.ShardTypes.Strong, ItemType.other,
+                8, Shop.ShardTypes.Strong, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "wind_arrow"), 1)
         );
         items.add(setup("gapple", Material.GOLDEN_APPLE, null, null, 36, Shop.ShardTypes.Weak, ItemType.other, "", null, 1));
