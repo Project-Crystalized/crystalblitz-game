@@ -1,5 +1,12 @@
 # Crystalized: Crystal Blitz config
 
+#When it is false no crystal will produce shards autotmaticly (crystal oveflow), so disable this if you want it Crystal Rush accurate
+crystal-overflow-generator-enabled: true
+
+#If you want the stale/base generators to produce automatic crystals but don't want the mid/Pure generators to do so disable this
+pure-generator-overflow-enabled: true
+#If you want the stale generators on base to work but never want it to produce pure shards on gen 3 disable this
+stale-generator-oveflow-producing-pure-on-gen-3: true
 teams:
     # When true, enables the below options to work, allowing for teams to be created manually instead of randomly generated.
     # These should be changed either when the server is shutdown, or when the game hasn't started (aka, in the waiting lobby)

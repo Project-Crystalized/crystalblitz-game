@@ -42,6 +42,8 @@ public final class crystalBlitz extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        //ensures config is saved
+        saveDefaultConfig();
 
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("crystalblitz");

@@ -73,7 +73,7 @@ public class PureShardGenerator {
         createHealthBar();
         //For the timer to be displayed, the regeneration itself is triggered when a crystal is broken so not here anymore
         createSpikeTimerRegenDisplay();
-        if(PURE_GENERATORS_OVERFLOW_ALLOWED){
+        if(isPureGeneratorOverflowAllowed()){
             //pure crystal overflow logicf
             //so that the location is on top of the crystal
             Location pureOverflowGenerationLocation = theBottomSourceBlockLocation.clone().add(0.5, 2.2, 0.5);
@@ -412,6 +412,10 @@ public class PureShardGenerator {
         if (pureCrystalOverFlowGeneration != null) {
             pureCrystalOverFlowGeneration.cancelOverflowGeneration();
         }
+    }
+    //If disabled in config will return false, and not do pure shard
+    private boolean isPureGeneratorOverflowAllowed() {
+        return PURE_GENERATORS_OVERFLOW_ALLOWED && crystalBlitz.getInstance().getConfig().getBoolean("pure-generator-overflow-enabled", true);
     }
 
 
