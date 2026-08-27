@@ -335,8 +335,8 @@ public class PureShardGenerator {
     private void regenOneSpike() {
         for (SpikeData spike : spikes) {
             Block block = spike.location.getBlock();
-            //if it ain't air skips
-            if (block.getType() != Material.AIR) {
+            //if it matches the spike then continues
+            if (block.getBlockData().matches(spike.blockData)) {
                 continue;
             }
             block.setBlockData(spike.blockData.clone(), false);
@@ -347,7 +347,8 @@ public class PureShardGenerator {
     //checks if there any spikes/side crystals missing
     private boolean hasMissingSpike() {
         for (SpikeData spike : spikes) {
-            if (spike.location.getBlock().getType() == Material.AIR) {
+            Block block = spike.location.getBlock();
+            if (!block.getBlockData().matches(spike.blockData)) {
                 return true;
             }
         }
