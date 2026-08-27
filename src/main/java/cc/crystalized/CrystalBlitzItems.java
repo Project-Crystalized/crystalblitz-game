@@ -150,7 +150,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("feather_orb", Material.COAL, translatable("crystalized.orb.feather.name"),
                 List.of(translatable("crystalized.orb.feather.desc")),
-                60, Shop.ShardTypes.Weak, ItemType.other,
+                80, Shop.ShardTypes.Weak, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "feather_orb"), 1)
         );
 
@@ -166,7 +166,7 @@ public class CrystalBlitzItems {
         );
         items.add(setup("defence_totem", Material.COAL, translatable("crystalized.totem.defence.name"),
                 List.of(translatable("crystalized.totem.defence.desc")),
-                70, Shop.ShardTypes.Weak, ItemType.other,
+                100, Shop.ShardTypes.Weak, ItemType.other,
                 "", null, new NamespacedKey("crystalized", "defense_totem"), 1)
         );
         items.add(setup("healing_totem", Material.COAL, translatable("crystalized.totem.healing.name"),
