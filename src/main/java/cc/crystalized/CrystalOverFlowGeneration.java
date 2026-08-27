@@ -46,7 +46,8 @@ public class CrystalOverFlowGeneration {
     //The method to start the overflow generation
     private void start() {
         //The ultimate switch which if not true stops the whole overflow generation
-        if (!CRYSTAL_OVERFLOW_ALLOWED) {
+        //now can be disabled in config as well
+        if (!isCrystalOverflowGeneratorsAllowed()) {
             return;
         }
         //starts with a slight delay to ensure that gamemanger won't be null
@@ -59,7 +60,8 @@ public class CrystalOverFlowGeneration {
                 //schedules the overflow task
                 scheduleNextOverflow();
                 //Schedules pure production for stale oveflow generators, so time can be more easliy tweaked
-                if (overflowGeneratorType == OverflowGeneratorType.STALE) {
+                //now can be disabled in config
+                if (overflowGeneratorType == OverflowGeneratorType.STALE && isStaleOverflowAllowedToProducePureOnGenIII()) {
                     scheduleNextPureProductionForStaleOverflowGenerators();
                 }
             }
@@ -69,7 +71,7 @@ public class CrystalOverFlowGeneration {
     //Schedules the overflow task
     private void scheduleNextOverflow() {
         //Makes sure it will never happened if crystal overflow is not allowed
-        if (!CRYSTAL_OVERFLOW_ALLOWED) {
+        if (!isCrystalOverflowGeneratorsAllowed()) {
             return;
         }
         if (crystalBlitz.getInstance().gamemanager == null) {
@@ -204,6 +206,9 @@ public class CrystalOverFlowGeneration {
         if (crystalBlitz.getInstance().gamemanager == null) {
             return;
         }
+        if(!isStaleOverflowAllowedToProducePureOnGenIII()){
+            return;
+        }
         BossBarStates state = crystalBlitz.getInstance().gamemanager.bossbar.currentstate;
 
         //When pure from stale oveflow generators is not yet unlocked
@@ -258,6 +263,17 @@ public class CrystalOverFlowGeneration {
             staleOveflowGeneratorPureProductionTask = null;
         }
     }
+    //Here it checks the config and the hard coded checks. To allow overflow generators.
+    private boolean isCrystalOverflowGeneratorsAllowed() {
+        return CRYSTAL_OVERFLOW_ALLOWED && crystalBlitz.getInstance().getConfig().getBoolean("crystal-overflow-generator-enabled", true);
+    }
+    //Checks the config to see if stale overflow is allowed to produce pure shards
+    private boolean isStaleOverflowAllowedToProducePureOnGenIII(){
+        return crystalBlitz.getInstance().getConfig().getBoolean("stale-generator-oveflow-producing-pure-on-gen-3", true);
+    }
+
+
+
 }
 
 //The type of the overflow generators. Primary will produce that type

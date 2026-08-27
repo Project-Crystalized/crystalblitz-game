@@ -18,7 +18,7 @@ public class BossbarManager {
     BossBarStates currentstate =  BossBarStates.starting; //Reset state
     //Changed to be 3 minutes as mite requsted
     //This is the time between each gen upgrade
-    int timerdefaultvalue = 3 * 60;
+    int timerdefaultvalue = 4 * 60;
     int timer = timerdefaultvalue;
     //aded a specific check for if nexuses can be revived
     private boolean canNexusesBeRevived = true;
