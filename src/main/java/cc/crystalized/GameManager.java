@@ -36,8 +36,10 @@ public class GameManager {
     public final List<PureShardGenerator> pureShardGenerators = new ArrayList<>();
     public static List<PlayerData> playerDatas = new ArrayList<>();
     public static GameTypes GameType;
-    //All the stale overflow generators, pure overflow handeled in Pure generators
-    private final List<CrystalOverFlowGeneration> crystalOverflowsStaleGenerators = new ArrayList<>();
+        //All the stale overflow generators, pure overflow handeled in Pure generators
+        //private final List<CrystalOverFlowGeneration> crystalOverflowsStaleGenerators = new ArrayList<>();
+    //Now handles entier stale generators
+    private final List<StaleShardGenerator> staleShardGenerators = new ArrayList<>();
 
     enum GameTypes {
         Custom,
@@ -62,8 +64,8 @@ public class GameManager {
         setupEntities();
         //The pure shard generators set up
         setupPureShardGenerators();
-        //The set up for stale crystals oveflow generators, no need for Pure shards as that is inside pure shard generators already
-        setupStaleCrystalOverflowGenerators();
+        //The stale shard generators set up.
+        setupStaleShardGeneretors();
 
         for (Player p : Bukkit.getOnlinePlayers()) {
             p.getEnderChest().setMaxStackSize(54);
@@ -414,27 +416,46 @@ public class GameManager {
             generator.cancelOverflowGenerationTask();
         }
         //Cancels all stale oveflow generators
-        for (CrystalOverFlowGeneration overFlowStaleGeneration : crystalOverflowsStaleGenerators) {
-            overFlowStaleGeneration.cancelOverflowGeneration();
+        for (StaleShardGenerator generator : staleShardGenerators) {
+            generator.canelStaleOverflowGenerations();
         }
-        crystalOverflowsStaleGenerators.clear();
+        pureShardGenerators.clear();
+        staleShardGenerators.clear();
     }
-    //This method sets up all stale overflow generators
-    private void setupStaleCrystalOverflowGenerators() {
+    //This method sets up all stale generators.
+    private void setupStaleShardGeneretors() {
         new BukkitRunnable() {
             @Override
             public void run() {
                 //Goes through team data, and gets the stale shard location
                 for (TeamData team : Teams.team_datas) {
                     Location staleLocation = crystalBlitz.getInstance().mapdata.getStaleShardLoc(team.name);
-                    //Slightly added the height to account for the gen upgrade which makes it higher, to not overcomplicate with chaning location for generating
-                    Location overflowLocation = staleLocation.clone().add(0.5, 2.2, 0.5);
-                    //Starts the stale oveflow generation and null pure generator as it is not a pure generator.
-                    crystalOverflowsStaleGenerators.add(new CrystalOverFlowGeneration(overflowLocation, OverflowGeneratorType.STALE, null));
+                    //Sets up the stale shard generators, based on team name and location.
+                    staleShardGenerators.add(new StaleShardGenerator(team.name, staleLocation));
                 }
             } //small delay added during debuging.
         }.runTaskLater(crystalBlitz.getInstance(), 1);
     }
+    //This is to be able to get stale shard generator based on team name for upgrades.
+    public StaleShardGenerator getStaleShardGenerator(String teamName) {
+        for (StaleShardGenerator generator : staleShardGenerators) {
+            if (generator.getTeamName().equals(teamName)) {
+                return generator;
+            }
+        }
+        return null;
+    }
+    //This is to be able to get the generator based on the side shard. As behaviours are generators based.
+    public StaleShardGenerator getStaleShardGeneratorFromSideShard(Location location) {
+        for (StaleShardGenerator generator : staleShardGenerators) {
+            if (generator.ownsSideShard(location)) {
+                return generator;
+            }
+        }
+
+        return null;
+    }
+
 }
 
 class TabMenu {
