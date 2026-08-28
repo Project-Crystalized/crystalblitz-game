@@ -23,10 +23,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.FluidLevelChangeEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -530,23 +527,41 @@ public class PlayerListener implements Listener {
                         }
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                     }
-                    case DEAD_BRAIN_CORAL_FAN, DEAD_BRAIN_CORAL_WALL_FAN, AMETHYST_CLUSTER, LARGE_AMETHYST_BUD -> {
+                    //The side shards break logic,added small amethyst bud
+                    case DEAD_BRAIN_CORAL_FAN, DEAD_BRAIN_CORAL_WALL_FAN, AMETHYST_CLUSTER, LARGE_AMETHYST_BUD, SMALL_AMETHYST_BUD -> {
+                        //Detects if it stale generator
+                        StaleShardGenerator staleGenerator = crystalBlitz.getInstance().gamemanager.getStaleShardGeneratorFromSideShard(b.getLocation());
+                        //Detects if it is a pure shard generator
+                        PureShardGenerator pureGenerator = crystalBlitz.getInstance().gamemanager.getPureShardGeneratorFromSpike(b.getLocation());
                         //The extra time that will be added for pure shards
                         int extraTime = 0;
                         //this is dumb, but decide what shard we're giving to the player
                         switch (b.getType()) {
                             case DEAD_BRAIN_CORAL_WALL_FAN -> {
+                                //Defualt stale gen
                                 ItemStack weak = Shop.ShardTypes.Weak.item.clone();
                                 weak.setAmount(2);
                                 p.getInventory().addItem(weak);
                                 extraTime = 0;
                             }
                             case LARGE_AMETHYST_BUD -> {
-                                ItemStack strong = Shop.ShardTypes.Strong.item.clone();
-                                strong.setAmount(1);
-                                p.getInventory().addItem(strong);
-                                extraTime = EXTRA_TIME_FOR_PURE_SHARDS;
+                                //Large amethyst is the last upgrade of stale gen and gives 6 stale and 4 pure shards
+                                ItemStack stale = Shop.ShardTypes.Weak.item.clone();
+                                stale.setAmount(6);
+                                ItemStack pure = Shop.ShardTypes.Strong.item.clone();
+                                pure.setAmount(4);
+                                p.getInventory().addItem(stale);
+                                p.getInventory().addItem(pure);
 
+                            }
+                            case SMALL_AMETHYST_BUD -> {
+                                //Small amethist is the first upgrade of stale gen and gives 4 stale and 1 pure
+                                ItemStack stale = Shop.ShardTypes.Weak.item.clone();
+                                stale.setAmount(4);
+                                ItemStack pure = Shop.ShardTypes.Strong.item.clone();
+                                pure.setAmount(1);
+                                p.getInventory().addItem(stale);
+                                p.getInventory().addItem(pure);
                             }
                             case AMETHYST_CLUSTER -> {
                                 ItemStack strong = Shop.ShardTypes.Strong.item.clone();
@@ -556,19 +571,23 @@ public class PlayerListener implements Listener {
                         }
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                         e.setCancelled(true);
-                        //Detects if it is a pure shard generator
-                        PureShardGenerator generator = crystalBlitz.getInstance().gamemanager.getPureShardGeneratorFromSpike(b.getLocation());
-                        //if it is weak shard does the old generation, the order is important as it is required to have that blcok property
-                        if(generator == null) {
-                            new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
+                        //The logic for stale generators
+                        if (staleGenerator != null) {
+                            //Stale generators doesn't need to be set to air as it handles it self and regeneration
+                            staleGenerator.breakSideShard(b.getLocation());
+                            return;
                         }
-                        //makes the block air
-                        b.setType(Material.AIR);
-                        //If generator is not null the order is important as it requires the side crystals to be air to detect missing
-                        if (generator != null) {
-                            //if it is starts the spike regeneration, where it slowly regens one at a time
-                            generator.startSpikeRegeneration();
+                        //The logic for pure gens
+                        if (pureGenerator != null) {
+                            //Pure regen neds the crystal to be missing/set to air before regen
+                            b.setType(Material.AIR);
+                            //starts the spike/side shard regeneration where it regrows one at a time
+                            pureGenerator.startSpikeRegeneration();
+                            return;
                         }
+                        //TODO: Renable after testing
+                        //new CrystalShardBlock(p, b.getType(), b.getLocation(), b.getBlockData(), extraTime);
+
                     }
                     default -> {
                         e.setCancelled(true);
@@ -669,6 +688,21 @@ public class PlayerListener implements Listener {
         //using isSimilar as amount doesn't matter
         //returns true if it is a shard of any type
         return item.isSimilar(Shop.ShardTypes.Weak.item) || item.isSimilar(Shop.ShardTypes.Strong.item) || item.isSimilar(Shop.ShardTypes.Nexus.item);
+    }
+    //Specificly to make small and large amethist insta mineable for stale gens as Mite requsted
+    @EventHandler
+    public void onBlockDamage(BlockDamageEvent e) {
+        Block b = e.getBlock();
+        if (b.getType() != Material.SMALL_AMETHYST_BUD && b.getType() != Material.LARGE_AMETHYST_BUD) {
+            return;
+        }
+        //checks if it is the stale genertaor and if it is not stops
+        StaleShardGenerator staleGenerator = crystalBlitz.getInstance().gamemanager.getStaleShardGeneratorFromSideShard(b.getLocation());
+        if (staleGenerator == null) {
+            return;
+        }
+        //makes them insta breakable.
+        e.setInstaBreak(true);
     }
 }
 

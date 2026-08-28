@@ -191,24 +191,30 @@ public class Shop{
         p.openInventory(view);
     }
 
+
     public static void openTeamUpgrades(Player p) {
         TeamData td = Teams.getTeamData(Teams.getPlayerTeam(p));
+        if(td == null){
+            return;
+        }
 
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA013").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
-        view.setItem(1, TeamUpgrades.getUpgradeShopItem(upgrades.nexusHeal, p));
-        view.setItem(2, TeamUpgrades.getUpgradeShopItem(upgrades.slimeTotemAlarm, p));
+        //Made the team upgrades work without being static, as then teams shared the sharpness/protection upgrade
+        view.setItem(1, td.teamUpgrades.getUpgradeShopItem(upgrades.nexusHeal, p));
+        //TODO: Disabled slime totem as it ain't working
+        //view.setItem(2, td.teamUpgrades.getUpgradeShopItem(upgrades.slimeTotemAlarm, p));
         if (td.teamUpgrades.hasUpgrade(upgrades.strongerShardGen1)) {
-            view.setItem(3, TeamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen2, p));
+            view.setItem(3, td.teamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen2, p));
         } else {
-            view.setItem(3, TeamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen1, p));
+            view.setItem(3, td.teamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen1, p));
         }
-        view.setItem(12, TeamUpgrades.getUpgradeShopItem(upgrades.doubleStaleShards, p));
-        //view.setItem(21, TeamUpgrades.getUpgradeShopItem(upgrades.autoShardCollect, p));
-        view.setItem(4, TeamUpgrades.getUpgradeShopItem(upgrades.sharpness, p));
-        view.setItem(5, TeamUpgrades.getUpgradeShopItem(upgrades.totemMoreHealth, p));
-        view.setItem(6, TeamUpgrades.getUpgradeShopItem(upgrades.protection, p));
+        view.setItem(12, td.teamUpgrades.getUpgradeShopItem(upgrades.doubleStaleShards, p));
+        //view.setItem(21, td.teamUpgrades.getUpgradeShopItem(upgrades.autoShardCollect, p));
+        view.setItem(4, td.teamUpgrades.getUpgradeShopItem(upgrades.sharpness, p));
+        view.setItem(5, td.teamUpgrades.getUpgradeShopItem(upgrades.totemMoreHealth, p));
+        view.setItem(6, td.teamUpgrades.getUpgradeShopItem(upgrades.protection, p));
 
         p.openInventory(view);
     }

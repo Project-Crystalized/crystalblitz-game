@@ -35,13 +35,14 @@ import static net.kyori.adventure.text.format.NamedTextColor.*;
 public class TeamUpgrades {
 
     List<String> team = new ArrayList<>();
-    private static List<upgrades> upgradesBought = new ArrayList<>();
-
-    public TextDisplay staleShardTag;
+    //Removed static as every team got the sharpness upgrade when it was bought, so if you bought a new sword as another team it would have sharpness
+    //Now each team should own their upgrades
+    private final List<upgrades> upgradesBought = new ArrayList<>();
 
     public TeamUpgrades(String t) {
         this.team.clear();
-        upgradesBought.clear();
+        //no need to clear it anymore as it should be empty when creating for each team
+            //upgradesBought.clear();
 
         new BukkitRunnable() {
             public void run() {
@@ -52,13 +53,15 @@ public class TeamUpgrades {
 
                 team.addAll(teamList);
 
-                resetStaleShard(crystalBlitz.getInstance().mapdata.getStaleShardLoc(t));
+                //Now handled in stale generators
+                    //resetStaleShard(crystalBlitz.getInstance().mapdata.getStaleShardLoc(t));
                 cancel();
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
     }
 
     private void resetStaleShard(Location center) {
+        /*
         center.setWorld(Bukkit.getWorld("world")); //throws a NPE if we dont do this, idk why
         Block cb = center.getBlock();
         cb.setType(Material.BLACK_GLAZED_TERRACOTTA);
@@ -83,10 +86,11 @@ public class TeamUpgrades {
             entity.setSeeThrough(true);
             entity.setBillboard(Display.Billboard.CENTER);
             entity.text(translatable("crystalized.game.crystalblitz.weaknode.mine").color(DARK_RED));
-        });
+        }); */
     }
 
     private void resetSideStaleShard(Location loc, BlockFace facing ,boolean remove) {
+        /*
         if (remove) {
             loc.getBlock().setType(Material.AIR);
         } else {
@@ -100,7 +104,10 @@ public class TeamUpgrades {
             b.getState().update(true, false);
             //System.out.println(b.getLocation());
         }
+
+         */
     }
+
 
     public boolean hasUpgrade(upgrades u) {
         if (upgradesBought.contains(u)) {
@@ -129,6 +136,12 @@ public class TeamUpgrades {
                 //TODO theres no slime totem in essentials yet
             }
             case doubleStaleShards -> {
+                //Activates second layer from the team which bought it, handled insiside the stale generator
+                StaleShardGenerator generator = crystalBlitz.getInstance().gamemanager.getStaleShardGenerator(Teams.getPlayerTeam(buyer));
+                if (generator != null) {
+                    generator.activateSecondLayer();
+                }
+                /*
                 Location origin = md.getStaleShardLoc(Teams.getPlayerTeam(buyer));
                 Location loc = origin.clone().add(0, 1, 0);
 
@@ -147,14 +160,23 @@ public class TeamUpgrades {
                 resetSideStaleShard(loc.clone().add(-1, 0, 0), BlockFace.WEST, false);
 
                 //move stale shard nametag up
-                staleShardTag.teleport(staleShardTag.getLocation().clone().add(0, 1, 0));
+                staleShardTag.teleport(staleShardTag.getLocation().clone().add(0, 1, 0)); */
             }
             case strongerShardGen1 -> {
-                //TODO
+                //Upgrades the stale generator to level 1.
+                StaleShardGenerator generator = crystalBlitz.getInstance().gamemanager.getStaleShardGenerator(Teams.getPlayerTeam(buyer));
+                if (generator != null) {
+                    generator.setStrongerShardUpgradeLevel(1);
+                }
             }
             case strongerShardGen2 -> {
-                //TODO
+                //Upgrades the stale generator to level 2
+                StaleShardGenerator generator = crystalBlitz.getInstance().gamemanager.getStaleShardGenerator(Teams.getPlayerTeam(buyer));
+                if (generator != null) {
+                    generator.setStrongerShardUpgradeLevel(2);
+                }
             }
+            //Auto shard collect disabled in the shop by Mite's request.
             case autoShardCollect -> {autoShardCollection();}
             case sharpness -> {
                 for (String s : team) {
@@ -228,8 +250,8 @@ public class TeamUpgrades {
             }
         }
     }
-
-    public static ItemStack getUpgradeShopItem(upgrades u, Player p) {
+    //Not static anymore, to work with the non-static version of team upgrades. As before teams shared upgrades
+    public ItemStack getUpgradeShopItem(upgrades u, Player p) {
         if (upgradesBought.contains(u)) {
             return u.shopItem_alreadyHas;
         } else if (p.getInventory().containsAtLeast(u.priceType.item, u.price)) {

@@ -219,7 +219,11 @@ public class PureShardGenerator {
 
         //This restores all th broken spikes to it's original block
         for (SpikeData spike : spikes) {
-            spike.location.getBlock().setBlockData(spike.blockData.clone(), false);
+            Block block = spike.location.getBlock();
+            //If the player block was covering the spike/side shard removes it
+            //so that the proper breaking works.
+            crystalBlitz.getInstance().Blocks.remove(block);
+            block.setBlockData(spike.blockData.clone(), false);
         }
         //Updates the health bar to visualy set it to full
         updateHealthBar();
@@ -339,6 +343,8 @@ public class PureShardGenerator {
             if (block.getBlockData().matches(spike.blockData)) {
                 continue;
             }
+            //ensures on revival player placed blocks get removed as well.
+            crystalBlitz.getInstance().Blocks.remove(block);
             block.setBlockData(spike.blockData.clone(), false);
             //Only regens one spike at a time
             return;
