@@ -560,7 +560,11 @@ class CBItem_Armor extends CBItem{
             whoFor.getInventory().setChestplate(item);
         } else {
             whoFor.getInventory().setChestplate(item);
-            whoFor.getInventory().getChestplate().addEnchantment(Enchantment.PROTECTION, 1);
+            //Checks if has protection otherwise other teams will get it, which didn't buy it
+            if (td.teamUpgrades.hasUpgrade(upgrades.protection)) {
+                whoFor.getInventory().getChestplate().addEnchantment(Enchantment.PROTECTION, 1);
+            }
+
         }
 
         //leggings
@@ -576,7 +580,11 @@ class CBItem_Armor extends CBItem{
             whoFor.getInventory().setLeggings(item);
         } else {
             whoFor.getInventory().setLeggings(leggings);
-            whoFor.getInventory().getLeggings().addEnchantment(Enchantment.PROTECTION, 1);
+            //Checks if has protection upgrade before applying to other pants as wells 
+            if (td.teamUpgrades.hasUpgrade(upgrades.protection)) {
+                whoFor.getInventory().getLeggings().addEnchantment(Enchantment.PROTECTION, 1);
+            }
+
         }
 
         //boots (will always be leather boots, so no material check here)
