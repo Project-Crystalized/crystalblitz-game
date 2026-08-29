@@ -153,7 +153,7 @@ public class Shop{
         view.setItem(4, CrystalBlitzItems.getShopItem("stone_sword", p));
         view.setItem(5, CrystalBlitzItems.getShopItem("iron_sword", p));
         view.setItem(6, CrystalBlitzItems.getShopItem("diamond_sword", p));
-        //TODO wiffle bat slot 7
+        //Wiffle bat at slot 7
         view.setItem(7, CrystalBlitzItems.getShopItem("wiffle_bat", p));
         view.setItem(10, CrystalBlitzItems.getShopItem("precise_crossbow", p));
         view.setItem(11, CrystalBlitzItems.getShopItem("crossbow", p));
@@ -186,13 +186,13 @@ public class Shop{
         view.setItem(0, Back);
         view.setItem(1, CrystalBlitzItems.getShopItem("feather_orb", p));
         view.setItem(2, CrystalBlitzItems.getShopItem("boost_orb", p));
-        view.setItem(5, CrystalBlitzItems.getShopItem("gapple", p));
-        view.setItem(3, CrystalBlitzItems.getShopItem("grappling_orb", p));
-        view.setItem(4, CrystalBlitzItems.getShopItem("explosive_orb", p));
+        view.setItem(4, CrystalBlitzItems.getShopItem("gapple", p));
+        //view.setItem(3, CrystalBlitzItems.getShopItem("grappling_orb", p));
+        view.setItem(3, CrystalBlitzItems.getShopItem("explosive_orb", p));
         view.setItem(10, CrystalBlitzItems.getShopItem("defence_totem", p));
-        view.setItem(11, CrystalBlitzItems.getShopItem("launch_totem", p));
-        view.setItem(12, CrystalBlitzItems.getShopItem("antiair_totem", p));
-        view.setItem(14, CrystalBlitzItems.getShopItem("cloud_totem", p));
+        //view.setItem(14, CrystalBlitzItems.getShopItem("launch_totem", p));
+        //view.setItem(12, CrystalBlitzItems.getShopItem("antiair_totem", p));
+        view.setItem(11, CrystalBlitzItems.getShopItem("cloud_totem", p));
         //TODO healing totem
 
         p.openInventory(view);
@@ -210,7 +210,7 @@ public class Shop{
         view.setItem(0, Back);
         //Made the team upgrades work without being static, as then teams shared the sharpness/protection upgrade
         view.setItem(1, td.teamUpgrades.getUpgradeShopItem(upgrades.nexusHeal, p));
-        //TODO: Disabled slime totem as it ain't working
+        //TODO: Disabled slime totem as it ain't working, renable when it is added
         //view.setItem(7, td.teamUpgrades.getUpgradeShopItem(upgrades.slimeTotemAlarm, p));
         if (td.teamUpgrades.hasUpgrade(upgrades.strongerShardGen1)) {
             view.setItem(3, td.teamUpgrades.getUpgradeShopItem(upgrades.strongerShardGen2, p));
@@ -220,7 +220,7 @@ public class Shop{
         view.setItem(2, td.teamUpgrades.getUpgradeShopItem(upgrades.doubleStaleShards, p));
         //view.setItem(21, td.teamUpgrades.getUpgradeShopItem(upgrades.autoShardCollect, p));
         view.setItem(4, td.teamUpgrades.getUpgradeShopItem(upgrades.sharpness, p));
-        view.setItem(5, td.teamUpgrades.getUpgradeShopItem(upgrades.totemMoreHealth, p));
+        //view.setItem(5, td.teamUpgrades.getUpgradeShopItem(upgrades.totemMoreHealth, p));
         view.setItem(6, td.teamUpgrades.getUpgradeShopItem(upgrades.protection, p));
 
         p.openInventory(view);
