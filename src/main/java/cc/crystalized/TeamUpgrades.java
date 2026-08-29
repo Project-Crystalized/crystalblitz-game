@@ -284,7 +284,7 @@ public class TeamUpgrades {
 }
 
 enum upgrades{
-    nexusHeal(Material.COAL, "Nexus Heal", "Restores your Nexus with half health", "nexus_shard", 10, Shop.ShardTypes.Nexus),
+    nexusHeal(Material.COAL, "Nexus Heal", "Restores your Nexus with half health", "nexus_shard", 6, Shop.ShardTypes.Nexus),
     slimeTotemAlarm(Material.COAL, "Slime Totem Alarm", "desc", "slime_totem", 40, Shop.ShardTypes.Weak),
     doubleStaleShards(Material.COAL, "Double Stale Shards", "adds another stale shard block ontop of your one at base.", "weak_shard", 32, Shop.ShardTypes.Weak),
     strongerShardGen1(Material.LARGE_AMETHYST_BUD, "Stronger Shard Generation 1", "LVL1: The Stale shard block at base may grow Pure shards if left long enough", "", 40, Shop.ShardTypes.Weak),
