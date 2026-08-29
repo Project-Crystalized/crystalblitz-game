@@ -1,13 +1,19 @@
 package cc.crystalized;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,6 +47,7 @@ public class CrystalBlitzItems {
     public static void SetupItems() {
         items.clear();
 
+        items.add(setupWiffleBat());
         items.add(setup("wooden_sword", Material.WOODEN_SWORD, null,
                 List.of(translatable("crystalized.sword.wood.desc")),
                 0, Shop.ShardTypes.Weak, ItemType.Melee,
@@ -364,6 +371,51 @@ public class CrystalBlitzItems {
         item.setItemMeta(meta);
         return new CBItem_Armor(item, internalName, price, priceType, downgradeTo, mustNotHave);
     }
+    //seperate wiffle bat set up, as it required quite a few custom changes involvig attrabutes
+    private static CBItem setupWiffleBat() {
+        //TODO: Maybe make it in Crystalize essentials later so other mini games could acces it if needed
+        //uses the stone axe as it is nearly the same as wooden axe and is not effected by world eddit
+        ItemStack item = new ItemStack(Material.STONE_AXE);
+        ItemMeta meta = item.getItemMeta();
+        //This copies the stone axe default atributes
+        Multimap<Attribute, AttributeModifier> attributes = ArrayListMultimap.create(Material.STONE_AXE.getDefaultAttributeModifiers(EquipmentSlot.HAND));
+        //Removes the attack damage attribute, to make it custom 2
+        attributes.removeAll(Attribute.ATTACK_DAMAGE);
+        //adds the new attack damage attribute
+        //Adds 1 as players default damage is 1, so it will be 2.
+        attributes.put(Attribute.ATTACK_DAMAGE, new AttributeModifier(new NamespacedKey("crystalized", "wiffle_bat_damage"),
+                        1,
+                        AttributeModifier.Operation.ADD_NUMBER,
+                        EquipmentSlotGroup.MAINHAND
+                )
+        );
+        //Applys the attribute modifiers. With the 2 attak and default axe attack speed
+        meta.setAttributeModifiers(attributes);
+        //TODO: This is not traslater friendly, as the stats are being faked with lore, so needs to be made translater friendly
+        meta.displayName(Component.text("Wifflebat").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        //meta.displayName(translatable("crystalized.item.wifflebat.name").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false));
+        meta.lore(List.of(
+                //translatable("crystalized.item.wifflebat.desc").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false),
+                Component.text("Deals knockback, but not a lot of damage").color(NamedTextColor.WHITE).decoration(TextDecoration.ITALIC, false),
+                Component.text("Knockback I").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false),
+                //a little spase to make it look like default
+                Component.empty(),
+                Component.text("When in Main Hand:").color(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false),
+                Component.text("2 Attack Damage").color(NamedTextColor.DARK_GREEN).decoration(TextDecoration.ITALIC, false),
+                Component.text("0.8 Attack Speed").color(NamedTextColor.DARK_GREEN).decoration(TextDecoration.ITALIC, false)));
+        meta.setUnbreakable(true);
+        meta.setItemModel(new NamespacedKey("crystalized", "wiffle_bat"));
+        meta.getPersistentDataContainer().set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, "wiffle_bat");
+        //Enchanted with knockback 1
+        meta.addEnchant(Enchantment.KNOCKBACK, 1, true);
+        item.setItemMeta(meta);
+        //Make them hidden as I faked them with lore, for translating might have to rework that in the future.
+        //TODO: Remove if want this to be displayed
+        item.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
+        //The price 20 pure shards for now.
+        return new CBItem(item, "wiffle_bat", 20, Shop.ShardTypes.Strong, ItemType.other, "", null);
+    }
+
 }
 
 
