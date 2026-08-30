@@ -404,7 +404,7 @@ public class PureShardGenerator {
                 //Displays when the next side crystal will regenerate in seonds
                 spikeTimerRegenDisplay.text(Component.text("Next Side Crystal: " + secondsRemaining + "s"));
             }
-        }.runTaskTimer(crystalBlitz.getInstance(), 1, 1); //updates quite often so it is almost instant
+        }.runTaskTimer(crystalBlitz.getInstance(), 1, 5); //updates quite often so it is almost instant
     }
     //Canceling the task so it won't run on revival. And makes sure spike regeneration is set to false, so it can run again later
     private void cancelSpikeRegeneration() {
