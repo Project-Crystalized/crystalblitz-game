@@ -17,6 +17,7 @@ import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.damage.DamageType;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -237,7 +238,16 @@ public class PlayerListener implements Listener {
                         if (newItem instanceof CBItem_Armor armor) {
                             armor.add(p);
                         } else if (newItem != null) {
-                            inv.addItem(newItem.item);
+                            //clones the item to avoid enchanting the source item, otherwise other teams end up having it as well.
+                            ItemStack downgradedItem = newItem.item.clone();
+                            //gets the team to see if it has the team sharpness upgrade.
+                            TeamData td = Teams.getTeamData(p);
+                            //when it is a sword will enchant if there is a sharpness upgrade
+                            if (newItem.type == CrystalBlitzItems.ItemType.Melee && td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
+                                downgradedItem.addEnchantment(Enchantment.SHARPNESS, 1);
+                            }
+                            //gives the downgraded item
+                            inv.addItem(downgradedItem);
                         }
                     }
                 }
