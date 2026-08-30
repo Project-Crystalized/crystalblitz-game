@@ -231,6 +231,12 @@ public class PlayerListener implements Listener {
         for (ItemStack i : inv) {
             if (i != null) {
                 CBItem cbItem = CrystalBlitzItems.getCBItem(i);
+                //Specificly blcoks as they are not consindered cbItem as I discovered, so removes them here.
+                if (cbItem == null) {
+                    if (i.getType().isBlock()) {
+                        inv.removeItem(i);
+                    }
+                }
                 if (cbItem != null) {
                     inv.removeItem(i);
                     if (!cbItem.downgradeTo.equals("")) {
