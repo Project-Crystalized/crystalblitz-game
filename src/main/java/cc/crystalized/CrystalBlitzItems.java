@@ -345,6 +345,8 @@ public class CrystalBlitzItems {
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         pdc.set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, internalName);
         item.setItemMeta(meta);
+        //Now should dispaly the amount of blocks you buy from the shop
+        item.setAmount(blockAmount);
         List<Material> blockReturn = List.of(blueBlock, cyanBlock, greenBlock, limeBlock, magentaBlock, redBlock, whiteBlock, yellowBlock);
         return new CBItem_Block(item, internalName, price, priceType, blockReturn, blockAmount);
     }
@@ -355,6 +357,8 @@ public class CrystalBlitzItems {
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         pdc.set(new NamespacedKey("crystalblitz", "internalname"), PersistentDataType.STRING, internalName);
         item.setItemMeta(meta);
+        //Now should dispaly the amount of blocks you buy from the shop
+        item.setAmount(blockAmount);
         List<Material> blockReturn = new ArrayList<>();
         for (int i = 0 ; i < 8 ; i++) {
             blockReturn.add(returnBlock);
