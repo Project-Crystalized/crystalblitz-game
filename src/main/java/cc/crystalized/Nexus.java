@@ -73,17 +73,18 @@ public class Nexus {
     }
 
     private void HealthBar(String t) {
-        Location loc = new Location(Bukkit.getWorld(""),
+        //Changed all world refence in this class to be the game world as it only should be happening while the game is going on.
+        Location loc = new Location(crystalBlitz.getInstance().getGameWorld(),
                 crystalBlitz.getInstance().mapdata.getNexus(t)[0] + 0.5,
                 crystalBlitz.getInstance().mapdata.getNexus(t)[1] + 2.3,
                 crystalBlitz.getInstance().mapdata.getNexus(t)[2] + 0.5
         );
-        TextDisplay display = Bukkit.getWorld("world").spawn(loc, TextDisplay.class, entity -> {
+        TextDisplay display = crystalBlitz.getInstance().getGameWorld().spawn(loc, TextDisplay.class, entity -> {
             entity.setSeeThrough(true);
             entity.setBillboard(Display.Billboard.CENTER);
             entity.text(text("loading..."));
         });
-        Bukkit.getWorld("world").spawn(loc.clone().add(0, 0.7, 0), TextDisplay.class, entity -> {
+        crystalBlitz.getInstance().getGameWorld().spawn(loc.clone().add(0, 0.7, 0), TextDisplay.class, entity -> {
             entity.setSeeThrough(true);
             entity.setBillboard(Display.Billboard.CENTER);
             entity.text(
@@ -150,12 +151,12 @@ public class Nexus {
     }
 
     public void destroyNexus(String t) {
-        Location blockloc1 = new Location(Bukkit.getWorld("world"),
+        Location blockloc1 = new Location(crystalBlitz.getInstance().getGameWorld(),
                 crystalBlitz.getInstance().mapdata.getNexus(team)[0],
                 crystalBlitz.getInstance().mapdata.getNexus(team)[1],
                 crystalBlitz.getInstance().mapdata.getNexus(team)[2]
         );
-        Location blockloc2 = new Location(Bukkit.getWorld("world"),
+        Location blockloc2 = new Location(crystalBlitz.getInstance().getGameWorld(),
                 crystalBlitz.getInstance().mapdata.getNexus(team)[0],
                 crystalBlitz.getInstance().mapdata.getNexus(team)[1] + 1,
                 crystalBlitz.getInstance().mapdata.getNexus(team)[2]
@@ -167,12 +168,12 @@ public class Nexus {
 
     public void destroyNexus(String t, Player p) {
         p.playSound(p, "crystalized:effect.nexus_crystal_destroyed", 50, 1);
-        Location blockloc1 = new Location(Bukkit.getWorld("world"),
+        Location blockloc1 = new Location(crystalBlitz.getInstance().getGameWorld(),
                 crystalBlitz.getInstance().mapdata.getNexus(t)[0],
                 crystalBlitz.getInstance().mapdata.getNexus(t)[1],
                 crystalBlitz.getInstance().mapdata.getNexus(t)[2]
         );
-        Location blockloc2 = new Location(Bukkit.getWorld("world"),
+        Location blockloc2 = new Location(crystalBlitz.getInstance().getGameWorld(),
                 crystalBlitz.getInstance().mapdata.getNexus(t)[0],
                 crystalBlitz.getInstance().mapdata.getNexus(t)[1] + 1,
                 crystalBlitz.getInstance().mapdata.getNexus(t)[2]
@@ -200,12 +201,12 @@ public class Nexus {
     }
 
     public void resetNexuses() {
-        Location blockloc1 = new Location(Bukkit.getWorld("world"),
+        Location blockloc1 = new Location(crystalBlitz.getInstance().getGameWorld(),
                 crystalBlitz.getInstance().mapdata.getNexus(team)[0],
                 crystalBlitz.getInstance().mapdata.getNexus(team)[1],
                 crystalBlitz.getInstance().mapdata.getNexus(team)[2]
         );
-        Location blockloc2 = new Location(Bukkit.getWorld("world"),
+        Location blockloc2 = new Location(crystalBlitz.getInstance().getGameWorld(),
                 crystalBlitz.getInstance().mapdata.getNexus(team)[0],
                 crystalBlitz.getInstance().mapdata.getNexus(team)[1] + 1,
                 crystalBlitz.getInstance().mapdata.getNexus(team)[2]

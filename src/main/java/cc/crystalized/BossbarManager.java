@@ -166,6 +166,17 @@ public class BossbarManager {
     public boolean getCanNexusesBeRevived(){
         return canNexusesBeRevived;
     }
+    //Added to removes the boss bar at the end of the game, for both bedrock and java player. Prevents double boss bar issue.
+    public void removeBossBar() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (FloodgateApi.getInstance().isFloodgatePlayer(p.getUniqueId())) {
+                p.hideBossBar(texture_br);
+            } else {
+                p.hideBossBar(texture);
+            }
+            p.hideBossBar(bar);
+        }
+    }
 }
 
 enum BossBarStates{
