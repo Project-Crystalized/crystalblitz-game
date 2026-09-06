@@ -32,7 +32,10 @@ public final class crystalBlitz extends JavaPlugin {
 
     public Set<Block> Blocks = new HashSet<>();
 
-    public final MapData mapdata = new MapData();
+    //Now mapdata is being created in on enabled as it needs mapmanager
+    public MapData mapdata;
+    //map manager is for world/map reseting after crashesh and game ends.
+    public MapManager mapManager;
     public GameManager gamemanager;
     public boolean is_force_starting = false;
     private boolean isCountingDown = false;
@@ -44,6 +47,11 @@ public final class crystalBlitz extends JavaPlugin {
     public void onEnable() {
         //ensures config is saved
         saveDefaultConfig();
+        //map manager and map data being created
+        mapManager = new MapManager(this);
+        mapdata = new MapData();
+        //The game world set up, deleting any previous game world dimensions.
+        mapManager.setup();
 
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("crystalblitz");
@@ -138,17 +146,11 @@ public final class crystalBlitz extends JavaPlugin {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "crystalized:crystalblitz");
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "crystalized:main");
 
-        World w  = Bukkit.getWorld("world");
-
-        w.setGameRule(GameRules.SHOW_DEATH_MESSAGES, false);
-        w.setGameRule(GameRules.SHOW_ADVANCEMENT_MESSAGES, false);
-        w.setGameRule(GameRules.FIRE_DAMAGE, false);
-        w.setGameRule(GameRules.SPAWN_PHANTOMS, false);
-        w.setGameRule(GameRules.SPAWN_MOBS, false);
-        w.setGameRule(GameRules.MOB_GRIEFING, false);
-        w.setGameRule(GameRules.RANDOM_TICK_SPEED, 0);
-        w.setGameRule(GameRules.NATURAL_HEALTH_REGENERATION, true);
-        w.setDifficulty(Difficulty.HARD);
+        //This is the waiting world rules, the same rules apply to it
+        World w  = getSourceWorld();
+        if(w != null){
+            setupWorldRules(w);
+        }
 
         CrystalBlitzDatabase.setup_databases();
         Shop.setupShop();
@@ -246,13 +248,20 @@ public final class crystalBlitz extends JavaPlugin {
                         }
                     }
                     case 6 -> {
+                        //Gets the game world and sets it's up for the game.
+                        World gameWorld = getGameWorld();
+                        if (gameWorld == null) {
+                            getLogger().severe("CrystalBlitz game world was not prepared !");
+                            return;
+                        }
+                        setupWorldRules(gameWorld);
+                        //The game manager creation moved here, so there is no moments the game would think that game manager is null.
+                        gamemanager = new GameManager(type);
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             player.showTitle(Title.title(translatable("crystalized.game.generic.go").color(GOLD), text(" "),
                                     Title.Times.times(Duration.ofMillis(0), Duration.ofSeconds(1), Duration.ofSeconds(1))));
                             player.playSound(player, "crystalized:effect.countdown_end", 50, 1);
                         }
-                        gamemanager = new GameManager(type);
-
                         ByteArrayDataOutput out = ByteStreams.newDataOutput();
                         out.writeUTF("start_game");
                         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -315,6 +324,34 @@ public final class crystalBlitz extends JavaPlugin {
 
         return players;
     }
+    /*Gets the worlds, the source world is the waiting world, game world is where the game is happening and
+    * active world is where the game should take the player if the game is going on or not.
+    * */
+    public World getSourceWorld() {
+        return mapManager.getSourceWorld();
+    }
+    public World getGameWorld() {
+        return mapManager.getGameWorld();
+    }
+    public World getActiveWorld() {
+        return mapManager.getActiveWorld();
+    }
+    //sets up the rules of the world, applies to waiting/source world and the game world
+    public void setupWorldRules(World world) {
+        if (world == null) {
+            return;
+        }
+        world.setGameRule(GameRules.SHOW_DEATH_MESSAGES, false);
+        world.setGameRule(GameRules.SHOW_ADVANCEMENT_MESSAGES, false);
+        world.setGameRule(GameRules.FIRE_DAMAGE, false);
+        world.setGameRule(GameRules.SPAWN_PHANTOMS, false);
+        world.setGameRule(GameRules.SPAWN_MOBS, false);
+        world.setGameRule(GameRules.MOB_GRIEFING, false);
+        world.setGameRule(GameRules.RANDOM_TICK_SPEED, 0);
+        world.setGameRule(GameRules.NATURAL_HEALTH_REGENERATION, true);
+        world.setDifficulty(Difficulty.HARD);
+    }
+
 }
 
 //cba making another .java file - Callum

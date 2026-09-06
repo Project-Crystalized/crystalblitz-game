@@ -51,7 +51,8 @@ public class GameManager {
 
     public GameManager(GameTypes type) {
         Bukkit.getServer().sendMessage(text("Starting Game!"));
-        for (Entity e : Bukkit.getWorld("world").getEntities()) {
+        //changed so it works with the game world
+        for (Entity e : crystalBlitz.getInstance().getGameWorld().getEntities()) {
             if (e instanceof Villager || e instanceof TextDisplay || e instanceof Arrow || e instanceof Item) {
                 e.remove();
             }
@@ -63,7 +64,7 @@ public class GameManager {
         playerDatas.clear();
         setupEntities();
         //The pure shard generators set up
-        setupPureShardGenerators();
+        //setupPureShardGenerators();
         //The stale shard generators set up.
         setupStaleShardGeneretors();
 
@@ -83,7 +84,7 @@ public class GameManager {
 
             p.getInventory().setItem(0, CrystalBlitzItems.getCBItem("wooden_sword").item);
             p.getInventory().setItem(1, CrystalBlitzItems.getCBItem("wooden_pickaxe").item);
-            Location ploc = new Location(Bukkit.getWorld("world"),
+            Location ploc = new Location(crystalBlitz.getInstance().getGameWorld(),
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[2]
@@ -97,7 +98,7 @@ public class GameManager {
         for (String s : teams.spectator) {
             Player p = Bukkit.getPlayer(s);
             Teams.setPlayerDisplayNames(p);
-            p.teleport(new Location(Bukkit.getWorld("world"),
+            p.teleport(new Location(crystalBlitz.getInstance().getGameWorld(),
                     crystalBlitz.getInstance().mapdata.spectator_spawn[0],
                     crystalBlitz.getInstance().mapdata.spectator_spawn[1],
                     crystalBlitz.getInstance().mapdata.spectator_spawn[2]
@@ -106,10 +107,17 @@ public class GameManager {
             new ScoreboardManager(p);
             playerDatas.add(new PlayerData(p));
         }
+        //set up for pure generators was moved here during debuging
+        setupPureShardGenerators();
 
         new BukkitRunnable() {
             @Override
             public void run() {
+                //moved so it checks first and cancels the task propely for the game end, must return so things below don't excecute
+                if (crystalBlitz.getInstance().gamemanager == null) {
+                    cancel();
+                    return;
+                }
                 //Main game loop
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (p.getGameMode().equals(GameMode.SURVIVAL) && p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit) {
@@ -118,9 +126,7 @@ public class GameManager {
                     TabMenu.sendTabMenu(p);
                 }
 
-                if (crystalBlitz.getInstance().gamemanager == null) {
-                    cancel();
-                }
+
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
 
@@ -139,59 +145,100 @@ public class GameManager {
     }
 
     public static void ForceEndGame() {
+        //Created a small refernce to crystalBlitz plugin so to not have to write crystalBlitz.getInstance() each time
+        //for redability sake
+        crystalBlitz cbPlugin = crystalBlitz.getInstance();
+        //This is to clean up all the left over tasks
+        GameManager oldGameManager = cbPlugin.gamemanager;
+        if (oldGameManager != null) {
+            oldGameManager.bossbar.removeBossBar();
+            oldGameManager.removePureShardHealthBars();
+            oldGameManager.cancelOverflowGenerationTasks();
+            //TODO: Any more task cancelations should go here which are needing the game world
+        }
+        World sourceWorld = cbPlugin.getSourceWorld();
+
+        if (sourceWorld == null) {
+            cbPlugin.getLogger().severe("Could not return players to waiting world because it is null for some reason!");
+            return;
+        }
+        //Returns everyone to the waiting world.
+        Location lobbyLocation = new Location(sourceWorld,
+                cbPlugin.mapdata.queue_spawn[0],
+                cbPlugin.mapdata.queue_spawn[1],
+                cbPlugin.mapdata.queue_spawn[2]
+        );
+        //this check is specificly to see if players should be kicked at the end of the game in config.
+        //For self hosting it can be disabled, for servers with lobby plugin it should kick players.
+        boolean kickPlayersAtGameEnd = cbPlugin.getConfig().getBoolean("kick_players_at_game_end");
+
         for (Player p : Bukkit.getOnlinePlayers()) {
-            try {
-                LevelManager.giveExperience(p, 5);
-                LevelManager.giveMoney(p, 20);
-            } catch (NoClassDefFoundError e) {}
-            p.kick();
+            //cbPlugin.getLogger().info(p.getName() + " passengers on player +" + p.getPassengers().size() + " vehicle =" + (p.getVehicle() != null));
+            //This is to make sure that the player has no passanagers as cross dimensional teleperotation doesn't work with pasanagers.
+            for (Entity passenger : new ArrayList<>(p.getPassengers())) {
+                p.removePassenger(passenger);
+                //Removes the pasanager entity completely
+                passenger.remove();
+            }
+            //ensures player is cleared and not riding anything, as teleportation would fail to a diffrent dimension
+            p.leaveVehicle();
+            p.getInventory().clear();
+            p.setFallDistance(0);
+            if (kickPlayersAtGameEnd) {
+                //The rewards are given only when kicking is enabled, as for self hosting there is no point for rewards.
+                try {
+                    LevelManager.giveExperience(p, 5);
+                    LevelManager.giveMoney(p, 20);
+                } catch (NoClassDefFoundError ignored) {}
+                p.kick();
+                //continues to the next players so the code after will only excecute if kick players is false in the loop
+                continue;
+            }
+            //makes sure player is set to adventure and teleported to the waiting world
+            p.setGameMode(GameMode.ADVENTURE);
+            boolean teleported = p.teleport(lobbyLocation);
+            if (!teleported) {
+                cbPlugin.getLogger().warning("Failed to return to the waiting world: " + p.getName());
+            }
+            //sets the scrorbored to main one
+            p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
         }
 
-        for (Entity e : Bukkit.getWorld("world").getEntities()) {
-            if (e instanceof Villager || e instanceof TextDisplay || e instanceof Arrow || e instanceof Item) {
-                e.remove();
+        //Clears the blocks from memory, doesn't have an effect on the world
+        cbPlugin.Blocks.clear();
+        //sets the game manager to null
+        cbPlugin.gamemanager = null;
+
+        //Does the world recreation on the new tick
+        Bukkit.getScheduler().runTask(cbPlugin , () -> {
+            //destroys world
+            if (!cbPlugin.mapManager.destroyGameWorld()) {
+                cbPlugin.getLogger().severe("Failed to destroy the game world!");
+                return;
+            }
+            //recreates it
+            if (!cbPlugin.mapManager.createGameWorld()) {
+                cbPlugin.getLogger().severe("Failed to prepare the game world for the next game!");
+                return;
+            }
+            //when sussesfull should log that the next game is ready
+            cbPlugin.getLogger().info("CrystalBlitz game finished. System is ready for the next game.");
+        });
+        //Resets the players tab view and score board for the waiting world.
+        if (!kickPlayersAtGameEnd) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                for (Player other : Bukkit.getOnlinePlayers()) {
+                    p.listPlayer(other);
+                }
+                new QueueScoreboard(p);
+                p.sendPlayerListHeaderAndFooter(
+                        //Header
+                        text("\nCrystalized: Crystal Blitz\n"),
+                        //Footer
+                        text("\n").append(text("Crystal Blitz Version: " + cbPlugin.getDescription().getVersion())).append(text("\n"))
+                );
             }
         }
-
-        Bukkit.getLogger().log(Level.INFO, "Removing player-made blocks, please wait before rejoining...");
-
-        new BukkitRunnable() {
-            int i = 0;
-
-            public void run() {
-                Set<Block> remove_set = new HashSet<>();
-                for (Block block : crystalBlitz.getInstance().Blocks) {
-                    Bukkit.getLogger().log(Level.INFO,
-                            "Set Block " + block.getType() + " at X:" + block.getX() + " Y:" + block.getY() + " Z:" + block.getZ() + " to air."
-                    );
-                    if (Bukkit.getOnlinePlayers().size() != 0) {
-                        for (Player p : Bukkit.getOnlinePlayers()) {
-                            p.kick(text("[!] We are still clearing blocks, please wait before rejoining..."));
-                        }
-                    }
-                    i++;
-                    block.setType(Material.AIR);
-                    remove_set.add(block);
-                    if (i > 10) {
-                        break;
-                    }
-                }
-                crystalBlitz.getInstance().Blocks.removeAll(remove_set);
-                if (crystalBlitz.getInstance().Blocks.isEmpty()) {
-                    Bukkit.getLogger().log(Level.INFO, "Removed all player-made blocks! You may rejoin to start another game");
-                    for (TeamData td : Teams.team_datas) {
-                        td.nexus.resetNexuses();
-                    }
-                    //ensures that all the pure shards generators will be propely fixed/revived at game shut down
-                    //TODO probobly should make it one method
-                    crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
-                    crystalBlitz.getInstance().gamemanager.removePureShardHealthBars();
-                    crystalBlitz.getInstance().gamemanager.cancelOverflowGenerationTasks();
-                    crystalBlitz.getInstance().gamemanager = null;
-                    cancel();
-                }
-            }
-        }.runTaskTimer(crystalBlitz.getInstance(), 1, 1);
     }
 
     public void destroyAllNexuses() {
@@ -209,12 +256,12 @@ public class GameManager {
         for (String team : Teams.teams) {
             if (!team.equals("spectator")) {
                 Location loc = new Location(
-                        Bukkit.getWorld("world"),
+                        crystalBlitz.getInstance().getGameWorld(),
                         crystalBlitz.getInstance().mapdata.getShop(team)[0] + 0.5,
                         crystalBlitz.getInstance().mapdata.getShop(team)[1],
                         crystalBlitz.getInstance().mapdata.getShop(team)[2] + 0.5
                 );
-                Villager shop = Bukkit.getWorld("world").spawn(loc, Villager.class, entity -> {
+                Villager shop = crystalBlitz.getInstance().getGameWorld().spawn(loc, Villager.class, entity -> {
                     entity.setGravity(true);
                     entity.setInvulnerable(true);
                     entity.setAI(false);
@@ -341,12 +388,19 @@ public class GameManager {
 
     //The set up method for pure shard generators
     private void setupPureShardGenerators() {
-        //Gets the world assuming it is titled world
-        World world = Bukkit.getWorld("world");
+        //Now works with the new world system
+        World world = crystalBlitz.getInstance().getGameWorld();
         //If null nothing happens
         if (world == null) {
+            crystalBlitz.getInstance().getLogger().warning("PUREGENS: Game world was null!");
             return;
         }
+        //Loggers to see which world it is scaning
+        //crystalBlitz.getInstance().getLogger().info("PUREGENS: Scanning world: " + world.getKey());
+        //crystalBlitz.getInstance().getLogger().info("PUREGENS: Loaded chunks = " + world.getLoadedChunks().length);
+
+        //tracks how many were found
+        int found = 0;
         //Scans loaded chunks once when the game starts. Searching for the generators blocks and setting them
         for (Chunk chunk : world.getLoadedChunks()) {
 
@@ -367,11 +421,14 @@ public class GameManager {
                         if (PureShardGenerator.isPureGeneratorSourceBlock(block.getRelative(BlockFace.DOWN))) {
                             continue;
                         }
+                        found++;
+                        crystalBlitz.getInstance().getLogger().info("PUREGENS: Found generator at " + x + ", " + y + ", " + z);
                         //Creates the new pure shard generator based on the bottom block of the generator
                         pureShardGenerators.add(new PureShardGenerator(block));
                     }
                 }
             }
+
         }
     }
     //This is to get the pure shard generator based on location
@@ -455,6 +512,7 @@ public class GameManager {
 
         return null;
     }
+
 
 }
 

@@ -23,15 +23,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -61,6 +59,16 @@ public class PlayerListener implements Listener {
     //The time that the kill credit will last after hit if the player fell off (10 seconds)
     private static final int KILL_CREDIT_TIME = 20 * 10;
 
+
+    @EventHandler(priority = EventPriority.MONITOR,
+            ignoreCancelled = false)
+    public void debugTeleport(PlayerTeleportEvent e) {
+
+        //A small debuger to help with teleportation related issues, can be uncomented later, so not deleted.
+        /*
+        crystalBlitz.getInstance().getLogger().info("Teleport debuger:  " + e.getPlayer().getName() + " from world: " + e.getFrom().getWorld().getKey()
+                + " to world: " + e.getTo().getWorld().getKey() + " cause: " + e.getCause() + " canceled?: " + e.isCancelled());*/
+    }
     //Prevening amethyst shards from spawning ever as mite requsted
     @EventHandler
     public void onItemSpawn(ItemSpawnEvent e) {
@@ -85,10 +93,12 @@ public class PlayerListener implements Listener {
         p.removePotionEffect(PotionEffectType.ABSORPTION);
 
         if (crystalBlitz.getInstance().gamemanager == null) {
-            p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(Bukkit.getWorld("world")));
+            //Teleports the player to the waiting world, should probobly be renamed as techinicly source world is no longer the template. Due to issues with copying it
+            //while it was running
+            p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getSourceWorld()));
             p.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());
             p.setGameMode(GameMode.ADVENTURE);
-            //TODO make this look better
+            //TODO make this look better - Callum. (Good enough in my opinion just need to update player displays to Crystal Wars everywhere later - Mish)
             p.sendPlayerListHeaderAndFooter(
                     //Header
                     text("\nCrystalized: Crystal Blitz\n"),
@@ -119,8 +129,9 @@ public class PlayerListener implements Listener {
 
         } else {
             //p.kick(text("A game is currently is progress, try joining again later.").color(NamedTextColor.RED));
+            //teleports to the game world location
             Location loc = new Location(
-                    Bukkit.getWorld("world"),
+                    crystalBlitz.getInstance().getGameWorld(),
                     crystalBlitz.getInstance().mapdata.spectator_spawn[0],
                     crystalBlitz.getInstance().mapdata.spectator_spawn[1],
                     crystalBlitz.getInstance().mapdata.spectator_spawn[2]
@@ -164,7 +175,8 @@ public class PlayerListener implements Listener {
         //If player's Y location is beyhond maps death limit
         //Teleports the player back to the original spawn location
         if (p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit) {
-            p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(Bukkit.getWorld("world")));
+            //teleports to the current active game world where players are supposed to be incase it accidently happens at the same time as starting the game.
+            p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getActiveWorld()));
             //makes sure fall distanse is 0
             p.setFallDistance(0);
         }
@@ -198,9 +210,9 @@ public class PlayerListener implements Listener {
             }
         }
         Component killer;
-
+        //teleports to the game world now on death correctly.
         Location loc = new Location(
-                Bukkit.getWorld("world"),
+                crystalBlitz.getInstance().getGameWorld(),
                 crystalBlitz.getInstance().mapdata.spectator_spawn[0],
                 crystalBlitz.getInstance().mapdata.spectator_spawn[1],
                 crystalBlitz.getInstance().mapdata.spectator_spawn[2]
@@ -309,7 +321,7 @@ public class PlayerListener implements Listener {
                     if (crystalBlitz.getInstance().gamemanager == null) {cancel();}
                     p.sendActionBar(translatable("crystalized.game.knockoff.respawn1").append(text(timer)).append(translatable("crystalized.game.knockoff.respawn2")));
                     if (timer == 0) {
-                        Location spawnloc = new Location(Bukkit.getWorld("world"),
+                        Location spawnloc = new Location(crystalBlitz.getInstance().getGameWorld(),
                                 crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
                                 crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
                                 crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[2]
@@ -326,7 +338,7 @@ public class PlayerListener implements Listener {
             p.sendMessage(text("[!] You're eliminated from the game!"));
             p.getInventory().clear();
             pd.isEliminated = true;
-            Location spawnloc = new Location(Bukkit.getWorld("world"),
+            Location spawnloc = new Location(crystalBlitz.getInstance().getGameWorld(),
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[2]

@@ -45,7 +45,8 @@ public class StaleShardGenerator {
     public StaleShardGenerator(String teamName, Location centerLocation) {
         this.teamName = teamName;
         this.centerLocation = centerLocation.clone();
-        this.centerLocation.setWorld(Bukkit.getWorld("world"));
+        //now sets to the game world where the game is happening
+        this.centerLocation.setWorld(crystalBlitz.getInstance().getGameWorld());
         //resets generator, star side shard generation and starts stale crystal overflow generation
         resetGeneratorToDefault();
         startSideShardsGenerationTask();

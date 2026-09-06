@@ -7,6 +7,10 @@ crystal-overflow-generator-enabled: true
 pure-generator-overflow-enabled: true
 #If you want the stale generators on base to work but never want it to produce pure shards on gen 3 disable this
 stale-generator-oveflow-producing-pure-on-gen-3: true
+
+#For servers like crystalized set to true, so can return to intended lobby. For running games without a lobby you can set it to false and it will not kick players
+ #and reset the world anyway
+kick_players_at_game_end: true
 teams:
     # When true, enables the below options to work, allowing for teams to be created manually instead of randomly generated.
     # These should be changed either when the server is shutdown, or when the game hasn't started (aka, in the waiting lobby)

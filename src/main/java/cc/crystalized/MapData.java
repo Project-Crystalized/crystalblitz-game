@@ -112,7 +112,8 @@ public class MapData {
     public Location getStaleShardLoc(String team) {
         MapData_Teams t = getTeamInfo(team);
         //Fixed this due to it giving me a null world, so that stale overflow generators could work
-        Location fixedLocation = new Location(Bukkit.getWorld("world"), t.staleShard.getX(), t.staleShard.getY(), t.staleShard.getZ());
+        //changed the world detection to work with the game world
+        Location fixedLocation = new Location(crystalBlitz.getInstance().getGameWorld(), t.staleShard.getX(), t.staleShard.getY(), t.staleShard.getZ());
         return fixedLocation;
     }
 }
@@ -129,15 +130,15 @@ class MapData_Teams{
         this.name = name;
 
         JsonArray nb = json.get("nexus").getAsJsonArray();
-        this.nexusBlock = new Location(Bukkit.getWorld("world"), nb.get(0).getAsDouble(), nb.get(1).getAsDouble(), nb.get(2).getAsDouble());
+        this.nexusBlock = new Location(crystalBlitz.getInstance().getGameWorld(), nb.get(0).getAsDouble(), nb.get(1).getAsDouble(), nb.get(2).getAsDouble());
 
         JsonArray s = json.get("spawn").getAsJsonArray();
-        this.spawn = new Location(Bukkit.getWorld("world"), s.get(0).getAsDouble(), s.get(1).getAsDouble(), s.get(2).getAsDouble());
+        this.spawn = new Location(crystalBlitz.getInstance().getGameWorld(), s.get(0).getAsDouble(), s.get(1).getAsDouble(), s.get(2).getAsDouble());
 
         JsonArray shop = json.get("shop").getAsJsonArray();
-        this.shopSpawn = new Location(Bukkit.getWorld("world"), shop.get(0).getAsDouble(), shop.get(1).getAsDouble(), shop.get(2).getAsDouble());
+        this.shopSpawn = new Location(crystalBlitz.getInstance().getGameWorld(), shop.get(0).getAsDouble(), shop.get(1).getAsDouble(), shop.get(2).getAsDouble());
 
         JsonArray stale = json.get("staleshard").getAsJsonArray();
-        this.staleShard = new Location(Bukkit.getWorld("world"), stale.get(0).getAsDouble(), stale.get(1).getAsDouble(), stale.get(2).getAsDouble());
+        this.staleShard = new Location(crystalBlitz.getInstance().getGameWorld(), stale.get(0).getAsDouble(), stale.get(1).getAsDouble(), stale.get(2).getAsDouble());
     }
 }
