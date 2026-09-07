@@ -52,7 +52,7 @@ public class MapManager {
         }
         return getSourceWorld();
     }
-    
+
     //This is called on server start, anything left from game world dimensions gets remove, then a new game world dimension gets created
     //Which fixes the crashing during the game issue
     public void setup() {
@@ -82,9 +82,9 @@ public class MapManager {
             return false;
         }
         /*The path to clean map template
-         * plugins/CrystalBlitz/MapTemplate/crystalbilitz_map_Template/
+         * world/MapTemplate/crystalblitz_map_Template/
          */
-        Path templateDimension = getTemplateDimensionFolder();
+        Path templateDimension = getTemplateDimensionFolder(sourceWorld);
 
         /*The path to dimension where game takes place
          * world/dimensions/minecraft/crystalblitz_game/
@@ -290,10 +290,14 @@ public class MapManager {
 
 
     /*The clean map template path
-     * plugins/CrystalBlitz/MapTemplate/crystalbilitz_map_Template/
+     * world/MapTemplate/crystalblitz_map_Template/
      */
-    private Path getTemplateDimensionFolder() {
-        return plugin.getDataFolder().toPath().resolve("MapTemplate").resolve("crystalbilitz_map_Template");
+    private Path getTemplateDimensionFolder(World sourceWorld) {
+        Path sourceDimension = sourceWorld.getWorldFolder().toPath();
+        //Goes up from overworld to minecraft to dimension to world. To return to the main world folder
+        Path worldFolder = sourceDimension.getParent().getParent().getParent();
+        //path to template from the world folder
+        return worldFolder.resolve("MapTemplate").resolve("crystalblitz_map_Template");
     }
     /*The path to dimension where game takes place
      * world/dimensions/minecraft/crystalblitz_game/

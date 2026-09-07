@@ -65,8 +65,11 @@ public class Nexus {
             case 4, 3 -> {
                 return text("(" + health + "/10)").color(GOLD);
             }
-            case 2, 1, 0 -> {
+            case 2, 1 -> {
                 return text("(" + health + "/10)").color(RED);
+            }
+            case 0 -> {
+                return text("(" + health + "/10)").color(GRAY);
             }
         }
         return text("(" + health + "/10)").color(WHITE);

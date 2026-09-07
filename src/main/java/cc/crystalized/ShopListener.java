@@ -203,13 +203,14 @@ public class ShopListener implements Listener {
                 if (cbItem instanceof CBItem_Armor cbArmor) {
                     cbArmor.add((Player) p);
                 } else {
-                    crystalBlitz.getInstance().getLogger().log(Level.WARNING, "[!] Item \"" + cbItem.internalName + "\" marked as ItemType.Armor but was setup incorrectly in code (cbItem is not an instance of CBItem_Armor)");
+                    crystalBlitz.getInstance().getLogger().log(Level.WARNING, "[!] Item \""
+                            + cbItem.internalName + "\" marked as ItemType.Armor but was setup incorrectly in code (cbItem is not an instance of CBItem_Armor)");
                     p.sendRichMessage("<red>Internal Error when buying item, check server console.");
                 }
             }
             case Blocks -> {
                 if (cbItem instanceof CBItem_Block cbBlock) {
-                    p.getInventory().addItem(cbBlock.item((Player) p));
+                    giveBlockToOffHandFirst((Player) p, cbBlock.item((Player) p));
                 } else {
                     crystalBlitz.getInstance().getLogger().log(Level.WARNING, "[!] Item \"" + cbItem.internalName + "\" marked as ItemType.Blocks but was setup incorrectly in code (cbItem is not an instance of CBItem_Block)");
                     p.sendRichMessage("<red>Internal Error when buying item, check server console.");
@@ -235,4 +236,29 @@ public class ShopListener implements Listener {
             p.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
         }
     }
+    //This method was made to be able to give players blocks in the off hand when they are holding that block in their off hand
+    private static void giveBlockToOffHandFirst(Player p, ItemStack itemBlocks) {
+        ItemStack offHandItem = p.getInventory().getItemInOffHand();
+        //When player has the same item in offhand gives it to the offhand
+        if (offHandItem.isSimilar(itemBlocks)) {
+            //depending on how much space left adds it to the off hand if there is space for it
+            int spaceLeftInOffhand = offHandItem.getMaxStackSize() - offHandItem.getAmount();
+            if (spaceLeftInOffhand > 0) {
+                //moves as many blocks as it can, min is used to see which is smaller if the space left and item's amounts is not big will fully fit in
+                //example: If there is 4 in off hand, 60 space is left and gives 16, so it will be able to give all the 16 blocks.
+                //Example2: If there is 60 in off hand, and 4 space is left and gives 16, so it will be able to give only 4 to off hand, and the rest to main inventory
+                //TODO: Make sure if there is no place in inventory not be able to buy
+                int amountToMove = Math.min(spaceLeftInOffhand, itemBlocks.getAmount());
+                offHandItem.setAmount(offHandItem.getAmount() + amountToMove);
+                itemBlocks.setAmount(itemBlocks.getAmount() - amountToMove);
+                //when everything fit into off hand and there is nothjing else to move so return
+                if (itemBlocks.getAmount() <= 0) {
+                    return;
+                }
+            }
+        }
+        //if something didn't fit in just adds the rest to the player inventory, or if it wasn't in the off hand
+        p.getInventory().addItem(itemBlocks);
+    }
+
 }
