@@ -223,6 +223,8 @@ public class GameManager {
             }
             //when sussesfull should log that the next game is ready
             cbPlugin.getLogger().info("CrystalBlitz game finished. System is ready for the next game.");
+            //sets the world rules to what they supposed to be.
+            cbPlugin.setupWorldRules(cbPlugin.getGameWorld());
         });
         //Resets the players tab view and score board for the waiting world.
         if (!kickPlayersAtGameEnd) {

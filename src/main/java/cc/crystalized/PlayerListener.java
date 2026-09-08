@@ -250,6 +250,10 @@ public class PlayerListener implements Listener {
                     }
                 }
                 if (cbItem != null) {
+                    //Experiment for now the pickaxes keep their tier after death
+                    if (cbItem.type == CrystalBlitzItems.ItemType.Pickaxe) {
+                        continue;
+                    }
                     inv.removeItem(i);
                     if (!cbItem.downgradeTo.equals("")) {
                         CBItem newItem = CrystalBlitzItems.getCBItem(cbItem.downgradeTo);
