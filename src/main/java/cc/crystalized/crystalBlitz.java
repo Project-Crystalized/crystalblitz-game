@@ -268,7 +268,7 @@ public final class crystalBlitz extends JavaPlugin {
                             out.writeUTF(p.getName());
                         }
                         Player p = (Player) Bukkit.getOnlinePlayers().toArray()[0];
-                        p.sendPluginMessage(crystalBlitz.getInstance(), "crystalized:crystalblitz", out.toByteArray());
+                        p.sendPluginMessage(crystalBlitz.getInstance(), "crystalized:main", out.toByteArray());
 
                         isCountingDown = false;
                         cancel();
