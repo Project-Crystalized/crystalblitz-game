@@ -204,13 +204,13 @@ class QueueScoreboard {
             @Override
             public void run() {
                 if (floodgateapi.isFloodgatePlayer(player.getUniqueId())) {
-                    obj.getScore("2").customName(text("Waiting for Players: ")
+                    obj.getScore("2").customName(translatable("crystalized.game.generic.waiting_for_players")
                             .append(text("(" + Bukkit.getOnlinePlayers().size()))
                             .append(text("/"))
                             .append(text("" + Bukkit.getMaxPlayers()))
                             .append(text(")"))
                     );
-                    obj.getScore("4").customName(text("You are playing on: " + crystalBlitz.getInstance().mapdata.map_name));
+                    obj.getScore("4").customName(translatable("crystalized.game.generic.playing_on").append(text(crystalBlitz.getInstance().mapdata.map_name)));
                 } else {
                     QueuePlayer.suffix(
                             text("(")

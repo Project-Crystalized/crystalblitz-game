@@ -111,7 +111,7 @@ public class Nexus {
 
     public void hitNexus(ItemStack i, Player p) {
         if (Teams.getPlayerTeam(p).equals(team)) {
-            p.sendMessage(text("[!] You cannot break your own Nexus! You need to defend this from the other teams!"));
+            p.sendMessage(translatable("crystalized.game.crystalblitz.nexus_tutorial"));
             return;
         }
 

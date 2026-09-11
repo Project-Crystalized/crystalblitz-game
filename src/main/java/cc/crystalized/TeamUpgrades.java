@@ -129,7 +129,7 @@ public class TeamUpgrades {
                 TeamData td = Teams.getTeamData(buyer);
                 td.nexus.resetNexuses();
                 td.nexus.health = 5;
-                Bukkit.getServer().sendMessage(text(td.name + " nexus has been healed by ").append(buyer.displayName())); //TODO temporary message
+                Bukkit.getServer().sendMessage(text(td.name).append(translatable("crystalized.game.crystalblitz.nexus_healed_by")).append(buyer.displayName())); //TODO temporary message
                 //TODO play sound (maybe reverse nexus shatter?)
             }
             case slimeTotemAlarm -> {
@@ -238,9 +238,9 @@ public class TeamUpgrades {
             }
             p.sendRichMessage("");
             p.sendMessage(buyer.displayName()
-                    .append(text(" bought the "))
+                    .append(translatable("crystalized.game.crystalblitz.team_upgrade_bought1"))
                     .append(u.item.effectiveName().color(NamedTextColor.GREEN))
-                    .append(text(" team upgrade!"))
+                    .append(translatable("crystalized.game.crystalblitz.team_upgrade_bought2"))
             );
             p.sendRichMessage("");
             if (floodgateapi.isFloodgatePlayer(p.getUniqueId())) {
@@ -284,15 +284,15 @@ public class TeamUpgrades {
 }
 
 enum upgrades{
-    nexusHeal(Material.COAL, "Nexus Heal", "Restores your Nexus with half health", "nexus_shard", 6, Shop.ShardTypes.Nexus),
-    slimeTotemAlarm(Material.COAL, "Slime Totem Alarm", "desc", "slime_totem", 40, Shop.ShardTypes.Weak),
-    doubleStaleShards(Material.COAL, "Double Stale Shards", "adds another stale shard block ontop of your one at base.", "weak_shard", 32, Shop.ShardTypes.Weak),
-    strongerShardGen1(Material.LARGE_AMETHYST_BUD, "Stronger Shard Generation 1", "LVL1: The Stale shard block at base may grow Pure shards if left long enough", "", 40, Shop.ShardTypes.Weak),
-    strongerShardGen2(Material.AMETHYST_CLUSTER, "Stronger Shard Generation 2", "LVL2: Pure Shards can grow Larger", "", 20, Shop.ShardTypes.Strong),
-    autoShardCollect(Material.COAL, "Auto Shard Collection", "Every 10 seconds, a stale shard block will be broken and its contents will go in your echest.", "strong_shard", 30, Shop.ShardTypes.Weak),
-    sharpness(Material.ENCHANTED_BOOK, "Sharpness", "Gives melee weapons sharpness automatically", "", 40, Shop.ShardTypes.Weak),
-    totemMoreHealth(Material.COAL, "More Totem Health", "Newly placed totems gain more health", "antiair_totem", 40, Shop.ShardTypes.Weak),
-    protection(Material.ENCHANTED_BOOK, "Protection", "Gives Protection 1 to armour", "", 40, Shop.ShardTypes.Weak),
+    nexusHeal(Material.COAL, "crystalized.game.crystalblitz.upgrades.name.nexus_heal", "crystalized.game.crystalblitz.upgrades.desc.nexus_heal", "nexus_shard", 6, Shop.ShardTypes.Nexus),
+    slimeTotemAlarm(Material.COAL, "crystalized.game.crystalblitz.upgrades.name.slime_alarm", "crystalized.game.crystalblitz.upgrades.desc.slime_alarm", "slime_totem", 40, Shop.ShardTypes.Weak),
+    doubleStaleShards(Material.COAL, "crystalized.game.crystalblitz.upgrades.name.double_stale", "crystalized.game.crystalblitz.upgrades.desc.double_stale", "weak_shard", 32, Shop.ShardTypes.Weak),
+    strongerShardGen1(Material.LARGE_AMETHYST_BUD, "crystalized.game.crystalblitz.upgrades.name.shard_gen1", "crystalized.game.crystalblitz.upgrades.desc.shard_gen1", "", 40, Shop.ShardTypes.Weak),
+    strongerShardGen2(Material.AMETHYST_CLUSTER, "crystalized.game.crystalblitz.upgrades.name.shard_gen2", "crystalized.game.crystalblitz.upgrades.desc.shard_gen2", "", 20, Shop.ShardTypes.Strong),
+    autoShardCollect(Material.COAL, "crystalized.game.crystalblitz.upgrades.name.auto_shard", "crystalized.game.crystalblitz.upgrades.desc.auto_shard", "strong_shard", 30, Shop.ShardTypes.Weak),
+    sharpness(Material.ENCHANTED_BOOK, "crystalized.game.crystalblitz.upgrades.name.sharpness", "crystalized.game.crystalblitz.upgrades.desc.sharpness", "", 40, Shop.ShardTypes.Weak),
+    totemMoreHealth(Material.COAL, "crystalized.game.crystalblitz.upgrades.name.totem_health", "crystalized.game.crystalblitz.upgrades.desc.totem_health", "antiair_totem", 40, Shop.ShardTypes.Weak),
+    protection(Material.ENCHANTED_BOOK, "crystalized.game.crystalblitz.upgrades.name.protection", "crystalized.game.crystalblitz.upgrades.desc.protection", "", 40, Shop.ShardTypes.Weak),
     ;
 
     ItemStack item;
@@ -342,7 +342,7 @@ enum upgrades{
             shopItem_ah_lore = new ArrayList<>();
         }
         shopItem_ah_lore.add(text(""));
-        shopItem_ah_lore.add(text("This upgrade is already bought.").color(NamedTextColor.RED).decoration(TextDecoration.ITALIC, false));
+        shopItem_ah_lore.add(translatable("crystalized.game.crystalblitz.upgrades.already_bought").color(NamedTextColor.RED).decoration(TextDecoration.ITALIC, false));
         shopItem_ah_meta.lore(shopItem_ah_lore);
         shopItem_ah_meta.setTooltipStyle(new NamespacedKey("crystalized", "cb_cantbuy"));
         shopItem_ah_meta.getPersistentDataContainer().set(new NamespacedKey("crystalized", "canbuy"), PersistentDataType.BOOLEAN, false);

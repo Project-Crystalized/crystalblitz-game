@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.concurrent.TimeUnit;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 
 public class WorldBorderManager {
 
@@ -36,7 +37,7 @@ public class WorldBorderManager {
     }
     public void ShrinkBorder() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            p.showTitle(Title.title(text("World Border Shrinking").color(NamedTextColor.RED), text("")));
+            p.showTitle(Title.title(translatable("crystalized.game.crystalblitz.border_shrink").color(NamedTextColor.RED), text("")));
             p.playSound(p, "minecraft:block.note_block.harp",  50, 1); //TODO Placeholder sound
         }
         border.changeSize(10, BORDER_SHRINKING_TIME);

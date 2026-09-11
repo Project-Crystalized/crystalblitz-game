@@ -388,12 +388,12 @@ public class PureShardGenerator {
                 }
                 //If generator is not active then display inactive text
                 if (!isActive()) {
-                    spikeTimerRegenDisplay.text(Component.text("Inactive"));
+                    spikeTimerRegenDisplay.text(Component.translatable("crystalized.game.crystalblitz.inactive"));
                     return;
                 }
                 //If the regeneration is not runing displays that it is full
                 if (!spikeRegenerationCurrentlyRunning) {
-                    spikeTimerRegenDisplay.text(Component.text("Crystals Full"));
+                    spikeTimerRegenDisplay.text(Component.translatable("crystalized.game.crystalblitz.full"));
                     return;
                 }
                 //calculates how many ticks remain before the next regeneration
@@ -402,7 +402,7 @@ public class PureShardGenerator {
                 //converst ticks to seconds, ceil so it rounds up
                 int secondsRemaining = (int) Math.ceil(ticksRemaining / 20.0);
                 //Displays when the next side crystal will regenerate in seonds
-                spikeTimerRegenDisplay.text(Component.text("Next Side Crystal: " + secondsRemaining + "s"));
+                spikeTimerRegenDisplay.text(Component.translatable("crystalized.game.crystalblitz.next_side_crystal").append(Component.text(secondsRemaining + "s")));
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 1, 5); //updates quite often so it is almost instant
     }

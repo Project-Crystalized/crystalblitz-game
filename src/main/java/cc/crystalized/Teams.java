@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 
 public class Teams {
     public static List<String> teams = new ArrayList<>();
@@ -202,7 +203,7 @@ public class Teams {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (getPlayerTeam(p) == null) {
                     spectator.add(p.getName());
-                    p.sendMessage(text("[!] You weren't assigned a team, we've put you in Spectator Team."));
+                    p.sendMessage(translatable("crystalized.game.crystalblitz.no_team"));
                 }
             }
 
@@ -290,7 +291,7 @@ public class Teams {
 
     public static void setPlayerDisplayNames(Player player) {
         if (spectator.contains(player.getName())) {
-            player.displayName(text("[Spectator] ").append(text(player.getName()).color(TEAM_SPECTATOR)));
+            player.displayName(translatable("crystalized.game.generic.spec").append(text(player.getName()).color(TEAM_SPECTATOR)));
         } else if (blue.contains(player.getName())) {
             player.displayName(text("\uE120 ").append(text(player.getName()).color(TEAM_BLUE)));
         } else if (cyan.contains(player.getName())) {
@@ -308,7 +309,7 @@ public class Teams {
         } else if (yellow.contains(player.getName())) {
             player.displayName(text("\uE127 ").append(text(player.getName()).color(TEAM_YELLOW)));
         } else {
-            player.displayName(text("[Unknown Team]").append(text(player.getName())));
+            player.displayName(translatable("crystalized.game.generic.unknown_team").append(text(player.getName())));
         }
     }
 

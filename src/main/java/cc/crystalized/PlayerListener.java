@@ -142,7 +142,7 @@ public class PlayerListener implements Listener {
             if (!teams.spectator.contains(p.getName())) {
                 teams.spectator.add(p.getName());
             }
-            p.sendMessage(text("[!] You joined a game that was already in progress, You've been put in Spectator."));
+            p.sendMessage(translatable("crystalized.game.crystalblitz.joined_in_progress_game"));
             p.setWorldBorder(crystalBlitz.getInstance().gamemanager.worldborder.border);
             for (Player player1 : Bukkit.getOnlinePlayers()) {
                 for (Player player2 : Bukkit.getOnlinePlayers()) {
@@ -339,7 +339,7 @@ public class PlayerListener implements Listener {
                 }
             }.runTaskTimer(crystalBlitz.getInstance(), 1, 20);
         } else {
-            p.sendMessage(text("[!] You're eliminated from the game!"));
+            p.sendMessage(translatable("crystalized.game.crystalblitz.eliminated"));
             p.getInventory().clear();
             pd.isEliminated = true;
             Location spawnloc = new Location(crystalBlitz.getInstance().getGameWorld(),
@@ -458,7 +458,7 @@ public class PlayerListener implements Listener {
                     }
                     case WHITE_GLAZED_TERRACOTTA, GRAY_GLAZED_TERRACOTTA, LIGHT_GRAY_GLAZED_TERRACOTTA -> {
                         if (!p.getInventory().getItemInMainHand().toString().toLowerCase().contains("pickaxe")) {
-                            p.sendMessage(text("[!] You need to use your Pickaxe to break this."));
+                            p.sendMessage(translatable("crystalized.game.crystalblitz.use_pickaxe"));
                             return;
                         }
                         e.setCancelled(true);
@@ -553,7 +553,7 @@ public class PlayerListener implements Listener {
                                 pureShardGenerator.damage(damage);
                                 break;
                             default:
-                                p.sendMessage(text("Broken black terracotta but this isn't weak or strong shards, please report this."));
+                                p.sendMessage(translatable("crystalized.game.crystalblitz.black_terracotta_report"));
                                 break;
 
                         }

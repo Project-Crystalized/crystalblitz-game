@@ -101,7 +101,7 @@ public class ShopListener implements Listener {
             TeamData td = Teams.getTeamData((Player) p);
 
             if (td.teamUpgrades.hasUpgrade(u)) {
-                p.sendMessage(text("[!] You already have this team upgrade."));
+                p.sendMessage(translatable("crystalized.game.crystalblitz.shop.team_upgrades.already_have"));
                 return;
             }
 
@@ -128,7 +128,7 @@ public class ShopListener implements Listener {
                 ((Player) p).playSound(p, "minecraft:block.note_block.pling", 50, 2); //TODO maybe different sound for upgrades?
                 refreshShop(p, title);
             } else {
-                p.sendMessage(text("[!] Insufficient funds")); //TODO make this translatable
+                p.sendMessage(translatable("crystalized.game.crystalblitz.shop.insufficient"));
             }
             return;
         }
@@ -147,7 +147,7 @@ public class ShopListener implements Listener {
                 refreshShop(p, title); //but removing this one doesn't takeaway crystals when buying something
 
             } else {
-                p.sendMessage(text("[!] Insufficient funds")); //TODO make this translatable
+                p.sendMessage(translatable("crystalized.game.crystalblitz.shop.insufficient"));
             }
         }
     }
@@ -174,7 +174,7 @@ public class ShopListener implements Listener {
             if (i != null) {
                 CBItem temp = CrystalBlitzItems.getCBItem(i);
                 if (temp != null && cbItem.mustNotHave.contains(temp.internalName)) {
-                    p.sendMessage(text("[!] You already have this item or something better!")); //TODO make this translatable
+                    p.sendMessage(translatable("crystalized.game.crystalblitz.shop.already_have"));
                     return;
                 }
             }

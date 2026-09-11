@@ -63,34 +63,34 @@ public class Shop{
 
     public static void setupShop() {
         ItemMeta CategoryOffence_im = CategoryOffence.getItemMeta();
-        CategoryOffence_im.customName(text("Offence").decoration(TextDecoration.ITALIC, false));
+        CategoryOffence_im.customName(translatable("crystalized.game.crystalblitz.shop.offence").decoration(TextDecoration.ITALIC, false));
         CategoryOffence_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryOffence.setItemMeta(CategoryOffence_im);
 
         ItemMeta CategoryDefence_im = CategoryDefence.getItemMeta();
-        CategoryDefence_im.customName(text("Defence").decoration(TextDecoration.ITALIC, false));
+        CategoryDefence_im.customName(translatable("crystalized.game.crystalblitz.shop.defence").decoration(TextDecoration.ITALIC, false));
         CategoryDefence_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryDefence.setItemMeta(CategoryDefence_im);
 
         ItemMeta CategoryUtility_im = CategoryUtility.getItemMeta();
-        CategoryUtility_im.customName(text("Utility").decoration(TextDecoration.ITALIC, false));
+        CategoryUtility_im.customName(translatable("crystalized.game.crystalblitz.shop.utility").decoration(TextDecoration.ITALIC, false));
         CategoryUtility_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryUtility.setItemMeta(CategoryUtility_im);
 
         ItemMeta CategoryUpgrades_im = CategoryUpgrades.getItemMeta();
-        CategoryUpgrades_im.customName(text("Team Upgrades").decoration(TextDecoration.ITALIC, false));
+        CategoryUpgrades_im.customName(translatable("crystalized.game.crystalblitz.shop.team_upgrades").decoration(TextDecoration.ITALIC, false));
         CategoryUpgrades_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         CategoryUpgrades.setItemMeta(CategoryUpgrades_im);
 
         ItemMeta EChest_im = EnderChest.getItemMeta();
         List<Component> EChest_lore = new ArrayList<>();
-        EChest_lore.add(text("Your private storage! Access from any Shop including this one.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
-        EChest_lore.add(text("Notice: When eliminated, all items will drop at your base's spawn.").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        EChest_lore.add(translatable("crystalized.game.crystalblitz.echest.lore1").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
+        EChest_lore.add(translatable("crystalized.game.crystalblitz.echest.lore2").decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE));
         EChest_im.lore(EChest_lore);
         EnderChest.setItemMeta(EChest_im);
 
         ItemMeta Back_im = Back.getItemMeta();
-        Back_im.customName(text("Back").decoration(TextDecoration.ITALIC, false));
+        Back_im.customName(translatable("crystalized.shardcore.generic.back").decoration(TextDecoration.ITALIC, false));
         Back_im.setItemModel(new NamespacedKey("crystalized", "ui/invisible"));
         Back.setItemMeta(Back_im);
     }
@@ -229,7 +229,7 @@ public class Shop{
     public static void openEnderChest(Player p) {
         PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
         if (pd == null) {
-            p.sendMessage(text("[!] Failed to open Ender Chest, your PlayerData is null"));
+            p.sendMessage(translatable("crystalized.game.crystalblitz.echest.fail"));
             return;
         }
         p.playSound(p, "minecraft:block.ender_chest.open", 1, 1);

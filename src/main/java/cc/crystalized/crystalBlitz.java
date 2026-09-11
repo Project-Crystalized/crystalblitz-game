@@ -293,7 +293,7 @@ public final class crystalBlitz extends JavaPlugin {
                 );
                 timer--;
                 if (!GameCountdownStarted && getInstance().is_force_starting) {
-                    Bukkit.getServer().sendMessage(text("Game cancelled, too few players!").color(RED));
+                    Bukkit.getServer().sendMessage(translatable("crystalized.game.generic.gamecancelled").color(RED));
                     GameCountdownStarted = false;
                     cancel();
                 }

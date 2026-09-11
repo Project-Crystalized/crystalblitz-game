@@ -50,7 +50,7 @@ public class GameManager {
     }
 
     public GameManager(GameTypes type) {
-        Bukkit.getServer().sendMessage(text("Starting Game!"));
+        Bukkit.getServer().sendMessage(translatable("crystalized.game.generic.starting"));
         //changed so it works with the game world
         for (Entity e : crystalBlitz.getInstance().getGameWorld().getEntities()) {
             if (e instanceof Villager || e instanceof TextDisplay || e instanceof Arrow || e instanceof Item) {
@@ -253,7 +253,7 @@ public class GameManager {
     }
 
     private static void setupEntities() {
-        Component name = text("Shop");
+        Component name = translatable("crystalized.game.crystalblitz.shop");
 
         for (String team : Teams.teams) {
             if (!team.equals("spectator")) {
@@ -521,9 +521,9 @@ public class GameManager {
 class TabMenu {
 
     static Component StatsPlayerList = text("");
-    static Component alive = text("[Alive] ").color(WHITE);
-    static Component dead = text("[Dead] ").color(WHITE);
-    static Component eliminated = text("[Eliminated] ").color(WHITE);
+    static Component alive = translatable("crystalized.game.generic.alive").color(WHITE);
+    static Component dead = translatable("crystalized.game.generic.dead").color(WHITE);
+    static Component eliminated = translatable("crystalized.game.generic.eliminated").color(WHITE);
 
     private static void addToStatsString(Component s) {
         StatsPlayerList = StatsPlayerList.append(s);

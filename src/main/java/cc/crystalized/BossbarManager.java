@@ -49,7 +49,7 @@ public class BossbarManager {
 
                 if (timer == 30 && currentstate == BossBarStates.GenUpgradeIV) {
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendMessage(text("Overtime will beging shortly, All Nexuses will be destroyed soon!"));
+                        p.sendMessage(translatable("crystalized.game.crystalblitz.overtime"));
                     }
                 }
                 //Changed the check as it started being slightly hard to read
@@ -63,7 +63,7 @@ public class BossbarManager {
                         //This revies all the broken shards on gen 1 upgrade
                         crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                         for (Player p : Bukkit.getOnlinePlayers()) {
-                            p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
+                            p.sendMessage(translatable("crystalized.game.crystalblitz.node_upgrade"));
                         }
                         timer = timerdefaultvalue;
                     }
@@ -72,7 +72,7 @@ public class BossbarManager {
                         //This revies all the broken shards on gen 2 upgrade
                         crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                         for (Player p : Bukkit.getOnlinePlayers()) {
-                            p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
+                            p.sendMessage(translatable("crystalized.game.crystalblitz.node_upgrade"));
                         }
                         timer = timerdefaultvalue;
                     }
@@ -81,7 +81,7 @@ public class BossbarManager {
                         //This revies all the broken shards on gen 3 upgrade
                         crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                         for (Player p : Bukkit.getOnlinePlayers()) {
-                            p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
+                            p.sendMessage(translatable("crystalized.game.crystalblitz.node_upgrade"));
                         }
                         timer = timerdefaultvalue;
                     }
@@ -90,7 +90,7 @@ public class BossbarManager {
                         //This revies all the broken shards on gen 4 upgrade
                         crystalBlitz.getInstance().gamemanager.revivePureShardGenerators();
                         for (Player p : Bukkit.getOnlinePlayers()) {
-                            p.sendMessage(text("Stale and Pure node generators have been Upgraded!"));
+                            p.sendMessage(translatable("crystalized.game.crystalblitz.node_upgrade"));
                         }
                         timer = timerdefaultvalue;
                     }
@@ -107,7 +107,7 @@ public class BossbarManager {
                         crystalBlitz.getInstance().gamemanager.worldborder.setTrueSizeBorder();
                         crystalBlitz.getInstance().gamemanager.worldborder.ShrinkBorder();
                         for (Player p : Bukkit.getOnlinePlayers()) {
-                            p.sendMessage(text("Overtime!! World border closing!").color(NamedTextColor.RED));
+                            p.sendMessage(translatable("crystalized.game.crystalblitz.overtime.border_closing").color(NamedTextColor.RED));
                         }
                         //changes the boss bar text here as it will not run again to change it later
                         ChangeBossbarText();
@@ -155,10 +155,10 @@ public class BossbarManager {
                 bar.name(translatable("crystalized.game.crystalblitz.bossbar.upgrade").append(text("(IV)")).color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case GenUpgradeIV -> {
-                bar.name(text("All Nexuses will be destroyed in: ").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
+                bar.name(translatable("crystalized.game.crystalblitz.overtime.destroy_nexus").color(NamedTextColor.YELLOW).append(text(timer).color(NamedTextColor.WHITE)));
             }
             case Overtime -> {
-                bar.name(text("Overtime!!").color(NamedTextColor.YELLOW));
+                bar.name(translatable("crystalized.game.crystalblitz.overtime").color(NamedTextColor.YELLOW));
             }
         }
     }
