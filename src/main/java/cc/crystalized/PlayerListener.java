@@ -700,15 +700,39 @@ public class PlayerListener implements Listener {
             victimInv.setItem(slot, null);
 
             //If there is a killer than the killer recives shards
-            //Added a checker which ensures that the killer is in survival mode so not giving to dead players.
-            if (killer != null && killer.getGameMode().equals(GameMode.SURVIVAL)) {
-                //adding the lostShards to the killer inviters and storing left over in the hash map
-                Map<Integer, ItemStack> leftovers = killer.getInventory().addItem(lostShards);
-                //If killers inventory is full than drops the left over shards next to the killer
-                for (ItemStack leftover : leftovers.values()) {
-                    killer.getWorld().dropItemNaturally(killer.getLocation(), leftover);
-                }
-            }
+            //added this method to avoid repeated code
+            giveLostShardsToKiller(killer, lostShards);
+        }
+        //Checks shards held in the offhand as it doesn't count as part of inventory
+        ItemStack offhand = victimInv.getItemInOffHand();
+        if (isShard(offhand)) {
+            //clones the offhand item
+            ItemStack lostShards = offhand.clone();
+            //cleares it
+            victimInv.setItemInOffHand(new ItemStack(Material.AIR));
+            //gives it to the killer if there is any same as in inventory walk through
+            giveLostShardsToKiller(killer, lostShards);
+        }
+        //checks the shards which are being held hostage by the players currsor, clears, and gives them to the killer if there is one
+        ItemStack cursor = victim.getItemOnCursor();
+        if (isShard(cursor)) {
+            ItemStack lostShards = cursor.clone();
+            victim.setItemOnCursor(new ItemStack(Material.AIR));
+            giveLostShardsToKiller(killer, lostShards);
+        }
+    }
+    //Added this method to reduce repeating code due to it now working with currsor and off hand
+    //gives shards to the killer if there is one and is in survival.
+    private void giveLostShardsToKiller(Player killer, ItemStack lostShards) {
+        //Added a checker which ensures that the killer is in survival mode so not giving to dead players.
+        if (killer == null || !killer.getGameMode().equals(GameMode.SURVIVAL)) {
+            return;
+        }
+        //adding the lostShards to the killer inviters and storing left over in the hash map
+        Map<Integer, ItemStack> leftovers = killer.getInventory().addItem(lostShards);
+        //If killers inventory is full than drops the left over shards next to the killer
+        for (ItemStack leftover : leftovers.values()) {
+            killer.getWorld().dropItemNaturally(killer.getLocation(), leftover);
         }
     }
 
