@@ -446,7 +446,10 @@ class CrystalBlitzDatabase{
             for (PlayerData pd : GameManager.playerDatas) {
                 if (pd == null || pd.p == null) continue;
                 String team = Teams.getPlayerTeam(pd.p.getName());
-                if (team == null || team.equals("spectator")) continue;
+                if (team == null || team.equals("spectator")) {
+									Bukkit.getLogger().severe("HUH a player was a participant but has no team or is spectator??? this cant happen surely :skull: :pray:");
+									continue;
+								};
 
                 player_stmt.setInt(1, game_id);
                 player_stmt.setBytes(2, uuid_to_bytes(pd.p.getUniqueId()));
