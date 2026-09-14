@@ -401,7 +401,7 @@ class CrystalBlitzDatabase{
         String create_id_column = "ALTER TABLE CrystalBlitzGames ADD COLUMN game_id INTEGER;";
         String check_id_column = "SELECT game_id FROM CrystalBlitzGames LIMIT 1;";
 
-        String create_game_column = "ALTER TABLE CbGamesPlayers ADD COLUMN game INTEGER REFERENCES KnockoffGames(game_id);";
+        String create_game_column = "ALTER TABLE CbGamesPlayers ADD COLUMN game INTEGER REFERENCES CrystalBlitzGames(game_id);";
         String check_game_column = "SELECT game FROM CbGamesPlayers LIMIT 1;";
 
         try (Connection conn = DriverManager.getConnection(URL)) {
@@ -428,7 +428,7 @@ class CrystalBlitzDatabase{
     }
 
     public static void save_game(String WinningTeam) {
-        String save_game = "INSERT INTO CrystalBlitzGames(game_id, map, winner_team, gametype, timestamp) VALUES(?, ?, ?, ?, unixepoch())";
+        String save_game = "INSERT INTO CrystalBlitzGames(map, winner_team, gametype, timestamp) VALUES(?, ?, ?, unixepoch())";
         GameManager gm = crystalBlitz.getInstance().gamemanager;
 
         try (Connection conn = DriverManager.getConnection(URL)) {
@@ -439,7 +439,7 @@ class CrystalBlitzDatabase{
             game_stmt.executeUpdate();
 
             String save_player = "INSERT INTO CbGamesPlayers(game, player_uuid, team, kills, deaths, nexus_kills, games_won)"
-                    + " VALUES(?, ?, ?, ?, ?, ?)";
+                    + " VALUES(?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement player_stmt = conn.prepareStatement(save_player);
             for (Player p : Bukkit.getOnlinePlayers()) {
                 PlayerData pd = gm.getPlayerData(p);
