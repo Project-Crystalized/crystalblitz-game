@@ -438,19 +438,23 @@ class CrystalBlitzDatabase{
             game_stmt.setString(3, gm.GameType.toString());
             game_stmt.executeUpdate();
 
+            int game_id = conn.prepareStatement("SELECT last_insert_rowid();").executeQuery().getInt("last_insert_rowid()");
+
             String save_player = "INSERT INTO CbGamesPlayers(game, player_uuid, team, kills, deaths, nexus_kills, games_won)"
                     + " VALUES(?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement player_stmt = conn.prepareStatement(save_player);
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                PlayerData pd = gm.getPlayerData(p);
-                int game_id = conn.prepareStatement("SELECT last_insert_rowid();").executeQuery().getInt("last_insert_rowid()");
+            for (PlayerData pd : GameManager.playerDatas) {
+                if (pd == null || pd.p == null) continue;
+                String team = Teams.getPlayerTeam(pd.p.getName());
+                if (team == null || team.equals("spectator")) continue;
+
                 player_stmt.setInt(1, game_id);
-                player_stmt.setBytes(2, uuid_to_bytes(p));
-                player_stmt.setString(3, Teams.getPlayerTeam(p));
+                player_stmt.setBytes(2, uuid_to_bytes(pd.p.getUniqueId()));
+                player_stmt.setString(3, team);
                 player_stmt.setInt(4, pd.kills);
                 player_stmt.setInt(5, pd.deaths);
                 player_stmt.setInt(6, pd.nexus_kills);
-                if (WinningTeam.equals(Teams.getPlayerTeam(p))) {
+                if (WinningTeam.equals(team)) {
                     player_stmt.setInt(7, 1);
                 } else {
                     player_stmt.setInt(7, 0);
@@ -463,9 +467,8 @@ class CrystalBlitzDatabase{
         }
     }
 
-    private static byte[] uuid_to_bytes(Player p) {
+    private static byte[] uuid_to_bytes(UUID uuid) {
         ByteBuffer bb = ByteBuffer.allocate(16);
-        UUID uuid = p.getUniqueId();
         bb.putLong(uuid.getMostSignificantBits());
         bb.putLong(uuid.getLeastSignificantBits());
         return bb.array();
