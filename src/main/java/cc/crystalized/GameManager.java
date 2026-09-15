@@ -11,9 +11,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -21,7 +18,6 @@ import org.geysermc.floodgate.api.FloodgateApi;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
@@ -285,6 +281,10 @@ public class GameManager {
             p.playSound(p, "crystalized:effect.ls_game_won", 50, 1);
             if (GameManager.GameType.equals(GameTypes.StandardSolos)) {
                 Player lastPlayer = Bukkit.getPlayer(Teams.get_team_from_string(winning_team).getFirst());
+                try {
+                    LevelManager.giveExperience(lastPlayer, 5);
+                    LevelManager.giveMoney(lastPlayer, 20);
+                } catch (NoClassDefFoundError e) {}
                 p.showTitle(Title.title(
                         lastPlayer.displayName(),
                         translatable("crystalized.game.knockoff.win").color(YELLOW),
@@ -301,6 +301,12 @@ public class GameManager {
                         text(td.symbol).append(translatable("crystalized.game.generic.team." + td.name).color(TextColor.color(td.color.asRGB()))).append(text(td.symbol))
                                 .append(text(" ")).append(translatable("crystalized.game.knockoff.win").color(YELLOW))
                 );
+                if(td.name.equals(Teams.getPlayerTeam(p))){
+                    try {
+                        LevelManager.giveExperience(p, 5);
+                        LevelManager.giveMoney(p, 20);
+                    } catch (NoClassDefFoundError e) {}
+                }
             }
             if (Teams.getPlayerTeam(p).equals(td.name)) {
                 p.playSound(p, "crystalized:effect.ls_game_won", 50, 1);

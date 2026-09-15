@@ -1,6 +1,7 @@
 package cc.crystalized;
 
 import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent;
+import gg.crystalized.lobby.LevelManager;
 import gg.crystalized.lobby.Ranks;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
@@ -342,6 +343,10 @@ public class PlayerListener implements Listener {
             p.sendMessage(translatable("crystalized.game.crystalblitz.eliminated"));
             p.getInventory().clear();
             pd.isEliminated = true;
+            try {
+                LevelManager.giveExperience(p, 5);
+                LevelManager.giveMoney(p, 20);
+            } catch (NoClassDefFoundError ex) {}
             Location spawnloc = new Location(crystalBlitz.getInstance().getGameWorld(),
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[0],
                     crystalBlitz.getInstance().mapdata.getSpawn(Teams.getPlayerTeam(p))[1],
