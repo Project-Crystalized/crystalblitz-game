@@ -301,7 +301,7 @@ public class GameManager {
                         text(td.symbol).append(translatable("crystalized.game.generic.team." + td.name).color(TextColor.color(td.color.asRGB()))).append(text(td.symbol))
                                 .append(text(" ")).append(translatable("crystalized.game.knockoff.win").color(YELLOW))
                 );
-                if(td.name.equals(Teams.getPlayerTeam(p))){
+                if(td.name.equals(Teams.getPlayerTeam(p)) && !crystalBlitz.getInstance().gamemanager.getPlayerData(p).isEliminated){
                     try {
                         LevelManager.giveExperience(p, 5);
                         LevelManager.giveMoney(p, 20);
