@@ -356,7 +356,17 @@ public final class crystalBlitz extends JavaPlugin {
 
 //cba making another .java file - Callum
 class CrystalBlitzDatabase{
-    public static final String URL = "jdbc:sqlite:"+ System.getProperty("user.home")+"/databases/crystalblitz_db.sql";
+    private static String dbDir() {
+        String d = System.getenv("CRYSTALIZED_DB_DIR");
+        if (d == null || d.isBlank()) d = System.getProperty("user.home") + "/databases/test_dbs";
+        try {
+            java.nio.file.Files.createDirectories(java.nio.file.Path.of(d));
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException("Could not create database directory: " + d, e);
+        }
+        return d;
+    }
+    public static final String URL = "jdbc:sqlite:" + dbDir() + "/crystalblitz_db.sql";
 
     public static void setup_databases() {
         try {
@@ -401,7 +411,7 @@ class CrystalBlitzDatabase{
         String create_id_column = "ALTER TABLE CrystalBlitzGames ADD COLUMN game_id INTEGER;";
         String check_id_column = "SELECT game_id FROM CrystalBlitzGames LIMIT 1;";
 
-        String create_game_column = "ALTER TABLE CbGamesPlayers ADD COLUMN game INTEGER REFERENCES KnockoffGames(game_id);";
+        String create_game_column = "ALTER TABLE CbGamesPlayers ADD COLUMN game INTEGER REFERENCES CrystalBlitzGames(game_id);";
         String check_game_column = "SELECT game FROM CbGamesPlayers LIMIT 1;";
 
         try (Connection conn = DriverManager.getConnection(URL)) {
@@ -428,7 +438,7 @@ class CrystalBlitzDatabase{
     }
 
     public static void save_game(String WinningTeam) {
-        String save_game = "INSERT INTO CrystalBlitzGames(game_id, map, winner_team, gametype, timestamp) VALUES(?, ?, ?, ?, unixepoch())";
+        String save_game = "INSERT INTO CrystalBlitzGames(map, winner_team, gametype, timestamp) VALUES(?, ?, ?, unixepoch())";
         GameManager gm = crystalBlitz.getInstance().gamemanager;
 
         try (Connection conn = DriverManager.getConnection(URL)) {
@@ -438,19 +448,26 @@ class CrystalBlitzDatabase{
             game_stmt.setString(3, gm.GameType.toString());
             game_stmt.executeUpdate();
 
+            int game_id = conn.prepareStatement("SELECT last_insert_rowid();").executeQuery().getInt("last_insert_rowid()");
+
             String save_player = "INSERT INTO CbGamesPlayers(game, player_uuid, team, kills, deaths, nexus_kills, games_won)"
-                    + " VALUES(?, ?, ?, ?, ?, ?)";
+                    + " VALUES(?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement player_stmt = conn.prepareStatement(save_player);
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                PlayerData pd = gm.getPlayerData(p);
-                int game_id = conn.prepareStatement("SELECT last_insert_rowid();").executeQuery().getInt("last_insert_rowid()");
+            for (PlayerData pd : GameManager.playerDatas) {
+                if (pd == null || pd.p == null) continue;
+                String team = Teams.getPlayerTeam(pd.p.getName());
+                if (team == null || team.equals("spectator")) {
+									Bukkit.getLogger().severe("HUH a player was a participant but has no team or is spectator??? this cant happen surely :skull: :pray:");
+									continue;
+								};
+
                 player_stmt.setInt(1, game_id);
-                player_stmt.setBytes(2, uuid_to_bytes(p));
-                player_stmt.setString(3, Teams.getPlayerTeam(p));
+                player_stmt.setBytes(2, uuid_to_bytes(pd.p.getUniqueId()));
+                player_stmt.setString(3, team);
                 player_stmt.setInt(4, pd.kills);
                 player_stmt.setInt(5, pd.deaths);
                 player_stmt.setInt(6, pd.nexus_kills);
-                if (WinningTeam.equals(Teams.getPlayerTeam(p))) {
+                if (WinningTeam.equals(team)) {
                     player_stmt.setInt(7, 1);
                 } else {
                     player_stmt.setInt(7, 0);
@@ -463,9 +480,8 @@ class CrystalBlitzDatabase{
         }
     }
 
-    private static byte[] uuid_to_bytes(Player p) {
+    private static byte[] uuid_to_bytes(UUID uuid) {
         ByteBuffer bb = ByteBuffer.allocate(16);
-        UUID uuid = p.getUniqueId();
         bb.putLong(uuid.getMostSignificantBits());
         bb.putLong(uuid.getLeastSignificantBits());
         return bb.array();

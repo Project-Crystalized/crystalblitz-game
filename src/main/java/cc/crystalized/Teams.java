@@ -244,23 +244,27 @@ public class Teams {
     }
 
     public static String getPlayerTeam(Player player) {
-        if (spectator.contains(player.getName())) {
+        return getPlayerTeam(player.getName());
+    }
+
+    public static String getPlayerTeam(String name) {
+        if (spectator.contains(name)) {
             return "spectator";
-        } else if (blue.contains(player.getName())) {
+        } else if (blue.contains(name)) {
             return "blue";
-        } else if (cyan.contains(player.getName())) {
+        } else if (cyan.contains(name)) {
             return "cyan";
-        } else if (green.contains(player.getName())) {
+        } else if (green.contains(name)) {
             return "green";
-        } else if (lime.contains(player.getName())) {
+        } else if (lime.contains(name)) {
             return "lime";
-        } else if (magenta.contains(player.getName())) {
+        } else if (magenta.contains(name)) {
             return "magenta";
-        } else if (red.contains(player.getName())) {
+        } else if (red.contains(name)) {
             return "red";
-        } else if (white.contains(player.getName())) {
+        } else if (white.contains(name)) {
             return "white";
-        } else if (yellow.contains(player.getName())) {
+        } else if (yellow.contains(name)) {
             return "yellow";
         } else {
             return null;
