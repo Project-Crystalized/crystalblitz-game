@@ -356,7 +356,17 @@ public final class crystalBlitz extends JavaPlugin {
 
 //cba making another .java file - Callum
 class CrystalBlitzDatabase{
-    public static final String URL = "jdbc:sqlite:"+ System.getProperty("user.home")+"/databases/crystalblitz_db.sql";
+    private static String dbDir() {
+        String d = System.getenv("CRYSTALIZED_DB_DIR");
+        if (d == null || d.isBlank()) d = System.getProperty("user.home") + "/databases/test_dbs";
+        try {
+            java.nio.file.Files.createDirectories(java.nio.file.Path.of(d));
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException("Could not create database directory: " + d, e);
+        }
+        return d;
+    }
+    public static final String URL = "jdbc:sqlite:" + dbDir() + "/crystalblitz_db.sql";
 
     public static void setup_databases() {
         try {
