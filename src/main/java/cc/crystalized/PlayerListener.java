@@ -369,6 +369,10 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
             return;
         }
+        //Changes the player who shot the fire ball after it has been punched, this kinda like transfering the fire ball ownership to the new shooter
+        if (e.getEntity() instanceof Fireball fireball && e.getDamager() instanceof Player playerShooter) {
+            fireball.setShooter(playerShooter);
+        }
         //Fixed the check so now the code should execute making the team damage prevention logic work
         if (!(e.getEntity() instanceof Player)) {
             return;
