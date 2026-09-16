@@ -6,10 +6,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -18,10 +15,7 @@ import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Villager;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -36,11 +30,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.geysermc.floodgate.api.FloodgateApi;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
@@ -312,8 +305,22 @@ public class PlayerListener implements Listener {
             deathcauseicon = text(" [").append(translatable("block.minecraft.magma_block").append(text("] ")));
         } else if (e.getDamageSource().getDamageType().equals(DamageType.FALL)) {
             deathcauseicon = text(" [Fall Damage] ");
-        } else {
-            deathcauseicon  = text(" [Unknown Death Reason] ");
+            //Added explosion deaths, but they currently don't work for fire ball death as it is manualy handled will have to add it manualy later
+        } else if (e.getDamageSource().getDamageType().equals(DamageType.EXPLOSION)) {
+            deathcauseicon  = text(" [Explosion] ");
+        } else if (e.getDamageSource().getDamageType().equals(DamageType.PLAYER_EXPLOSION)) {
+            deathcauseicon  = text(" [Explosion] ");
+        }
+        //TODO: This a temporay fix fore fire balls not being displayed in the kill due to the damage being manual.
+        else {
+            crystalBlitz.getInstance().getLogger().info("Death type doesn't have it's own msg: " + e.getDamageSource().getDamageType() +
+                    " uses fall back");
+            if (k != null){
+                deathcauseicon  = text(" [killed] ");
+            }
+            else {
+                deathcauseicon  = text(" [Died] ");
+            }
         }
 
         Bukkit.getServer().sendMessage(deathprefix.append(killer).append(deathcauseicon).append(pd.cachedRankIcon_small.append(text(" ").append(p.displayName()))));
@@ -392,6 +399,11 @@ public class PlayerListener implements Listener {
         lastAttacker.put(victimUUID, attackerUUID);
         //Gets the current tick to later see if the diffrence is below the kill credit time
         lastAttackTick.put(victimUUID, Bukkit.getCurrentTick());
+        //Fireball damage is handled manually
+        if (e.getDamager() instanceof Fireball) {
+            e.setCancelled(true);
+            return;
+        }
     }
 
     @EventHandler
@@ -760,7 +772,275 @@ public class PlayerListener implements Listener {
         //makes them insta breakable.
         e.setInstaBreak(true);
     }
+
+    //Fully custom fire ball behaviour, to be able to knoback enemies, and use it as a rocket jump. As well as cutom block destruction
+    @EventHandler
+    public void onFireballHit(ProjectileHitEvent e) {
+        //If it is not a fire ball nothing happens
+        if (!(e.getEntity() instanceof Fireball fireball)) {
+            return;
+        }
+
+        crystalBlitz plugin = crystalBlitz.getInstance();
+
+        //If not during the game nothing will work
+        if (plugin.gamemanager == null) {
+            return;
+        }
+
+        //Checks if it is in the game world
+        if (!fireball.getWorld().equals(plugin.getGameWorld())) {
+            return;
+        }
+
+        //gets the location of the fire ball and the world
+        Location explosionLoc = fireball.getLocation().clone();
+        World world = fireball.getWorld();
+
+        //Fully removes the fireball to make sure that the explosion is fully custom
+        fireball.remove();
+
+        //Plays the explosion effect
+        world.spawnParticle(Particle.EXPLOSION, explosionLoc, 1);
+        //Gives some flames around the explosion, didn't want to bother with real fire setting right now, and looks pretty good
+        world.spawnParticle(Particle.FLAME, explosionLoc,
+                35,
+                1.2,
+                0.7,
+                1.2,
+                0.03
+        );
+
+        //Adds a bit of smoke to the explosion.
+        world.spawnParticle(Particle.SMOKE, explosionLoc,
+                20,
+                1.0,
+                0.6,
+                1.0,
+                0.04
+        );
+        //plays the sound effect of explosion at the explosion loaction
+        world.playSound(explosionLoc, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
+
+        /*
+        *----------------
+        * Block destruction logic
+        * ---------------------
+        * */
+        //Radius at which it is able to destroy blocks
+        double blockRadius = 3.0;
+
+        //Makes a copy of blocks which it can safely remove from the block tracking list with the plugin
+        Set<Block> blocksToCheck = new HashSet<>(plugin.Blocks);
+
+        for (Block block : blocksToCheck) {
+            //Makes sure it is happening in the same world
+            if (!block.getWorld().equals(world)) {
+                continue;
+            }
+
+            //gets the middle of the block loaction
+            Location blockLoc = block.getLocation().add(0.5, 0.5, 0.5);
+            //gets the distanse to be able to see if it is in the radius
+            double distance = blockLoc.distance(explosionLoc);
+
+            //if they are outside then skips to the next block
+            if (distance > blockRadius) {
+                continue;
+            }
+
+            //This calculates how strong is the explision based on the distanse from the block
+
+            //1 is super close to the explosion
+            //0 is like at the edge of the explosion
+            double distanceStrength = 1.0 - (distance / blockRadius);
+
+            //This is how seseptable the block is to be destroyed, the higher the number the eassier it is to destroy
+            double blockSeseptabilityToDestruction;
+
+            switch (block.getType()) {
+                //concrete is eassiest to destroy like wool in bed wars, as it is the common block
+                case WHITE_CONCRETE, ORANGE_CONCRETE, MAGENTA_CONCRETE, LIGHT_BLUE_CONCRETE,
+                     YELLOW_CONCRETE, LIME_CONCRETE, PINK_CONCRETE, GRAY_CONCRETE,
+                     LIGHT_GRAY_CONCRETE, CYAN_CONCRETE, PURPLE_CONCRETE, BLUE_CONCRETE,
+                     BROWN_CONCRETE, GREEN_CONCRETE, RED_CONCRETE, BLACK_CONCRETE -> blockSeseptabilityToDestruction = 1.5;
+
+                //Wool is harder to destroy due to it's price and it being less common the concrete
+                case WHITE_WOOL, ORANGE_WOOL, MAGENTA_WOOL, LIGHT_BLUE_WOOL, YELLOW_WOOL,
+                     LIME_WOOL, PINK_WOOL, GRAY_WOOL, LIGHT_GRAY_WOOL, CYAN_WOOL,
+                     PURPLE_WOOL, BLUE_WOOL, BROWN_WOOL, GREEN_WOOL, RED_WOOL,
+                     BLACK_WOOL -> blockSeseptabilityToDestruction = 0.55;
+
+                //Glass has a tiny chance of being destroyed
+                case GLASS, WHITE_STAINED_GLASS, ORANGE_STAINED_GLASS, MAGENTA_STAINED_GLASS, LIGHT_BLUE_STAINED_GLASS,
+                     YELLOW_STAINED_GLASS, LIME_STAINED_GLASS, PINK_STAINED_GLASS, GRAY_STAINED_GLASS,
+                     LIGHT_GRAY_STAINED_GLASS, CYAN_STAINED_GLASS, PURPLE_STAINED_GLASS, BLUE_STAINED_GLASS,
+                     BROWN_STAINED_GLASS, GREEN_STAINED_GLASS, RED_STAINED_GLASS, BLACK_STAINED_GLASS -> blockSeseptabilityToDestruction = 0.15;
+
+                //Waxed copper is tottaly immune, idk it gives that vibe to me.
+                case WAXED_CHISELED_COPPER -> blockSeseptabilityToDestruction = 0.0;
+
+                //Everything else is like regular concrete.
+                default -> blockSeseptabilityToDestruction = 1.5;
+            }
+
+            //Combines with the distance from the explosion to see the chance of it to be destroyed
+            double destroyChance = blockSeseptabilityToDestruction * distanceStrength;
+
+            //roles a random number and if the result if it is less or matches the chance than the block is gone
+            if (Math.random() <= destroyChance) {
+                block.setType(Material.AIR);
+                //Removes the destroyed block from tracking
+                plugin.Blocks.remove(block);
+            }
+        }
+
+        /*
+        * Abandoned fire logic, like it works, but there need to be a few things done, like allowing players to extingiche it
+        * preventing from spreading on flamebel objects which are not player placed, and remove it after some time
+        * Basicly for visiablity particles seemed to be a lot better than real fire in my opinion
+        * */
+
+        /*
+        //Starts a bit of fire around the explosion
+        int fireRadius = 2;
+        //goes through the blocks around the explosion
+        for (int x = -fireRadius; x <= fireRadius; x++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -fireRadius; z <= fireRadius; z++) {
+                    Block block = world.getBlockAt(explosionLoc.getBlockX() + x, explosionLoc.getBlockY() + y, explosionLoc.getBlockZ() + z);
+                    //Places fire, ensuring that it is replacing air with a block below it.
+                    if (block.getType().equals(Material.AIR) && block.getRelative(BlockFace.DOWN).getType().isSolid()) {
+                        //A random chance of fire so it is not spread through the entier radius
+                        if (Math.random() < 0.25) {
+                            block.setType(Material.FIRE);
+                        }
+                    }
+                }
+            }
+        }
+        */
+
+        /*
+        * Player knockback logic and damage:
+        * Rocket jumping, and sending enemies flying, while ignoring temates.
+        * */
+
+        //Player knockback radius
+        //The enemy radius
+        double knockbackRadius = 5.0;
+        //The self shooter radius for fire ball damage
+        double shooterKnockbackRadius = 3.0;
+
+
+        //Gets the player who shot the fireball
+        Player shooter = null;
+        //sets it to the person who shot
+        if (fireball.getShooter() instanceof Player playerShooter) {
+            shooter = playerShooter;
+        }
+        //Goes through all the player in the knockback radius in the explosion
+        for (Player player : explosionLoc.getNearbyPlayers(knockbackRadius)) {
+            //Only effects the player in survival mode to avoid spectators etc
+            if (!player.getGameMode().equals(GameMode.SURVIVAL)) {
+                continue;
+            }
+            //calculates the distanse from the exploding location
+            double distance = player.getLocation().distance(explosionLoc);
+
+            //If further than nothing happen, this is more for safety
+            if (distance > knockbackRadius) {
+                continue;
+            }
+
+            //The closer the player is to the explosion the stronger knockback becomes
+            double strength = 1.0 - (distance / knockbackRadius);
+
+            //Checks if it is the player who shot
+            boolean isShooter = shooter != null && shooter.equals(player);
+            //The shooter has to be closer to the explosion to be effected for fireball jump and in general.
+            if (isShooter && distance > shooterKnockbackRadius) {
+                continue;
+            }
+
+            //The shooter gets their own logic for proper fire ball jump
+            if (isShooter) {
+
+                /*
+                 * Rocket jump with direction:
+                 */
+                //adds it slightly to be at the players middle
+                //convets to to vector, and subtracts the explosion location vector to get the knockback vector it will be oposite direction
+                //example:
+                //Player center location = (10, 11, 10)
+                //Explosion = (10, 10, 10)
+                //Knockback = (0, 1, 0), which will point up
+                Vector knockback = player.getLocation().add(0, 0.9, 0).toVector().subtract(explosionLoc.toVector());
+
+                //if it is too small nothing happens as vector will be normalizied to keeps it direction only
+                if (knockback.lengthSquared() < 0.0001) {
+                    continue;
+                }
+                //The strenght is being recaluated for the shooter specificly
+                strength = 1.0 - (distance / shooterKnockbackRadius);
+
+                //The vector normalizies to keep direction only
+                knockback.normalize();
+
+                //This is the value that can be tuned for the rocket jump strenght, like knockback strenght.
+                knockback.multiply(1.35 * strength);
+
+
+                //This is done to keep the players current velocity, so that it would work similiar to bed wars. Like forward rocket jump while running
+                Vector currentVelocity = player.getVelocity();
+                Vector finalVelocity = currentVelocity.clone().add(knockback);
+
+                //Shooter gets less demage.
+                player.damage(2.0);
+                //sets the final player velocity to be players velocity
+                player.setVelocity(finalVelocity);
+                continue;
+
+            }
+            //Temates don't get no knockback, no nothing. The only way they can die is if the shooter aims at the block below them
+            //which I can't do anything above team grifing, they could also just mine blocks under their temate, and block jump with a block.
+            //so this is the most anti team grifing possible
+            if (shooter != null && Teams.getPlayerTeam(player).equals(Teams.getPlayerTeam(shooter))) {
+                continue;
+            }
+
+            //Enmies are simplpy pushed away from the explosion, similiar to the shooter
+            Vector knockback = player.getLocation().toVector().subtract(explosionLoc.toVector());
+
+            //Here though the goal is to allways have some upward momentum at least
+            if (knockback.lengthSquared() == 0) {
+                knockback = new Vector(0, 1, 0);
+            } else {
+                knockback.normalize();
+            }
+            //The knockback is stronger than the shooters
+            knockback.multiply(3.0 * strength);
+
+            //The y is handled seperately to make sure enemy allways get laucned from the explosion at least a bit
+            knockback.setY(0.4 + (0.9 * strength));
+
+            //Keeps the current velocity to mantian velocityu
+            Vector currentVelocity = player.getVelocity();
+
+            //The final velocity of the enemy is more controled.
+            //The higher Y values get selected, this is done to keep the highest upward momentum, and not combine them so the enemy doesn't die
+            //from fall if jumped all the time
+            Vector finalVelocity = new Vector(currentVelocity.getX() + knockback.getX(), Math.max(currentVelocity.getY(), knockback.getY()),
+                    currentVelocity.getZ() + knockback.getZ());
+
+            //Damages the enemy more than shooter...
+            player.damage(4.0);
+            //Sets the enemies final velocity
+            player.setVelocity(finalVelocity);
+        }
+    }
 }
+
 
 class CrystalShardBlock {
     //Added the extra time parameter whicch will be 5 for Pure shards, and zero for weak/stale shards
