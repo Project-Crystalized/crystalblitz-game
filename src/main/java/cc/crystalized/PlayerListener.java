@@ -230,7 +230,9 @@ public class PlayerListener implements Listener {
         pd.deaths++;
 
         PlayerInventory inv = p.getInventory();
+        //TODO: For polish make the off hand down gradebel as well
         inv.setItemInOffHand(new ItemStack(Material.AIR));
+        //TODO: Small bug fix get the currsor's items and down grade as well, if the player trying to cheese the system.
 
         //downgrade player's items
         for (ItemStack i : inv) {
@@ -267,6 +269,38 @@ public class PlayerListener implements Listener {
                     }
                 }
             }
+        }
+        //Checks if the player has a sword and picaxe after the down grade
+        boolean hasSword = false;
+        boolean hasPickaxe = false;
+        for (ItemStack item : inv) {
+            if (item == null) {
+                continue;
+            }
+            //using tags detemrines if the item is a sword or a picakaxe and sets it to true
+            if (Tag.ITEMS_SWORDS.isTagged(item.getType())) {
+                hasSword = true;
+            }
+            if (Tag.ITEMS_PICKAXES.isTagged(item.getType())) {
+                hasPickaxe = true;
+            }
+        }
+
+        //If the player doesn't have a sword, gives the default back with the proper enchants.
+        if (!hasSword) {
+            ItemStack sword = CrystalBlitzItems.getCBItem("wooden_sword").item.clone();
+
+            //Ensures it has the team sharpness upgrade.
+            TeamData td = Teams.getTeamData(p);
+            if (td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
+                sword.addEnchantment(Enchantment.SHARPNESS, 1);
+            }
+            //puts the sword in the inventory at it's original posioton
+            inv.setItem(0, sword);
+        }
+        //If the player has no pickaxe gives them the default wooden pickaxe
+        if (!hasPickaxe) {
+            inv.setItem(1, CrystalBlitzItems.getCBItem("wooden_pickaxe").item.clone());
         }
 
         //Death Message to server
