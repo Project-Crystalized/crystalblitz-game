@@ -230,10 +230,69 @@ public class PlayerListener implements Listener {
         pd.deaths++;
 
         PlayerInventory inv = p.getInventory();
-        //TODO: For polish make the off hand down gradebel as well
-        inv.setItemInOffHand(new ItemStack(Material.AIR));
-        //TODO: Small bug fix get the currsor's items and down grade as well, if the player trying to cheese the system.
+        //Checks if the player has a sword and picaxe, incase needs default ones
+        boolean hasSword = false;
+        boolean hasPickaxe = false;
 
+        //Handles tools in the offhand separately so they stay in the offhand after death
+        //TODO: This logic needs a full rewrite with the off hand, as currently I did the dertiest of fixes but it work
+        //so it clones the off hand and makes a temp new off hand item and cleares the really off hand to be air
+        ItemStack offhandItem = inv.getItemInOffHand().clone();
+        inv.setItemInOffHand(new ItemStack(Material.AIR));
+        ItemStack newOffhandItem = new ItemStack(Material.AIR);
+
+        //downgrades the off hand item if it is not air
+        if (offhandItem != null && !offhandItem.getType().isAir()) {
+            CBItem offhandCBItem = CrystalBlitzItems.getCBItem(offhandItem);
+            //same as main downgrade pretty much
+            if (offhandCBItem != null) {
+                //Experiment for now the pickaxes keep their tier after death
+                if (offhandCBItem.type == CrystalBlitzItems.ItemType.Pickaxe) {
+                    newOffhandItem = offhandItem;
+                    hasPickaxe = true;
+                }
+                else if (!offhandCBItem.downgradeTo.equals("")) {
+                    CBItem newItem = CrystalBlitzItems.getCBItem(offhandCBItem.downgradeTo);
+                    //arrmor is low key maybe not needed as arrmor can't be in off hand, but I copied it from the main dowgrade.
+                    //might be ussesful for the future, and not doing anything bad
+                    if (newItem instanceof CBItem_Armor armor) {
+                        armor.add(p);
+                    } else if (newItem != null) {
+                        //clones the item to avoid enchanting the source item, otherwise other teams end up having it as well.
+                        ItemStack downgradedItem = newItem.item.clone();
+                        //gets the team to see if it has the team sharpness upgrade.
+                        TeamData td = Teams.getTeamData(p);
+                        //when it is a sword will enchant if there is a sharpness upgrade
+                        if (newItem.type == CrystalBlitzItems.ItemType.Melee && td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
+                            downgradedItem.addEnchantment(Enchantment.SHARPNESS, 1);
+                        }
+                        //FixMe: Dirty fix, but currently it is not added to inventory straight away it does the chekcs and waits till main inventory check is done
+                        newOffhandItem = downgradedItem;
+                        //checks the type of weapon and if it is a sword or pick sets to true respectably. And if player don't have it in the end gives wood
+                        if (Tag.ITEMS_SWORDS.isTagged(newOffhandItem.getType())) {
+                            hasSword = true;
+                        }
+                        //incase in the future we make the pickaxes be downgradel again
+                        if (Tag.ITEMS_PICKAXES.isTagged(newOffhandItem.getType())) {
+                            hasPickaxe = true;
+                        }
+                    }
+                }
+
+
+            }
+        }
+
+        //TODO: This is good no changes needed her
+        //Moves the held hostage currsor item back to the inventory so that it can be propely down graded.
+        //so that players not abuse the inventory cleaning system.
+        ItemStack cursorItem = p.getItemOnCursor().clone();
+        if (!cursorItem.getType().isAir()) {
+            p.setItemOnCursor(new ItemStack(Material.AIR));
+            inv.addItem(cursorItem);
+        }
+
+        //TODO: Combine with the off hand logic, for now the dirty fix makes the offhand invisible for this, so it thinks there is air.
         //downgrade player's items
         for (ItemStack i : inv) {
             if (i != null) {
@@ -247,6 +306,7 @@ public class PlayerListener implements Listener {
                 if (cbItem != null) {
                     //Experiment for now the pickaxes keep their tier after death
                     if (cbItem.type == CrystalBlitzItems.ItemType.Pickaxe) {
+                        hasPickaxe = true;
                         continue;
                     }
                     inv.removeItem(i);
@@ -263,33 +323,29 @@ public class PlayerListener implements Listener {
                             if (newItem.type == CrystalBlitzItems.ItemType.Melee && td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
                                 downgradedItem.addEnchantment(Enchantment.SHARPNESS, 1);
                             }
-                            //gives the downgraded item
+                            //can add safely to inventory as off hand is hendled seperately very unprofesionaly
                             inv.addItem(downgradedItem);
+                            if (Tag.ITEMS_SWORDS.isTagged(downgradedItem.getType())) {
+                                hasSword = true;
+                            }
+                            //incase in the future we make the pickaxes be downgradel again
+                            if (Tag.ITEMS_PICKAXES.isTagged(downgradedItem.getType())) {
+                                hasPickaxe = true;
+                            }
                         }
                     }
                 }
             }
         }
-        //Checks if the player has a sword and picaxe after the down grade
-        boolean hasSword = false;
-        boolean hasPickaxe = false;
-        for (ItemStack item : inv) {
-            if (item == null) {
-                continue;
-            }
-            //using tags detemrines if the item is a sword or a picakaxe and sets it to true
-            if (Tag.ITEMS_SWORDS.isTagged(item.getType())) {
-                hasSword = true;
-            }
-            if (Tag.ITEMS_PICKAXES.isTagged(item.getType())) {
-                hasPickaxe = true;
-            }
-        }
+        //FixMe: Here it finnaly gives the item to off hand so it went undedicated through the inventory.
+        //The reason behind all this is that I thought callum cleared the offhand cause it wasn't techinicly part of inventory.
+        //I thought I will manualy walk through it, and make them reuse some methods, but no it sees, and now it is 6am and I just want it work for beta
+        //so the dirty fix of hidden off hand till the inventory check
+        inv.setItemInOffHand(newOffhandItem);
 
         //If the player doesn't have a sword, gives the default back with the proper enchants.
         if (!hasSword) {
             ItemStack sword = CrystalBlitzItems.getCBItem("wooden_sword").item.clone();
-
             //Ensures it has the team sharpness upgrade.
             TeamData td = Teams.getTeamData(p);
             if (td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
@@ -443,6 +499,29 @@ public class PlayerListener implements Listener {
             return;
         }
     }
+    ///This broke the code so bad, I will revisit it later for now we get a dirty ahh code with a dirty ahhh fix enjoy
+    private ItemStack downgradeItem(boolean goesInOffHand, CBItem newItem, Player p ) {
+        PlayerInventory inv = p.getInventory();
+        //clones the item to avoid enchanting the source item, otherwise other teams end up having it as well.
+        ItemStack downgradedItem = newItem.item.clone();
+        //gets the team to see if it has the team sharpness upgrade.
+        TeamData td = Teams.getTeamData(p);
+        //when it is a sword will enchant if there is a sharpness upgrade
+        if (newItem.type == CrystalBlitzItems.ItemType.Melee && td.teamUpgrades.hasUpgrade(upgrades.sharpness)) {
+            downgradedItem.addEnchantment(Enchantment.SHARPNESS, 1);
+        }
+        //gives the downgraded item
+        //main invnetory
+        if(!goesInOffHand) {
+            inv.addItem(downgradedItem);
+        }
+        //offhand
+        else {
+            inv.setItemInOffHand(downgradedItem);
+        }
+        return downgradedItem;
+    }
+
 
     @EventHandler
     public void onPlayerDamage (EntityDamageEvent e) {
