@@ -1,10 +1,20 @@
 package cc.crystalized;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.EventManager;
+import com.github.retrooper.packetevents.event.PacketListener;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
+import com.github.retrooper.packetevents.event.PacketSendEvent;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityData;
+import com.github.retrooper.packetevents.protocol.entity.data.EntityDataTypes;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityMetadata;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
@@ -44,6 +54,15 @@ public final class crystalBlitz extends JavaPlugin {
     private int PlayerStartLimit = 3;
 
     @Override
+    public void onLoad(){
+        PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
+        PacketEvents.getAPI().getSettings().reEncodeByDefault(false).checkForUpdates(true).bStats(false);
+        PacketEvents.getAPI().load();
+        EventManager events = PacketEvents.getAPI().getEventManager();
+        events.registerListener(new CrystalBlitzPackets(), PacketListenerPriority.NORMAL);
+    }
+
+    @Override
     public void onEnable() {
         //ensures config is saved
         saveDefaultConfig();
@@ -53,6 +72,7 @@ public final class crystalBlitz extends JavaPlugin {
         //The game world set up, deleting any previous game world dimensions.
         mapManager.setup();
 
+        PacketEvents.getAPI().init();
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("crystalblitz");
             command.then(Commands.literal("start").requires(sender -> sender.getSender().hasPermission("minecraft.command.op"))
@@ -206,6 +226,7 @@ public final class crystalBlitz extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        PacketEvents.getAPI().terminate();
         //Ensuring that all generators will be revived before shut down happens
         //and health bars removed
         if (gamemanager != null) {
@@ -485,5 +506,35 @@ class CrystalBlitzDatabase{
         bb.putLong(uuid.getMostSignificantBits());
         bb.putLong(uuid.getLeastSignificantBits());
         return bb.array();
+    }
+}
+
+class CrystalBlitzPackets implements PacketListener {
+    @Override
+    public void onPacketSend(PacketSendEvent event){
+        if(event.getPacketType() != PacketType.Play.Server.ENTITY_METADATA) {
+            return;
+        }
+        event.markForReEncode(true);
+        WrapperPlayServerEntityMetadata metaWrapper = new WrapperPlayServerEntityMetadata(event);
+        GameManager gc = crystalBlitz.getInstance().gamemanager;
+        Player updated_player = get_player_by_entity_id(metaWrapper.getEntityId());
+        if (gc == null
+                || updated_player == null
+                || !Teams.getPlayerTeam(updated_player).equals(Teams.getPlayerTeam(Bukkit.getPlayer(event.getUser().getUUID())))){
+            return;
+        }
+        List<EntityData<?>> data = metaWrapper.getEntityMetadata();
+        data.add(new EntityData<>(0, EntityDataTypes.BYTE, ((Integer) 0x40).byteValue()));
+        metaWrapper.setEntityMetadata(data);
+    }
+
+    private static Player get_player_by_entity_id(int id) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getEntityId() == id) {
+                return player;
+            }
+        }
+        return null;
     }
 }
