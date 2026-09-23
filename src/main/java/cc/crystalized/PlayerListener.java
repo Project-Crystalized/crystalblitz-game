@@ -87,6 +87,7 @@ public class PlayerListener implements Listener {
         p.removePotionEffect(PotionEffectType.ABSORPTION);
         GameManager.unsetSpectator(p);
 
+
         if (crystalBlitz.getInstance().gamemanager == null) {
             //Teleports the player to the waiting world, should probobly be renamed as techinicly source world is no longer the template. Due to issues with copying it
             //while it was running
