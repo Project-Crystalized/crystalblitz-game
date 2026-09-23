@@ -397,17 +397,26 @@ public class GameManager {
     }
 
     public static void setSpectator(Player p){
+        p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 0, false, false, true));
         p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().clear();
         p.setInvisible(true);
         p.setAllowFlight(true);
         p.setFlying(true);
+        p.setCollidable(false);
         InventoryManager.giveLobbyItems(p);
         p.getInventory().setItem(App.BackToHub.slot, App.BackToHub.build());
         p.getInventory().setItem(App.Requeue.slot, App.Requeue.build());
         //p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getSourceWorld()));
     }
 
+    public static void unsetSpectator(Player p){
+        p.getInventory().clear();
+        p.setInvisible(false);
+        p.setAllowFlight(false);
+        p.setFlying(false);
+        p.setCollidable(true);
+    }
     //Methods for Pure shard generators
 
     //The set up method for pure shard generators

@@ -85,7 +85,7 @@ public class PlayerListener implements Listener {
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 0, false, false, true));
         p.removePotionEffect(PotionEffectType.ABSORPTION);
-        p.setInvisible(false);
+        GameManager.unsetSpectator(p);
 
         if (crystalBlitz.getInstance().gamemanager == null) {
             //Teleports the player to the waiting world, should probobly be renamed as techinicly source world is no longer the template. Due to issues with copying it
@@ -463,6 +463,7 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
             return;
         }
+
         //Changes the player who shot the fire ball after it has been punched, this kinda like transfering the fire ball ownership to the new shooter
         if (e.getEntity() instanceof Fireball fireball && e.getDamager() instanceof Player playerShooter) {
             fireball.setShooter(playerShooter);
@@ -484,6 +485,11 @@ public class PlayerListener implements Listener {
         }
 
         if (attacker == null) {
+            return;
+        }
+
+        if(attacker.getGameMode() == GameMode.ADVENTURE){
+            e.setCancelled(true);
             return;
         }
         //preventing team damage
@@ -535,6 +541,10 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerDamage (EntityDamageEvent e) {
         if (crystalBlitz.getInstance().gamemanager == null) {
+            e.setCancelled(true);
+        }
+
+        if(e.getEntity() instanceof Player p && p.getGameMode() == GameMode.ADVENTURE){
             e.setCancelled(true);
         }
     }
