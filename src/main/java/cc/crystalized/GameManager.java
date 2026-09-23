@@ -1,5 +1,7 @@
 package cc.crystalized;
 
+import gg.crystalized.lobby.App;
+import gg.crystalized.lobby.InventoryManager;
 import gg.crystalized.lobby.LevelManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -99,7 +101,7 @@ public class GameManager {
                     crystalBlitz.getInstance().mapdata.spectator_spawn[1],
                     crystalBlitz.getInstance().mapdata.spectator_spawn[2]
             ));
-            p.setGameMode(GameMode.SPECTATOR);
+            setSpectator(p);
             new ScoreboardManager(p);
             playerDatas.add(new PlayerData(p));
         }
@@ -313,6 +315,8 @@ public class GameManager {
             } else {
                 p.playSound(p, "crystalized:effect.ls_game_lost", 50, 1);
             }
+
+            setSpectator(p);
         }
         CrystalBlitzDatabase.save_game(winning_team);
 
@@ -390,6 +394,18 @@ public class GameManager {
         }
 
         return null;
+    }
+
+    public static void setSpectator(Player p){
+        p.setGameMode(GameMode.ADVENTURE);
+        p.getInventory().clear();
+        p.setInvisible(true);
+        p.setAllowFlight(true);
+        p.setFlying(true);
+        InventoryManager.giveLobbyItems(p);
+        p.getInventory().setItem(App.BackToHub.slot, App.BackToHub.build());
+        p.getInventory().setItem(App.Requeue.slot, App.Requeue.build());
+        //p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getSourceWorld()));
     }
 
     //Methods for Pure shard generators

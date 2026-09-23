@@ -1,5 +1,8 @@
 package cc.crystalized;
 
+import gg.crystalized.lobby.Nametag;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -10,6 +13,8 @@ import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +25,9 @@ import java.util.logging.Logger;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
+import static org.bukkit.scoreboard.Team.Option.COLLISION_RULE;
+import static org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY;
+import static org.bukkit.scoreboard.Team.OptionStatus.NEVER;
 
 public class Teams {
     public static List<String> teams = new ArrayList<>();
@@ -235,12 +243,11 @@ public class Teams {
 
     private void addPlayerToTeamIfPossible(List<String> team, String p) {
         try {
-            if (p != null) {
-                team.add(p);
+            if (p == null) {
+               return;
             }
-        } catch (Exception e) {
-
-        }
+            team.add(p);
+        } catch (Exception e) {}
     }
 
     public static String getPlayerTeam(Player player) {
@@ -479,24 +486,32 @@ class TeamData{
 
 class CustomPlayerNametags {
     public CustomPlayerNametags(Player p) {
+        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+        Component[] content = new Component[2];
+        content[0] = p.displayName();
+        if (pd != null) {
+            content[1] = pd.cachedRankIcon_large;
+        }
+        Nametag tag = Nametag.reloadNametag(p, content);
+        /*
         TextDisplay displayFront = p.getWorld().spawn(p.getLocation(), TextDisplay.class, entity -> {
             entity.setBillboard(Display.Billboard.CENTER);
         });
         p.addPassenger(displayFront);
         p.hideEntity(crystalBlitz.getInstance(), displayFront);
-
+         */
         new BukkitRunnable() {
             public void run() {
-                if (crystalBlitz.getInstance().gamemanager == null || !p.isOnline() || p.getGameMode().equals(GameMode.SPECTATOR)) {
-                    displayFront.remove();
+                if (crystalBlitz.getInstance().gamemanager == null || !p.isOnline() || p.getGameMode().equals(GameMode.ADVENTURE)) {
+                    Nametag.disconnect(p);
                     cancel();
                 } else {
                     PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
-                    displayFront.text(
-                            pd.cachedRankIcon_large
-                                    .append(text("\n"))
-                                    .append(p.displayName())
-                    );
+                    content[0] = p.displayName();
+                    if (pd != null) {
+                        content[1] = pd.cachedRankIcon_large;
+                    }
+                    tag.updateContent(content);
                 }
             }
         }.runTaskTimer(crystalBlitz.getInstance(), 20, 2);

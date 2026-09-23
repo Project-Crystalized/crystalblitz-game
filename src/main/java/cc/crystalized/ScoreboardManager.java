@@ -64,6 +64,7 @@ public class ScoreboardManager {
         blue.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         blue.addEntry("9");
         blue.suffix(text(""));
+        blue.color(NamedTextColor.BLUE);
         obj.getScore("9").setScore(9);
 
         Team cyan = scoreboard.registerNewTeam("cyan");
@@ -71,6 +72,7 @@ public class ScoreboardManager {
         cyan.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         cyan.addEntry("8");
         cyan.suffix(text(""));
+        cyan.color(NamedTextColor.DARK_AQUA);
         obj.getScore("8").setScore(8);
 
         Team green = scoreboard.registerNewTeam("green");
@@ -78,6 +80,7 @@ public class ScoreboardManager {
         green.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         green.addEntry("7");
         green.suffix(text(""));
+        green.color(NamedTextColor.DARK_GREEN);
         obj.getScore("7").setScore(7);
 
         Team lime = scoreboard.registerNewTeam("lime");
@@ -85,6 +88,7 @@ public class ScoreboardManager {
         lime.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         lime.addEntry("6");
         lime.suffix(text(""));
+        lime.color(NamedTextColor.GREEN);
         obj.getScore("6").setScore(6);
 
         Team magenta = scoreboard.registerNewTeam("magenta");
@@ -92,6 +96,7 @@ public class ScoreboardManager {
         magenta.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         magenta.addEntry("5");
         magenta.suffix(text(""));
+        magenta.color(NamedTextColor.DARK_PURPLE);
         obj.getScore("5").setScore(5);
 
         Team red = scoreboard.registerNewTeam("red");
@@ -99,6 +104,7 @@ public class ScoreboardManager {
         red.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         red.addEntry("4");
         red.suffix(text(""));
+        red.color(NamedTextColor.RED);
         obj.getScore("4").setScore(4);
 
         Team white = scoreboard.registerNewTeam("white");
@@ -106,6 +112,7 @@ public class ScoreboardManager {
         white.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         white.addEntry("3");
         white.suffix(text(""));
+        white.color(NamedTextColor.WHITE);
         obj.getScore("3").setScore(3);
 
         Team yellow = scoreboard.registerNewTeam("yellow");
@@ -113,6 +120,7 @@ public class ScoreboardManager {
         yellow.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         yellow.addEntry("2");
         yellow.suffix(text(""));
+        yellow.color(NamedTextColor.YELLOW);
         obj.getScore("2").setScore(2);
 
         Team genspeed = scoreboard.registerNewTeam("genspeed");

@@ -4,6 +4,7 @@ main: cc.crystalized.crystalBlitz
 api-version: '26.2'
 authors: [ Callum_Is_Bad ]
 description: description
+softdepend: [packetevents, floodgate]
 commands:
   crystalblitz:
     description: "Commands for Crystal Blitz"

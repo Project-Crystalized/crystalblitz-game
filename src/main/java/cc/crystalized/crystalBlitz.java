@@ -14,6 +14,7 @@ import com.google.common.io.ByteStreams;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import gg.crystalized.lobby.Lobby_plugin;
 import io.github.retrooper.packetevents.factory.spigot.SpigotPacketEventsBuilder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -73,6 +74,7 @@ public final class crystalBlitz extends JavaPlugin {
         mapManager.setup();
 
         PacketEvents.getAPI().init();
+        Lobby_plugin.getInstance().doNametagsDespitePassive = true;
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             LiteralArgumentBuilder<CommandSourceStack> command = Commands.literal("crystalblitz");
             command.then(Commands.literal("start").requires(sender -> sender.getSender().hasPermission("minecraft.command.op"))

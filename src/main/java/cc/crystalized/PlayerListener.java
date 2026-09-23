@@ -85,6 +85,7 @@ public class PlayerListener implements Listener {
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 0, false, false, true));
         p.removePotionEffect(PotionEffectType.ABSORPTION);
+        p.setInvisible(false);
 
         if (crystalBlitz.getInstance().gamemanager == null) {
             //Teleports the player to the waiting world, should probobly be renamed as techinicly source world is no longer the template. Due to issues with copying it
@@ -131,7 +132,7 @@ public class PlayerListener implements Listener {
                     crystalBlitz.getInstance().mapdata.spectator_spawn[2]
             );
             p.teleport(loc);
-            p.setGameMode(GameMode.SPECTATOR);
+            GameManager.setSpectator(p);
             Teams teams = crystalBlitz.getInstance().gamemanager.teams;
             if (!teams.spectator.contains(p.getName())) {
                 teams.spectator.add(p.getName());
@@ -181,6 +182,8 @@ public class PlayerListener implements Listener {
         e.setCancelled(true);
         if (crystalBlitz.getInstance().gamemanager == null) {return;}
         Player p = e.getPlayer();
+
+        if(p.getGameMode() == GameMode.ADVENTURE) p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getSourceWorld()));
 
         Entity entity = e.getDamageSource().getCausingEntity();
         Player k;
@@ -430,7 +433,7 @@ public class PlayerListener implements Listener {
                         );
                         p.setGameMode(GameMode.SURVIVAL);
                         p.teleport(spawnloc);
-                        new CustomPlayerNametags(p);
+                        //new CustomPlayerNametags(p);
                         cancel();
                     }
                     timer--;
@@ -440,6 +443,7 @@ public class PlayerListener implements Listener {
             p.sendMessage(translatable("crystalized.game.crystalblitz.eliminated"));
             p.getInventory().clear();
             pd.isEliminated = true;
+            GameManager.setSpectator(p);
             try {
                 LevelManager.giveExperience(p, 5);
                 LevelManager.giveMoney(p, 20);
