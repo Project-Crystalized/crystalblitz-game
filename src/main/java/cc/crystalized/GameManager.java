@@ -182,6 +182,11 @@ public class GameManager {
             p.leaveVehicle();
             p.getInventory().clear();
             p.setFallDistance(0);
+            //makes sure players are visible again after being set to specator. And flight is reset.
+            //moved before kicking so that players are propely reset for the next game regardless of kick
+            p.setInvisible(false);
+            p.setAllowFlight(false);
+            p.setFlying(false);
             if (kickPlayersAtGameEnd) {
                 //The rewards are given only when kicking is enabled, as for self hosting there is no point for rewards.
                 try {
@@ -396,7 +401,9 @@ public class GameManager {
         return null;
     }
 
-    public static void setSpectator(Player p){
+    //TODO: We need to test if those spectators have collisions with projectiles and if they can body block
+    //as it sets to this spectators specificly when you join an on going game and they could mess with the game
+    public static void setSpectator(Player p) {
         p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().clear();
         p.setInvisible(true);

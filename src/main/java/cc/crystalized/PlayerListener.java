@@ -86,6 +86,9 @@ public class PlayerListener implements Listener {
         p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 0, false, false, true));
         p.removePotionEffect(PotionEffectType.ABSORPTION);
         p.setInvisible(false);
+        //Resets spectator flied when rejoining. It is fine as if needs to be a spectator player will be set to spectator later
+        p.setFlying(false);
+        p.setAllowFlight(false);
 
         if (crystalBlitz.getInstance().gamemanager == null) {
             //Teleports the player to the waiting world, should probobly be renamed as techinicly source world is no longer the template. Due to issues with copying it
