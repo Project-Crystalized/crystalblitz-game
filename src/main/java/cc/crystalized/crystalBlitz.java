@@ -619,7 +619,7 @@ class GameCompass implements Listener {
         play.setItemMeta(skull);
 
         ItemMeta meta = play.getItemMeta();
-        Component displayName = Component.text(name).color(GRAY).decoration(ITALIC, false);
+        Component displayName = Component.text("\uE103").color(WHITE).decoration(ITALIC, false).append(Component.text(name).color(GRAY).decoration(ITALIC, true));
         if(player.getPlayer() != null && player.getPlayer().getGameMode() != GameMode.ADVENTURE) displayName = player.getPlayer().displayName().decoration(ITALIC, false);
         meta.displayName(displayName);
         play.setItemMeta(meta);
