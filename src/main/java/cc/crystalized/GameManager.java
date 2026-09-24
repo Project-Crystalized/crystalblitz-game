@@ -13,6 +13,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -418,6 +419,7 @@ public class GameManager {
         InventoryManager.giveLobbyItems(p);
         p.getInventory().setItem(App.BackToHub.slot, App.BackToHub.build());
         p.getInventory().setItem(App.Requeue.slot, App.Requeue.build());
+        p.getInventory().setItem(6, new ItemStack(Material.COMPASS));
         //p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getSourceWorld()));
         //Makes so the player is hidden for all other players, this is done to preven collision with arrows, blocks placements
         //etc, basicly makes so that other players don't even see what the spectator is holding or being able to interact with them at all

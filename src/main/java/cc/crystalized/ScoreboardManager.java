@@ -63,6 +63,9 @@ public class ScoreboardManager {
         blue.setAllowFriendlyFire(false);
         blue.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         blue.addEntry("9");
+        for(String name : Teams.get_team_from_string("blue")){
+            blue.addPlayer(Bukkit.getOfflinePlayer(name));
+        }
         blue.suffix(text(""));
         blue.color(NamedTextColor.BLUE);
         obj.getScore("9").setScore(9);
@@ -71,6 +74,9 @@ public class ScoreboardManager {
         cyan.setAllowFriendlyFire(false);
         cyan.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         cyan.addEntry("8");
+        for(String name : Teams.get_team_from_string("cyan")){
+            cyan.addPlayer(Bukkit.getOfflinePlayer(name));
+        }
         cyan.suffix(text(""));
         cyan.color(NamedTextColor.DARK_AQUA);
         obj.getScore("8").setScore(8);
@@ -79,6 +85,9 @@ public class ScoreboardManager {
         green.setAllowFriendlyFire(false);
         green.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         green.addEntry("7");
+        for(String name : Teams.get_team_from_string("green")){
+            green.addPlayer(Bukkit.getOfflinePlayer(name));
+        }
         green.suffix(text(""));
         green.color(NamedTextColor.DARK_GREEN);
         obj.getScore("7").setScore(7);
@@ -87,6 +96,9 @@ public class ScoreboardManager {
         lime.setAllowFriendlyFire(false);
         lime.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         lime.addEntry("6");
+        for(String name : Teams.get_team_from_string("lime")){
+            lime.addPlayer(Bukkit.getOfflinePlayer(name));
+        }
         lime.suffix(text(""));
         lime.color(NamedTextColor.GREEN);
         obj.getScore("6").setScore(6);
@@ -95,6 +107,9 @@ public class ScoreboardManager {
         magenta.setAllowFriendlyFire(false);
         magenta.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         magenta.addEntry("5");
+        for(String name : Teams.get_team_from_string("magenta")){
+            magenta.addPlayer(Bukkit.getOfflinePlayer(name));
+        }
         magenta.suffix(text(""));
         magenta.color(NamedTextColor.DARK_PURPLE);
         obj.getScore("5").setScore(5);
@@ -103,6 +118,9 @@ public class ScoreboardManager {
         red.setAllowFriendlyFire(false);
         red.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         red.addEntry("4");
+        for(String name : Teams.get_team_from_string("red")){
+            red.addPlayer(Bukkit.getOfflinePlayer(name));
+        }
         red.suffix(text(""));
         red.color(NamedTextColor.RED);
         obj.getScore("4").setScore(4);
@@ -111,6 +129,9 @@ public class ScoreboardManager {
         white.setAllowFriendlyFire(false);
         white.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         white.addEntry("3");
+        for(String name : Teams.get_team_from_string("white")){
+            white.addPlayer(Bukkit.getOfflinePlayer(name));
+        }
         white.suffix(text(""));
         white.color(NamedTextColor.WHITE);
         obj.getScore("3").setScore(3);
@@ -119,6 +140,9 @@ public class ScoreboardManager {
         yellow.setAllowFriendlyFire(false);
         yellow.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
         yellow.addEntry("2");
+        for(String name : Teams.get_team_from_string("yellow")){
+            yellow.addPlayer(Bukkit.getOfflinePlayer(name));
+        }
         yellow.suffix(text(""));
         yellow.color(NamedTextColor.YELLOW);
         obj.getScore("2").setScore(2);

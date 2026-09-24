@@ -1,5 +1,6 @@
 package cc.crystalized;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.EventManager;
 import com.github.retrooper.packetevents.event.PacketListener;
@@ -25,8 +26,16 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.nio.ByteBuffer;
@@ -38,6 +47,7 @@ import java.util.logging.Level;
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
+import static net.kyori.adventure.text.format.TextDecoration.ITALIC;
 
 public final class crystalBlitz extends JavaPlugin {
 
@@ -164,6 +174,7 @@ public final class crystalBlitz extends JavaPlugin {
 
         this.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         this.getServer().getPluginManager().registerEvents(new ShopListener(), this);
+        this.getServer().getPluginManager().registerEvents(new GameCompass(), this);
 
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "crystalized:crystalblitz");
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "crystalized:main");
@@ -538,5 +549,81 @@ class CrystalBlitzPackets implements PacketListener {
             }
         }
         return null;
+    }
+}
+
+class GameCompass implements Listener {
+    @EventHandler
+    public void onCompassClick(PlayerInteractEvent e){
+        if(e.getItem() == null || e.getItem().getType() != Material.COMPASS){
+            return;
+        }
+
+        if(e.getPlayer().getGameMode() != GameMode.ADVENTURE){
+            return;
+        }
+
+        int teamSize = 0;
+        ArrayList<List<String>> allPlayerSortedInTeams = new ArrayList<>();
+        for(String teamName : Teams.teams){
+            List<String> team = Teams.get_team_from_string(teamName);
+            if(team == null || team.isEmpty()) continue;
+            teamSize = Math.max(team.size(), teamSize);
+            allPlayerSortedInTeams.add(team);
+        }
+        int inventorySize = allPlayerSortedInTeams.size() * teamSize * 2;
+        int[] possibleSizes = new int[]{9, 18, 27, 36, 45, 54};
+        for(int i : possibleSizes){
+            if(inventorySize % 9 == 0) break;
+            if(inventorySize <= i){
+                inventorySize = i;
+                break;
+            }
+        }
+        Inventory inv = Bukkit.createInventory(null, inventorySize, Component.text(""));
+        int slot = 0;
+        for(List<String> team : allPlayerSortedInTeams){
+            for(String name : team){
+                inv.setItem(slot, buildItem(name));
+                slot++;
+            }
+            if(slot % 9 != 0) slot++;
+        }
+        e.getPlayer().openInventory(inv);
+    }
+
+    @EventHandler
+    public void onHeadClick(InventoryClickEvent e){
+        if(e.getCurrentItem() == null || e.getCurrentItem().getType() != Material.PLAYER_HEAD){
+            return;
+        }
+        if(e.getWhoClicked().getGameMode() != GameMode.ADVENTURE){
+            return;
+        }
+        e.setCancelled(true);
+        ItemStack item = e.getCurrentItem();
+        SkullMeta skull = (SkullMeta) item.getItemMeta();
+        PlayerProfile profile = skull.getPlayerProfile();
+        if(profile == null || profile.getId() == null) return;
+        OfflinePlayer player = Bukkit.getOfflinePlayer(profile.getId());
+        if(player.getPlayer() == null) return;
+        e.getWhoClicked().teleport(player.getPlayer());
+    }
+
+    public static ItemStack buildItem(String name){
+        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
+        PlayerProfile profile = player.getPlayerProfile();
+        ItemStack play = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta skull = (SkullMeta) play.getItemMeta();
+        skull.setPlayerProfile(profile);
+        play.setItemMeta(skull);
+
+        ItemMeta meta = play.getItemMeta();
+        Component displayName = Component.text(name).color(GRAY).decoration(ITALIC, false);
+        if(player.getPlayer() != null && player.getPlayer().getGameMode() != GameMode.ADVENTURE) displayName = player.getPlayer().displayName().decoration(ITALIC, false);
+        meta.displayName(displayName);
+        play.setItemMeta(meta);
+
+        return play;
     }
 }
