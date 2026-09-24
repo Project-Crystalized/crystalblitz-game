@@ -428,10 +428,9 @@ public class GameManager {
             if (player.equals(p)) {
                 continue;
             }
-            //Only the current playing players will not know that the spectator exists
-            if (player.getGameMode() == GameMode.SURVIVAL) {
-                player.hidePlayer(crystalBlitz.getInstance(), p);
-            }
+            //No one except spectator will know that they exist.
+            player.hidePlayer(crystalBlitz.getInstance(), p);
+
         }
     }
 
