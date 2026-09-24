@@ -25,6 +25,9 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Bat;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -384,6 +387,12 @@ public final class crystalBlitz extends JavaPlugin {
         world.setGameRule(GameRules.RANDOM_TICK_SPEED, 0);
         world.setGameRule(GameRules.NATURAL_HEALTH_REGENERATION, true);
         world.setDifficulty(Difficulty.HARD);
+        //Removes any hostile entieies, including bats.
+        for (Entity entity : world.getEntities()) {
+            if (entity instanceof Monster || entity instanceof Bat) {
+                entity.remove();
+            }
+        }
     }
 
 }
