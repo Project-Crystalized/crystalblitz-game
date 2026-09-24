@@ -99,6 +99,9 @@ public class Teams {
                         if (!red.isEmpty()) {red.clear();}
                         if (!white.isEmpty()) {white.clear();}
                         if (!yellow.isEmpty()) {yellow.clear();}
+                        //spectator needs clearing as well, as otherwise mid game joiners for next game will be spectating again
+                        if (!spectator.isEmpty()) {spectator.clear();}
+
                         cancel();
                     }
                 }
