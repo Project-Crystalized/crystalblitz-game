@@ -580,6 +580,8 @@ class GameCompass implements Listener {
             teamSize = Math.max(team.size(), teamSize);
             allPlayerSortedInTeams.add(team);
         }
+        //This fails if it is above 54 like 64 is not divivdalbe by 9, but it is bigger than 54 the final number
+        //so added a fall back to make sure it will never exside the limit
         int inventorySize = allPlayerSortedInTeams.size() * teamSize * 2;
         int[] possibleSizes = new int[]{9, 18, 27, 36, 45, 54};
         for(int i : possibleSizes){
@@ -589,10 +591,19 @@ class GameCompass implements Listener {
                 break;
             }
         }
+        //a fall back incase it managed to excide the invnetory limit.
+        if(inventorySize > 54) {
+            inventorySize = 54;
+        }
         Inventory inv = Bukkit.createInventory(null, inventorySize, Component.text(""));
         int slot = 0;
         for(List<String> team : allPlayerSortedInTeams){
             for(String name : team){
+                //Only displays currently players that are currently alive, so not tping to respawning players
+                Player player = Bukkit.getPlayerExact(name);
+                if(player == null || player.getGameMode() != GameMode.SURVIVAL) {
+                    continue;
+                }
                 inv.setItem(slot, buildItem(name));
                 slot++;
             }
@@ -614,8 +625,14 @@ class GameCompass implements Listener {
         SkullMeta skull = (SkullMeta) item.getItemMeta();
         PlayerProfile profile = skull.getPlayerProfile();
         if(profile == null || profile.getId() == null) return;
-        OfflinePlayer player = Bukkit.getOfflinePlayer(profile.getId());
-        if(player.getPlayer() == null) return;
+        //Makes sure that you can't teleport to dead players otherwise it is weird.
+        //Player could die between when the compass was opened.
+        Player spectator = (Player) e.getWhoClicked();
+        Player player = Bukkit.getPlayer(profile.getId());
+        if(player == null || player.getGameMode() != GameMode.SURVIVAL) {
+            spectator.sendMessage(Component.text("Can't teleport to a player as they are dead.").color(RED));
+            return;
+        }
         e.getWhoClicked().teleport(player.getPlayer());
     }
 
