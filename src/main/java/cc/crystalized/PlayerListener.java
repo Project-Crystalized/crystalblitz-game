@@ -160,23 +160,33 @@ public class PlayerListener implements Listener {
         }
     }
     //Added this to prevent infinity fall before game starts - Mish
+    //now also prevents spectator infinite fall.
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
-        //Ensures this happens only when game manager is null, so not during the game
-        if (crystalBlitz.getInstance().gamemanager != null) {
-            return;
-        }
         //Gets the player
         Player p = e.getPlayer();
         //If player's Y location is beyhond maps death limit
-        //Teleports the player back to the original spawn location
+        //Teleports the player back to their original location
         if (p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit) {
-            //teleports to the current active game world where players are supposed to be incase it accidently happens at the same time as starting the game.
-            p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getActiveWorld()));
-            //makes sure fall distanse is 0
+            //Ensures this happens only when game manager is null, so not during the game
+            if (crystalBlitz.getInstance().gamemanager == null) {
+                //teleports to the current active game world where players are supposed to be incase it accidently happens at the same time as starting the game.
+                p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getActiveWorld()));
+            }
+            //teleports to spectators default location
+            else if (p.getGameMode() == GameMode.ADVENTURE) {
+                p.teleport(new Location(crystalBlitz.getInstance().getGameWorld(), crystalBlitz.getInstance().mapdata.spectator_spawn[0],
+                        crystalBlitz.getInstance().mapdata.spectator_spawn[1],
+                        crystalBlitz.getInstance().mapdata.spectator_spawn[2]));
+            }
+            //makes sure fall distanse is 0 for both cases.
             p.setFallDistance(0);
+
         }
     }
+
+
+
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
@@ -556,7 +566,9 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
         } else {
             if (e.getRightClicked() instanceof Villager) {
-                if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {
+                //prevents villager for spectators.
+                if (e.getPlayer().getGameMode().equals(GameMode.SPECTATOR) || e.getPlayer().getGameMode().equals(GameMode.ADVENTURE)) {
+                    e.setCancelled(true);
                     return;
                 }
                 new Shop(e.getPlayer());
@@ -566,6 +578,12 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+        //Spectators should not be able to interact with any blocks, while still being able to interact with their tool bar.
+        if (crystalBlitz.getInstance().gamemanager != null && p.getGameMode() == GameMode.ADVENTURE && e.getClickedBlock() != null) {
+            e.setCancelled(true);
+            return;
+        }
         if (crystalBlitz.getInstance().gamemanager == null) {
             e.setCancelled(true);
         }
@@ -1174,6 +1192,22 @@ public class PlayerListener implements Listener {
             player.damage(4.0);
             //Sets the enemies final velocity
             player.setVelocity(finalVelocity);
+        }
+    }
+    //prevents picking up of items by spectating players.
+    @EventHandler
+    public void onSpectatorPickup(EntityPickupItemEvent e) {
+        if (e.getEntity() instanceof Player p && crystalBlitz.getInstance().gamemanager != null && p.getGameMode() == GameMode.ADVENTURE) {
+            e.setCancelled(true);
+        }
+    }
+
+    //prevents dropping items while player is a spectator.
+    @EventHandler
+    public void onSpectatorDrop(PlayerDropItemEvent e) {
+        Player p = e.getPlayer();
+        if (crystalBlitz.getInstance().gamemanager != null && p.getGameMode() == GameMode.ADVENTURE) {
+            e.setCancelled(true);
         }
     }
 }

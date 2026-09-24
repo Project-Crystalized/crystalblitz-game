@@ -72,6 +72,8 @@ public class GameManager {
             p.getEnderChest().clear();
         }
         for (Player p : crystalBlitz.getInstance().getOnlinePlayers()) {
+            //unsets spectator at the start of the new game to make sure no left over players are in spectator
+            unsetSpectator(p);
             givePlayerItems(p);
             Teams.setPlayerDisplayNames(p);
             p.setGameMode(GameMode.SURVIVAL);
@@ -187,6 +189,8 @@ public class GameManager {
             p.setInvisible(false);
             p.setAllowFlight(false);
             p.setFlying(false);
+            //unsets spectator before kicking/sending back to main world.
+            unsetSpectator(p);
             if (kickPlayersAtGameEnd) {
                 //The rewards are given only when kicking is enabled, as for self hosting there is no point for rewards.
                 try {
@@ -415,6 +419,18 @@ public class GameManager {
         p.getInventory().setItem(App.BackToHub.slot, App.BackToHub.build());
         p.getInventory().setItem(App.Requeue.slot, App.Requeue.build());
         //p.teleport(crystalBlitz.getInstance().mapdata.get_queue_spawn(crystalBlitz.getInstance().getSourceWorld()));
+        //Makes so the player is hidden for all other players, this is done to preven collision with arrows, blocks placements
+        //etc, basicly makes so that other players don't even see what the spectator is holding or being able to interact with them at all
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            //skips itself
+            if (player.equals(p)) {
+                continue;
+            }
+            //Only the current playing players will not know that the spectator exists
+            if (player.getGameMode() == GameMode.SURVIVAL) {
+                player.hidePlayer(crystalBlitz.getInstance(), p);
+            }
+        }
     }
 
     public static void unsetSpectator(Player p){
@@ -423,6 +439,10 @@ public class GameManager {
         p.setAllowFlight(false);
         p.setFlying(false);
         p.setCollidable(true);
+        //makes the player be visible by the other players again.
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.showPlayer(crystalBlitz.getInstance(), p);
+        }
     }
     //Methods for Pure shard generators
 
