@@ -624,9 +624,11 @@ public class PlayerListener implements Listener {
                         }
                     }
                     case WHITE_GLAZED_TERRACOTTA, GRAY_GLAZED_TERRACOTTA, LIGHT_GRAY_GLAZED_TERRACOTTA -> {
+
                         if (!p.getInventory().getItemInMainHand().toString().toLowerCase().contains("pickaxe")) {
                             p.sendMessage(translatable("crystalized.game.crystalblitz.use_pickaxe"));
-                            return;
+                            //let's the player mine withb anything lmao. 
+                            //return;
                         }
                         e.setCancelled(true);
                         Directional dir = (Directional) e.getBlock().getBlockData();
