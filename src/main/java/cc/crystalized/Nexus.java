@@ -135,6 +135,10 @@ public class Nexus {
                 health--;
                 health--;
                 break;
+            default:
+                //Anything can damage nexuse but without pick it is very slow.
+                health--;
+                break;
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (Teams.getPlayerTeam(player).equals(team)) {
