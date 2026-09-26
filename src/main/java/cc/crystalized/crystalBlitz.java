@@ -541,9 +541,23 @@ class CrystalBlitzPackets implements PacketListener {
         WrapperPlayServerEntityMetadata metaWrapper = new WrapperPlayServerEntityMetadata(event);
         GameManager gc = crystalBlitz.getInstance().gamemanager;
         Player updated_player = get_player_by_entity_id(metaWrapper.getEntityId());
-        if (gc == null
-                || updated_player == null
-                || !Teams.getPlayerTeam(updated_player).equals(Teams.getPlayerTeam(Bukkit.getPlayer(event.getUser().getUUID())))){
+        //seperated the checks as it was giving me exceptions when joining late as spectator.
+        if (gc == null || updated_player == null) {
+            return;
+        }
+        //gets the player who is viewing and makes sure it is not null
+        Player viewer = Bukkit.getPlayer(event.getUser().getUUID());
+        if (viewer == null) {
+            return;
+        }
+        //gets the team of the player and the viewers team, and makes sure they are not null
+        String updatedTeam = Teams.getPlayerTeam(updated_player);
+        String viewerTeam = Teams.getPlayerTeam(viewer);
+        if (updatedTeam == null || viewerTeam == null) {
+            return;
+        }
+        //prevents glowing if not from the same team
+        if (!updatedTeam.equals(viewerTeam)) {
             return;
         }
         List<EntityData<?>> data = metaWrapper.getEntityMetadata();
