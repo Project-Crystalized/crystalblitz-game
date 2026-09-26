@@ -2,6 +2,7 @@ package cc.crystalized;
 
 import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent;
 import gg.crystalized.lobby.LevelManager;
+import gg.crystalized.lobby.Nametag;
 import gg.crystalized.lobby.Ranks;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
@@ -125,6 +126,11 @@ public class PlayerListener implements Listener {
             }
 
         } else {
+            //moved teams higher to prevent player not having a team for a bit.
+            Teams teams = crystalBlitz.getInstance().gamemanager.teams;
+            if (!teams.spectator.contains(p.getName())) {
+                teams.spectator.add(p.getName());
+            }
             //p.kick(text("A game is currently is progress, try joining again later.").color(NamedTextColor.RED));
             //teleports to the game world location
             Location loc = new Location(
@@ -135,10 +141,6 @@ public class PlayerListener implements Listener {
             );
             p.teleport(loc);
             GameManager.setSpectator(p);
-            Teams teams = crystalBlitz.getInstance().gamemanager.teams;
-            if (!teams.spectator.contains(p.getName())) {
-                teams.spectator.add(p.getName());
-            }
             p.sendMessage(translatable("crystalized.game.crystalblitz.joined_in_progress_game"));
             p.setWorldBorder(crystalBlitz.getInstance().gamemanager.worldborder.border);
             for (Player player1 : Bukkit.getOnlinePlayers()) {
@@ -146,6 +148,8 @@ public class PlayerListener implements Listener {
                     player1.unlistPlayer(player2);
                 }
             }
+            //same fix as in Knock off otherwise spectators doesn't see the name tag updated
+            new CustomPlayerNametags(p);
         }
     }
 

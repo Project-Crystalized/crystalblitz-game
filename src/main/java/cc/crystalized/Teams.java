@@ -488,35 +488,38 @@ class TeamData{
 }
 
 class CustomPlayerNametags {
-    public CustomPlayerNametags(Player p) {
-        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+    //made it match knock off as much as possible otherwise the late spectator wasn't seeing the name tags
+    public CustomPlayerNametags(Player player) {
+        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(player);
         Component[] content = new Component[2];
-        content[0] = p.displayName();
+        content[0] = player.displayName();
         if (pd != null) {
             content[1] = pd.cachedRankIcon_large;
+        } else {
+            content[1] = text("");
         }
-        Nametag tag = Nametag.reloadNametag(p, content);
-        /*
-        TextDisplay displayFront = p.getWorld().spawn(p.getLocation(), TextDisplay.class, entity -> {
-            entity.setBillboard(Display.Billboard.CENTER);
-        });
-        p.addPassenger(displayFront);
-        p.hideEntity(crystalBlitz.getInstance(), displayFront);
-         */
+        Nametag tag = Nametag.reloadNametag(player, content);
         new BukkitRunnable() {
             public void run() {
-                if (crystalBlitz.getInstance().gamemanager == null || !p.isOnline() || p.getGameMode().equals(GameMode.ADVENTURE)) {
-                    Nametag.disconnect(p);
+                if (crystalBlitz.getInstance().gamemanager == null || !player.isOnline()) {
+                    Nametag.disconnect(player);
                     cancel();
+                    return;
+                }
+                PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(player);
+                //as late joiners don't have pd
+                if (pd == null) {
+                    return;
+                }
+                //updates the tag the same way when the player is ellemninated as in knock off
+                if (pd.isEliminated) {
+                    tag.updateContent(new Component[]{text("")});
                 } else {
-                    PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
-                    content[0] = p.displayName();
-                    if (pd != null) {
-                        content[1] = pd.cachedRankIcon_large;
-                    }
+                    content[0] = player.displayName();
+                    content[1] = pd.cachedRankIcon_large;
                     tag.updateContent(content);
                 }
             }
-        }.runTaskTimer(crystalBlitz.getInstance(), 20, 2);
+        }.runTaskTimer(crystalBlitz.getInstance(), 1L, 1L);
     }
 }
