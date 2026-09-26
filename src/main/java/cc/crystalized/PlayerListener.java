@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent;
 import gg.crystalized.lobby.LevelManager;
 import gg.crystalized.lobby.Ranks;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -938,6 +939,11 @@ public class PlayerListener implements Listener {
     //Fully custom fire ball behaviour, to be able to knoback enemies, and use it as a rocket jump. As well as cutom block destruction
     @EventHandler
     public void onFireballHit(ProjectileHitEvent e) {
+        //makes sure projectiles don't hit players in adventure spectator
+        if (e.getHitEntity() instanceof Player p && p.getGameMode() == GameMode.ADVENTURE) {
+            e.setCancelled(true);
+            return;
+        }
         //If it is not a fire ball nothing happens
         if (!(e.getEntity() instanceof Fireball fireball)) {
             return;
@@ -1214,6 +1220,22 @@ public class PlayerListener implements Listener {
     public void onSpectatorDrop(PlayerDropItemEvent e) {
         Player p = e.getPlayer();
         if (crystalBlitz.getInstance().gamemanager != null && p.getGameMode() == GameMode.ADVENTURE) {
+            e.setCancelled(true);
+        }
+    }
+    //Prevents spectators from being targeted by mobs
+    @EventHandler
+    public void onSpectatorTarget(EntityTargetLivingEntityEvent e) {
+        if (e.getTarget() instanceof Player p && p.getGameMode() == GameMode.ADVENTURE && crystalBlitz.getInstance().gamemanager != null) {
+            e.setCancelled(true);
+            e.setTarget(null);
+        }
+    }
+    //Prevents any attacks by spectattors like fire balls should not be deflectable at all.
+    //client sided may look like deflection has happened, but on everyones elses fire ball travels normaly
+    @EventHandler
+    public void onSpectatorAttack(PrePlayerAttackEntityEvent e) {
+        if (e.getPlayer().getGameMode() == GameMode.ADVENTURE && crystalBlitz.getInstance().gamemanager != null) {
             e.setCancelled(true);
         }
     }
