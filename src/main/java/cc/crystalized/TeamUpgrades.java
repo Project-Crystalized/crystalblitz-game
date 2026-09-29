@@ -1,5 +1,7 @@
 package cc.crystalized;
 
+import gg.crystalized.lobby.Achievement;
+
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
 import io.papermc.paper.persistence.PersistentDataContainerView;
@@ -10,14 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.CoralWallFan;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.TextDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -116,14 +113,31 @@ public class TeamUpgrades {
         return false;
     }
 
+    //every upgrade currently buyable in the shop, the rest are disabled (slimeTotemAlarm, autoShardCollect, totemMoreHealth)
+    private static final List<upgrades> BUYABLE_UPGRADES = List.of(
+            upgrades.nexusHeal,
+            upgrades.strongerShardGen1,
+            upgrades.strongerShardGen2,
+            upgrades.doubleStaleShards,
+            upgrades.sharpness,
+            upgrades.protection
+    );
+
     public void getUpgrade(upgrades u, Player buyer) {
         if (upgradesBought.contains(u)) {
             return;
         }
         upgradesBought.add(u);
 
+        //cb_everythingbought: bought every buyable team upgrade
+        if (upgradesBought.containsAll(BUYABLE_UPGRADES)) {
+					try {
+            Achievement everything = Achievement.getAchievement("cb_everythingbought", buyer);
+            everything.setProgress(100);
+					} catch (NoClassDefFoundError e) {}
+        }
+
         //do special shit for some upgrades
-        MapData md = crystalBlitz.getInstance().mapdata;
         switch (u) {
             case nexusHeal -> {
                 TeamData td = Teams.getTeamData(buyer);

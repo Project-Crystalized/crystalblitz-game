@@ -1,8 +1,8 @@
 package cc.crystalized;
 
 import com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent;
+import gg.crystalized.lobby.Achievement;
 import gg.crystalized.lobby.LevelManager;
-import gg.crystalized.lobby.Nametag;
 import gg.crystalized.lobby.Ranks;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
@@ -29,7 +29,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -54,6 +53,10 @@ public class PlayerListener implements Listener {
     private final Map<UUID, Integer> lastAttackTick = new HashMap<>();
     //The time that the kill credit will last after hit if the player fell off (10 seconds)
     private static final int KILL_CREDIT_TIME = 20 * 10;
+
+	  // for cb_clutch achivement
+    private final Map<UUID, Boolean> clutchArmed = new HashMap<>();
+    private final Map<UUID, Boolean> clutchOrbUsed = new HashMap<>();
 
 
     @EventHandler(priority = EventPriority.MONITOR,
@@ -188,10 +191,31 @@ public class PlayerListener implements Listener {
             p.setFallDistance(0);
 
         }
+
+    		//cb_clutch: armed while in a deep fall, completed by using any orb then landing alive
+    		int CLUTCH_MIN_FALL_DISTANCE = 12;
+    		int CLUTCH_ARM_HEIGHT_ABOVE_VOID = 15;
+        if (crystalBlitz.getInstance().gamemanager != null && p.getGameMode() == GameMode.SURVIVAL) {
+            UUID id = p.getUniqueId();
+						try {
+            if (Boolean.TRUE.equals(clutchArmed.get(id))) {
+                if (p.isOnGround()) {
+                    if (Boolean.TRUE.equals(clutchOrbUsed.get(id))) {
+											try {
+                        Achievement clutch = Achievement.getAchievement("cb_clutch", p);
+                        clutch.setProgress(100);
+											} catch (NoClassDefFoundError err) {}
+                    }
+                    clutchArmed.remove(id);
+                    clutchOrbUsed.remove(id);
+                }
+            } else if (!p.isOnGround() && p.getFallDistance() > CLUTCH_MIN_FALL_DISTANCE
+                    && p.getY() < crystalBlitz.getInstance().mapdata.DeathLimit + CLUTCH_ARM_HEIGHT_ABOVE_VOID) {
+                clutchArmed.put(id, true);
+            }
+						} catch (NullPointerException err) {}
+        }
     }
-
-
-
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
@@ -238,9 +262,14 @@ public class PlayerListener implements Listener {
         //Clears out the the hash maps so no extra potential kill credits, after respawn
         lastAttacker.remove(p.getUniqueId());
         lastAttackTick.remove(p.getUniqueId());
+        clutchArmed.remove(p.getUniqueId());
+        clutchOrbUsed.remove(p.getUniqueId());
         if (k != null) {
-            PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(k);
+            PlayerData kpd = GameManager.getPlayerData(k);
             kpd.kills++;
+            //cb_elimeveryone: personally eliminated everyone
+            kpd.victimsEliminated.add(p.getUniqueId());
+            checkEliminatedEveryone(k);
             //killer = k.displayName();
             killer = kpd.cachedRankIcon_small.append(text(" ")).append(k.displayName());
         } else {
@@ -584,6 +613,14 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
+        //cb_clutch: using any orb mid deep-fall counts, landing is tracked in onPlayerMove
+        if (crystalBlitz.getInstance().gamemanager != null && p.getGameMode() == GameMode.SURVIVAL
+                && Boolean.TRUE.equals(clutchArmed.get(p.getUniqueId())) && e.getItem() != null) {
+            CBItem cb = CrystalBlitzItems.getCBItem(e.getItem());
+            if (cb != null && cb.internalName.endsWith("_orb")) {
+                clutchOrbUsed.put(p.getUniqueId(), true);
+            }
+        }
         //Spectators should not be able to interact with any blocks, while still being able to interact with their tool bar.
         if (crystalBlitz.getInstance().gamemanager != null && p.getGameMode() == GameMode.ADVENTURE && e.getClickedBlock() != null) {
             e.setCancelled(true);
@@ -725,6 +762,7 @@ public class PlayerListener implements Listener {
                                 p.getInventory().addItem(strong);
                                 //Deals the damage to the generator
                                 pureShardGenerator.damage(damage);
+                                checkPuritarian(p);
                                 break;
                             default:
                                 p.sendMessage(translatable("crystalized.game.crystalblitz.black_terracotta_report"));
@@ -775,6 +813,7 @@ public class PlayerListener implements Listener {
                                 p.getInventory().addItem(strong);
                             }
                         }
+                        checkPuritarian(p);
                         p.playSound(p, "minecraft:block.note_block.bell", 50, 2);
                         e.setCancelled(true);
                         //The logic for stale generators
@@ -923,6 +962,74 @@ public class PlayerListener implements Listener {
         //using isSimilar as amount doesn't matter
         //returns true if it is a shard of any type
         return item.isSimilar(Shop.ShardTypes.Weak.item) || item.isSimilar(Shop.ShardTypes.Strong.item) || item.isSimilar(Shop.ShardTypes.Nexus.item);
+    }
+
+    //cb_puritarian: carry 5 stacks of pure shards in main inventory at once, monotonic so deaths don't revoke progress
+    private static void checkPuritarian(Player p) {
+        if (crystalBlitz.getInstance().gamemanager == null) return;
+        PlayerData pd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+        if (pd == null) return;
+
+        int count = 0;
+        for (ItemStack i : p.getInventory().getStorageContents()) {
+            if (i != null && i.isSimilar(Shop.ShardTypes.Strong.item)) {
+                count += i.getAmount();
+            }
+        }
+        if (count > pd.maxAmtOfPureShardsSoFar) {
+            pd.maxAmtOfPureShardsSoFar = count;
+			      try {
+            	Achievement a = Achievement.getAchievement("cb_puritarian", p);
+    					int PURITARIAN_PURE_NEEDED = 5 * 64;
+            	a.setProgress(Math.min(100, pd.maxAmtOfPureShardsSoFar * 100 / PURITARIAN_PURE_NEEDED));
+						} catch (NoClassDefFoundError e) {}
+        }
+    }
+
+    @EventHandler
+    public void onPickupForPuritarian(EntityPickupItemEvent e) {
+        if (crystalBlitz.getInstance().gamemanager == null) {
+            return;
+        }
+        if (!(e.getEntity() instanceof Player p) || p.getGameMode() != GameMode.SURVIVAL) {
+            return;
+        }
+        if (!e.getItem().getItemStack().isSimilar(Shop.ShardTypes.Strong.item)) {
+            return;
+        }
+        //pickup applies after the event, recheck next tick
+        Bukkit.getScheduler().runTaskLater(crystalBlitz.getInstance(), () -> checkPuritarian(p), 1);
+    }
+
+    //cb_elimeveryone: killer personally eliminated every other non-spectator participant still online
+    private static void checkEliminatedEveryone(Player killer) {
+        if (crystalBlitz.getInstance().gamemanager == null) {
+            return;
+        }
+        PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(killer);
+        if (kpd == null) {
+            return;
+        }
+        int needed = 0;
+        for (PlayerData pd : GameManager.playerDatas) {
+            if (pd.p.getUniqueId().equals(killer.getUniqueId())) {
+                continue;
+            }
+            if (!pd.p.isOnline() || Teams.spectator.contains(pd.p.getName())) {
+                continue;
+            }
+            needed++;
+            if (!kpd.victimsEliminated.contains(pd.p.getUniqueId())) {
+                return;
+            }
+        }
+        if (needed == 0) {
+            return;
+        }
+				try {
+        	Achievement a = Achievement.getAchievement("cb_elimeveryone", killer);
+        	a.setProgress(100);
+				} catch (NoClassDefFoundError e) {}
     }
     //Specificly to make small and large amethist insta mineable for stale gens as Mite requsted
     @EventHandler

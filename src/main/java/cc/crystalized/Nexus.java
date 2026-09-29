@@ -1,5 +1,7 @@
 package cc.crystalized;
 
+import gg.crystalized.lobby.Achievement;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -16,12 +18,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
@@ -199,8 +199,15 @@ public class Nexus {
         NexusBrokenText.add(translatable("crystalized.game.crystalblitz." + t + "nexus"));
         NexusBrokenText.add(text(p.getName()));
 
-        PlayerData kpd = crystalBlitz.getInstance().gamemanager.getPlayerData(p);
+        PlayerData kpd = GameManager.getPlayerData(p);
         kpd.nexus_kills++;
+
+				try {
+    				Achievement shardsAch = Achievement.getAchievement("cb_nexusshards", p);
+    				shardsAch.setProgress(100);
+    				Achievement collectorAch = Achievement.getAchievement("cb_nexuscollecter", p);
+    				collectorAch.setProgress(Math.min(100, kpd.nexus_kills * 100 / 3));
+				} catch (NoClassDefFoundError e) {}
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(translatable("crystalized.game.crystalblitz.chat.nexusbroken", NexusBrokenText));
