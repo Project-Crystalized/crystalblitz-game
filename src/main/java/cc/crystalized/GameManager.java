@@ -1,6 +1,7 @@
 package cc.crystalized;
 
 import gg.crystalized.lobby.App;
+import gg.crystalized.lobby.Achievement;
 import gg.crystalized.lobby.InventoryManager;
 import gg.crystalized.lobby.LevelManager;
 import net.kyori.adventure.text.Component;
@@ -296,6 +297,8 @@ public class GameManager {
                 try {
                     LevelManager.giveExperience(lastPlayer, 5);
                     LevelManager.giveMoney(lastPlayer, 20);
+                    Achievement winAch = Achievement.getAchievement("cb_win", lastPlayer);
+                    winAch.setProgress(100);
                 } catch (NoClassDefFoundError e) {}
                 p.showTitle(Title.title(
                         lastPlayer.displayName(),
@@ -317,6 +320,8 @@ public class GameManager {
                     try {
                         LevelManager.giveExperience(p, 5);
                         LevelManager.giveMoney(p, 20);
+                        Achievement winAch = Achievement.getAchievement("cb_win", p);
+                        winAch.setProgress(100);
                     } catch (NoClassDefFoundError e) {}
                 }
             }

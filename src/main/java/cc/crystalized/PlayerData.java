@@ -11,6 +11,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 import static net.kyori.adventure.text.Component.text;
 
@@ -24,6 +27,11 @@ public class PlayerData {
     int kills = 0;
     int nexus_kills = 0;
     int deaths = 0;
+
+    // for achievement: cb_elimeveryone
+    public Set<UUID> victimsEliminated = new HashSet<>();
+    //for achivement cb_puritarian
+    public int maxAmtOfPureShardsSoFar = 0;
 
     public PlayerData(Player player) {
         p = player;
