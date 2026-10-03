@@ -285,15 +285,6 @@ public final class crystalBlitz extends JavaPlugin {
                         }
                     }
                     case 6 -> {
-                        //never start a game with less than 2 players, it can never end by itself
-                        //and would block the server until someone restarts it
-                        if (Bukkit.getOnlinePlayers().size() < 2) {
-                            Bukkit.getServer().sendMessage(translatable("crystalized.game.generic.gamecancelled").color(RED));
-                            isCountingDown = false;
-                            GameCountdownStarted = false;
-                            cancel();
-                            return;
-                        }
                         //Gets the game world and sets it's up for the game.
                         World gameWorld = getGameWorld();
                         if (gameWorld == null) {
