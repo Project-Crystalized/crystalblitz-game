@@ -1350,6 +1350,20 @@ public class PlayerListener implements Listener {
             e.setCancelled(true);
         }
     }
+
+    //Ends the game when the last player leaves it, so an abandoned game can
+    //never block the server. The quitter still counts as online during this
+    //event, so size 1 means nobody will be left.
+    @EventHandler
+    public void onLastPlayerQuit(PlayerQuitEvent e) {
+        if (crystalBlitz.getInstance().gamemanager == null) {
+            return;
+        }
+        if (Bukkit.getOnlinePlayers().size() <= 1) {
+            crystalBlitz.getInstance().getLogger().info("Last player left, ending the CrystalBlitz game.");
+            GameManager.ForceEndGame();
+        }
+    }
 }
 
 

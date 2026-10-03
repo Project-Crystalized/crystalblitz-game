@@ -335,6 +335,14 @@ public final class crystalBlitz extends JavaPlugin {
                     cancel();
                 }
                 if (timer == 0) {
+                    //players may have left during the countdown, never start a game
+                    //that could not end by itself. force-start commands bypass this.
+                    if (Bukkit.getOnlinePlayers().size() < 2) {
+                        Bukkit.getServer().sendMessage(translatable("crystalized.game.generic.gamecancelled").color(NamedTextColor.RED));
+                        GameCountdownStarted = false;
+                        cancel();
+                        return;
+                    }
                     crystalBlitz.getInstance().is_force_starting = true;
                     GameCountdownStarted = false;
                     cancel();

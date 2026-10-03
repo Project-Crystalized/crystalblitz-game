@@ -152,6 +152,8 @@ public class GameManager {
         crystalBlitz cbPlugin = crystalBlitz.getInstance();
         //This is to clean up all the left over tasks
         GameManager oldGameManager = cbPlugin.gamemanager;
+        //null first, so quit events from our own kicks below see no running game
+        cbPlugin.gamemanager = null;
         if (oldGameManager != null) {
             oldGameManager.bossbar.removeBossBar();
             oldGameManager.removePureShardHealthBars();
@@ -215,8 +217,6 @@ public class GameManager {
 
         //Clears the blocks from memory, doesn't have an effect on the world
         cbPlugin.Blocks.clear();
-        //sets the game manager to null
-        cbPlugin.gamemanager = null;
 
         //Does the world recreation on the new tick
         Bukkit.getScheduler().runTask(cbPlugin , () -> {
