@@ -37,7 +37,7 @@ public class PlayerData {
         p = player;
         cachedRankIcon_small = Ranks.getIcon(Bukkit.getOfflinePlayer(p.getName()));
         cachedRankIcon_large = Ranks.getRankWithName(p);
-        enderChest = Bukkit.getServer().createInventory(null, 54, text("\uA000\uA001 echest").color(NamedTextColor.WHITE));
+        enderChest = Bukkit.getServer().createInventory(null, 54, text("\uA000\uA017 echest").color(NamedTextColor.WHITE));
     }
 
     public void dropEnderChestContents(Location loc) {
