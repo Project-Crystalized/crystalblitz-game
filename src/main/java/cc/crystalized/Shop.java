@@ -54,7 +54,7 @@ public class Shop{
     public static ItemStack CategoryOffence = new ItemStack(Material.COAL);
     public static ItemStack CategoryDefence = new ItemStack(Material.COAL);
     public static ItemStack CategoryUtility = new ItemStack(Material.COAL);
-    public static ItemStack CategoryUpgrades = new ItemStack(Material.PINK_STAINED_GLASS);
+    public static ItemStack CategoryUpgrades = new ItemStack(Material.COAL);
     public static ItemStack EnderChest = new ItemStack(Material.ENDER_CHEST);
     public static ItemStack Back = new ItemStack(Material.COAL);
 
@@ -101,11 +101,11 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA00B").color(NamedTextColor.WHITE));
         view.clear();
 
+        view.setItem(2, CategoryUpgrades);
         view.setItem(3, CategoryUpgrades);
         view.setItem(4, CategoryUpgrades);
         view.setItem(5, CategoryUpgrades);
         view.setItem(6, CategoryUpgrades);
-        view.setItem(7, CategoryUpgrades);
 
         view.setItem(9, CategoryOffence);
         view.setItem(10, CategoryOffence);
@@ -127,7 +127,6 @@ public class Shop{
         view.setItem(31, CategoryDefence);
         view.setItem(32, CategoryDefence);
 
-        //Fixed the utility having defense parts, causing bottom of utility being defense
         view.setItem(15, CategoryUtility);
         view.setItem(16, CategoryUtility);
         view.setItem(17, CategoryUtility);
@@ -153,7 +152,6 @@ public class Shop{
         view.setItem(4, CrystalBlitzItems.getShopItem("stone_sword", p));
         view.setItem(5, CrystalBlitzItems.getShopItem("iron_sword", p));
         view.setItem(6, CrystalBlitzItems.getShopItem("diamond_sword", p));
-        //Wiffle bat at slot 7
         view.setItem(7, CrystalBlitzItems.getShopItem("wiffle_bat", p));
         view.setItem(10, CrystalBlitzItems.getShopItem("precise_crossbow", p));
         view.setItem(11, CrystalBlitzItems.getShopItem("crossbow", p));
@@ -208,7 +206,6 @@ public class Shop{
         view = Bukkit.getServer().createInventory(p, 54, text("\uA000\uA013").color(NamedTextColor.WHITE));
         view.clear();
         view.setItem(0, Back);
-        //Made the team upgrades work without being static, as then teams shared the sharpness/protection upgrade
         view.setItem(1, td.teamUpgrades.getUpgradeShopItem(upgrades.nexusHeal, p));
         //TODO: Disabled slime totem as it ain't working, renable when it is added
         //view.setItem(7, td.teamUpgrades.getUpgradeShopItem(upgrades.slimeTotemAlarm, p));
