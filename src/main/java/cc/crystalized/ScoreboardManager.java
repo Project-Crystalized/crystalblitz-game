@@ -1,5 +1,6 @@
 package cc.crystalized;
 
+import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -19,6 +20,7 @@ public class ScoreboardManager {
         Component title = text("Crystal Blitz").color(NamedTextColor.LIGHT_PURPLE).append(text(" \uE12F").color(NamedTextColor.WHITE));
         Objective obj = scoreboard.registerNewObjective("main", Criteria.DUMMY, title);
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        obj.numberFormat(NumberFormat.blank());
 
         obj.getScore("12").setScore(12);
         obj.getScore("12").customName(translatable("crystalized.game.generic.team").append(text(": ")).append(translatable("crystalized.game.generic.team." + Teams.getPlayerTeam(player))));
@@ -201,6 +203,7 @@ class QueueScoreboard {
         Component title = text("Crystal Blitz").color(NamedTextColor.LIGHT_PURPLE).append(text(" \uE12F").color(NamedTextColor.WHITE));
         Objective obj = scoreboard.registerNewObjective("main", Criteria.DUMMY, title);
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        obj.numberFormat(NumberFormat.blank());
 
         obj.getScore("5").setScore(5);
         obj.getScore("5").customName(text("  "));
